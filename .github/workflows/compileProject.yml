@@ -25,5 +25,9 @@ jobs:
       - name: switch directory 
         run: |
           cd ${{ github.workspace }};
-          ls;
-          elm make src/Main.elm --output=docs/index.html
+          pwd;
+      - name: list workspace files
+        run: ls ${{ github.workspace }}
+      - name: pwd
+        run: pwd
+      

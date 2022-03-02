@@ -28,4 +28,5 @@ jobs:
       - name: make index.html
         run: |
           cd ${{ github.workspace }}
+          ls .
           elm make src/Main.elm --output=docs/index.html

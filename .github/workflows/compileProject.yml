@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: youcefs21/setup-elm@1.2.1
       - name: switch directory 
-        run: cd ${{ github.workspace }}
-      - run: ls .
-      - name: compile Main.elm
-        run: elm make src/Main.elm --output=docs/index.html
+        run: |
+          cd ${{ github.workspace }};
+          ls;
+          elm make src/Main.elm --output=docs/index.html

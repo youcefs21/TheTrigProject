@@ -29,5 +29,8 @@ jobs:
       - name: list workspace files
         run: ls ${{ github.workspace }}
       - name: pwd
-        run: pwd
+        run: pwd; ls -a
+      - name: cd back
+        run: cd ..; ls -a
+      
       

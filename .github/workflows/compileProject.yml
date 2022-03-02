@@ -23,6 +23,8 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: justgook/setup-elm@1.2.0
+        with: 
+          cahce: false
 
       # Compile project to index.html
       - name: make index.html

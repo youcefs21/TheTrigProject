@@ -22,15 +22,10 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: youcefs21/setup-elm@1.2.1
+      - uses: actions/checkout@v2
       - name: switch directory 
-        run: |
-          cd ${{ github.workspace }};
-          pwd;
-      - name: list workspace files
-        run: ls ${{ github.workspace }}
-      - name: pwd
-        run: pwd; ls -a
-      - name: cd back
-        run: cd ..; ls -a
-      
+        run: cd ${{ github.workspace }};
+      - name: compile project
+        run: elm make src/Main.elm --output=docs/index.html
+
       

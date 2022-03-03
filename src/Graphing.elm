@@ -13,7 +13,7 @@ myShapes model =
                       [0, pi/2, pi, 3*pi/2, 2*pi] 
                       ["0", "\u{03C0}/2", "\u{03C0}", "3\u{03C0}/2", "2\u{03C0}"]
   ++
-  List.map (\i -> line ((i - deltaX) * scaleX, scaleY * sin (i - deltaX)) (i * scaleX, scaleY * sin i)
+  List.map (\i -> line ((i - deltaX) * scaleX, scaleY * model.func (i - deltaX)) (i * scaleX, scaleY * model.func i)
                       |> outlined (solid 0.5) black
                       |> move (-90, 0)) 
                       (rangeStep deltaX (2 * pi) deltaX)
@@ -29,16 +29,16 @@ deltaX = 0.1
 scaleX = 28
 scaleY = 45
 
-type Func = Sin | Cos | Tan
-
 type Msg = Tick Float GetKeyState
 
-type alias Model = { time : Float , func : Func}
+type alias Model = { time : Float , func : Float -> Float}
 
 update msg model = case msg of
-                     Tick t _ -> { time = t }
+                     Tick t _ -> { time = t , func = currentFunc}
+                     
+currentFunc = sin
 
-init = { time = 0 }
+init = { time = 0 , func = currentFunc}
 
 main = gameApp Tick { model = init, view = view, update = update, title = "Game Slot" }
 

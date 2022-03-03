@@ -62,7 +62,8 @@ angles radians = group <|
             circle 0.5 
                 |> filled black
                 |> move (pos ur d) 
-            ]) 
+            ]
+            |> notifyTap (UpdateAngle d)) 
         specialAngles
     
 
@@ -77,11 +78,19 @@ triangle angle quad showSLengths = group [
                 Four -> 360 - angle
 
         in
-            wedge 3 (alpha / 360)
-                |> outlined (solid 0.5) darkGrey
-                |> rotate (degrees (alpha / 2))
-                |> scaleX (if quad == Two || quad == Three then -1 else 1)
-                |> scaleY (if quad == Three || quad == Four then -1 else 1)
+            if angle == 0 then group [] else
+            if angle == 90 || angle == 270 then 
+                square 3
+                    |> outlined (solid 0.5) darkGrey
+                    |> move (1.5, 1.5)
+                    |> scaleX (if angle == 90 then 1 else -1)
+                    |> scaleY (if angle == 90 then 1 else -1)
+            else
+                wedge 3 (alpha / 360)
+                    |> outlined (solid 0.5) darkGrey
+                    |> rotate (degrees (alpha / 2))
+                    |> scaleX (if quad == Two   || quad == Three then -1 else 1)
+                    |> scaleY (if quad == Three || quad == Four  then -1 else 1)
     ],
 
     -- Hypothenuse
@@ -145,20 +154,23 @@ type alias Model = {
 
 init = { 
     time         = 0,
-    angle        = 45,
-    quad         = Three,
+    angle        = 0,
+    quad         = One,
     showCast     = True,
     showSAngles  = True,
     showSLengths = True,
-    radians      = False }
+    radians      = True }
 
 update msg model = 
     case msg of
         Tick t _ -> 
             ({ model | time = t }, Cmd.none)
         UpdateAngle newAngle -> 
-            ({ model | angle = limitAngle newAngle,
-                       quad  = updateQuad model.angle }, Cmd.none)
+            let 
+                newNewAngle = limitAngle newAngle
+            in
+                ({ model | angle = newNewAngle,
+                           quad  = updateQuad newNewAngle }, Cmd.none)
 
 main : EllieAppWithTick () Model Msg
 main = ellieAppWithTick Tick { 

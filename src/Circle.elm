@@ -4,7 +4,7 @@ import GraphicSVG exposing (..)
 import GraphicSVG.EllieApp exposing (..)
 
 myShapes model = [
-    unitCircle,
+    unitCircle model.showCast,
     triangle model.angle model.quad
     ]
 
@@ -51,7 +51,7 @@ triangle angle quad = group [
         |> move (pos angle)
     ]
   
-unitCircle = group [
+unitCircle showCast = group [
     -- Grid
     rect 0.5 110
         |> filled grey,
@@ -63,20 +63,24 @@ unitCircle = group [
         |> outlined (solid 0.5) blue,
 
     -- CAST
-    text "C"
-        |> sansserif
-        |> size 10
-        |> filled black
+    if showCast then cast else group []
     ]
 
-type Msg = 
-    Tick Float GetKeyState |
-    UpdateAngle Float
-
-type alias Model = { 
-    time  : Float,
-    angle : Float,
-    quad  : Quadrant }
+cast =
+    let 
+        r = 50
+        tText t = text t |> sansserif |> centered |> size 10 |> filled black
+    in 
+    group [
+        tText "C"
+            |> move (r, -r),
+        tText "A"
+            |> move (r, r - 5),
+        tText "S"
+            |> move (-r, r - 5),
+        tText "T"
+            |> move (-r, -r)
+    ]
 
 update msg model = 
     case msg of
@@ -95,10 +99,21 @@ updateQuad angle =
     else if angle > 180 && angle <= 270 then Three
     else Four
 
+type Msg = 
+    Tick Float GetKeyState |
+    UpdateAngle Float
+
+type alias Model = { 
+    time  : Float,
+    angle : Float,
+    quad  : Quadrant,
+    showCast  : Bool }
+
 init = { 
     time = 0,
     angle = 235,
-    quad = Three }
+    quad = Three,
+    showCast = True }
 
 main : EllieAppWithTick () Model Msg
 main = ellieAppWithTick Tick { 

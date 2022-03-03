@@ -1,12 +1,17 @@
+module Graphing exposing (..)
+
+import GraphicSVG exposing (..)
+import GraphicSVG.EllieApp exposing (..)
 import String
 
 myShapes model =
   List.map2 (\i txt -> text txt
-                      |> size 6
+                      |> size 4
                       |> centered
                       |> filled black
-                      |> move (-90 + i, 5))
-                      (rangeStep 0 180 (pi * scaleX / 2)) ["0", "\u{03C0}/2", "\u{03C0}", "3\u{03C0}/2", "2\u{03C0}"]
+                      |> move (-90 + i * scaleX, 5))
+                      [0, pi/2, pi, 3*pi/2, 2*pi] 
+                      ["0", "\u{03C0}/2", "\u{03C0}", "3\u{03C0}/2", "2\u{03C0}"]
   ++
   List.map (\i -> line ((i - deltaX) * scaleX, scaleY * sin (i - deltaX)) (i * scaleX, scaleY * sin i)
                       |> outlined (solid 0.5) black
@@ -24,9 +29,11 @@ deltaX = 0.1
 scaleX = 28
 scaleY = 45
 
+type Func = Sin | Cos | Tan
+
 type Msg = Tick Float GetKeyState
 
-type alias Model = { time : Float }
+type alias Model = { time : Float , func : Func}
 
 update msg model = case msg of
                      Tick t _ -> { time = t }

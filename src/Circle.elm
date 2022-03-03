@@ -11,17 +11,19 @@ fonts = {
 lightTheme = {
     adj = blue,
     opp = green,
-    hyp = red }
+    hyp = red,
+    tan = rgb 0 128 128,
+    cir = lightBlue }
 
 myShapes model = [
     group [
-        unitCircle model.showCast model.showSAngles model.radians,
+        unitCircle model.col model.showCast model.showSAngles model.radians,
         triangle model.col model.angle model.quad model.showSLengths
     ]
         |> scale 0.75
     ]
   
-unitCircle showCast showSAngles radians = group [
+unitCircle col showCast showSAngles radians = group [
     -- Grid
     group [
         rect 0.5 110
@@ -33,29 +35,29 @@ unitCircle showCast showSAngles radians = group [
 
     -- Circle
     circle 50 
-        |> outlined (solid 0.5) blue
+        |> outlined (solid 0.5) col.cir
         |> makeTransparent 0.7,
 
     -- CAST
-    if showCast then cast else group [],
+    if showCast then cast col else group [],
 
     -- Special Angles
     if showSAngles then angles radians else group []
     ]
 
-cast =
+cast col =
     let 
         r = 50
-        tText t = text t |> customFont fonts.sansserif |> centered |> size 10 |> filled black
+        tText t c = text t |> customFont fonts.sansserif |> centered |> size 10 |> filled c
     in 
     group [
-        tText "C"
+        tText "C" col.adj
             |> move (r, -r),
-        tText "A"
+        tText "A" col.hyp
             |> move (r, r - 5),
-        tText "S"
+        tText "S" col.opp
             |> move (-r, r - 5),
-        tText "T"
+        tText "T" col.tan
             |> move (-r, -r)
     ]
 
@@ -99,17 +101,18 @@ triangle col angle quad showSLengths =
             if angle == 0 then group [] else
             if angle == 90 || angle == 270 then 
                 square 3
-                    |> outlined (solid 0.5) darkGrey
+                    |> outlined (solid 0.4) darkGrey
                     |> move (1.5, 1.5)
                     |> scaleX (if angle == 90 then 1 else -1)
                     |> scaleY (if angle == 90 then 1 else -1)
             else
                 wedge 3 (alpha / 360)
-                    |> outlined (solid 0.5) darkGrey
+                    |> outlined (solid 0.4) darkGrey
                     |> rotate (degrees (alpha / 2))
                     |> scaleX (if quad == Two   || quad == Three then -1 else 1)
                     |> scaleY (if quad == Three || quad == Four  then -1 else 1)
-        ],
+        ]
+            |> makeTransparent 0.7,
         
         -- Adjacent
         line org (xpos ur angle, 0)
@@ -210,7 +213,7 @@ type alias Model = {
     showSAngles  : Bool,
     showSLengths : Bool,
     radians      : Bool,
-    col          : { adj : Color, opp : Color, hyp : Color }}
+    col          : { adj : Color, opp : Color, hyp : Color, tan : Color, cir : Color }}
 
 init = { 
     time         = 0,

@@ -14,8 +14,11 @@ lightTheme = {
     hyp = red }
 
 myShapes model = [
-    unitCircle model.showCast model.showSAngles model.radians,
-    triangle model.col model.angle model.quad model.showSLengths
+    group [
+        unitCircle model.showCast model.showSAngles model.radians,
+        triangle model.col model.angle model.quad model.showSLengths
+    ]
+        |> scale 0.75
     ]
   
 unitCircle showCast showSAngles radians = group [
@@ -59,22 +62,27 @@ cast =
 angles radians = group <| 
     List.map 
         (\(d, r) -> 
-            group [ text (if radians then r else (String.fromFloat d))
-                |> customFont fonts.monospace
-                |> size 4
-                |> centered 
-                |> filled black 
-                |> makeTransparent 0.5
-                |> move 
-                    (let
-                        x = xpos (ur + 7.5) d
-                        y = ypos (ur + 7.5) d
-                    in (x, if y > 0 then y - 5 else y)),
-            circle 0.5 
-                |> filled black
-                |> move (pos ur d) 
-            ]
-            |> notifyTap (UpdateAngle d)) 
+            let 
+                str      = if radians then r else (String.fromFloat d)
+                strlen s = (*) s <| toFloat <| String.length str
+                quad     = updateQuad d
+            in
+                group [ text str
+                    |> customFont fonts.monospace
+                    |> size 4
+                    |> centered 
+                    |> filled black 
+                    |> makeTransparent 0.5
+                    |> (let
+                            x = xpos (ur + 7.5) d
+                            y = ypos (ur + 7.5) d
+                        in move (x + if quad == One || quad == Four then strlen 1.5 else -(strlen 1.5), 
+                                 y + if quad == One || quad == Two  then -3     else 0)),
+                circle 0.5 
+                    |> filled black
+                    |> move (pos ur d) 
+                ]
+                |> notifyTap (UpdateAngle d)) 
         specialAngles
     
 
@@ -118,8 +126,10 @@ triangle col angle quad showSLengths =
         -- Side Lengths
         if showSLengths then 
             let
-                adj = getString alpha adjLengths
-                opp = getString alpha oppLengths
+                rawAdj = getString alpha adjLengths
+                rawOpp = getString alpha oppLengths
+                adj = (if quad == Two   || quad == Three && rawAdj /= "0" then "-" else "") ++ rawAdj
+                opp = (if quad == Three || quad == Four  && rawOpp /= "0" then "-" else "") ++ rawOpp
                 tText str c = 
                     text str
                         |> customFont "Consolas"
@@ -138,7 +148,13 @@ triangle col angle quad showSLengths =
                     tText opp col.opp
                         |> move (xpos ur angle +
                                  if quad == One || quad == Four then (toFloat (String.length opp) + 1)
-                                 else -(toFloat (String.length opp) + 1), ypos (ur / 2) angle)
+                                 else -(toFloat (String.length opp) + 1), ypos (ur / 2) angle),
+                    -- Hyp
+                    tText "1" col.hyp
+                        |> move (xpos (ur / 2) angle +
+                                 if quad == One || quad == Four then -3 else 3, 
+                                 ypos (ur / 2) angle + 
+                                 if quad == One || quad == Two then 3 else -5)
                 ]  
         else group [],
 

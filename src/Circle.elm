@@ -17,13 +17,13 @@ lightTheme = {
 
 myShapes model = [
     group [
-        unitCircle model.col model.showCast model.showSAngles model.radians,
+        unitCircle model.col model.showCast model.showSAngles model.radians model.angle,
         triangle model.col model.angle model.quad model.showSLengths
     ]
         |> scale 0.75
     ]
   
-unitCircle col showCast showSAngles radians = group [
+unitCircle col showCast showSAngles radians angle = group [
     -- Grid
     group [
         rect 0.5 110
@@ -42,7 +42,7 @@ unitCircle col showCast showSAngles radians = group [
     if showCast then cast col else group [],
 
     -- Special Angles
-    if showSAngles then angles radians else group []
+    if showSAngles then angles radians angle else group []
     ]
 
 cast col =
@@ -61,28 +61,31 @@ cast col =
             |> move (-r, -r)
     ]
 
-angles radians = group <| 
+angles radians angle = group <| 
     List.map 
         (\(d, r) -> 
             let 
                 str      = if radians then r else (String.fromFloat d)
                 strlen s = (*) s <| toFloat <| String.length str
                 quad     = updateQuad d
+                x = xpos (ur + 7.5) d + if quad == One || quad == Four then strlen 1.5 else -(strlen 1.5)
+                y = ypos (ur + 7.5) d + if quad == One || quad == Two  then -3 else 0
             in
-                group [ text str
-                    |> customFont fonts.monospace
-                    |> size 4
-                    |> centered 
-                    |> filled black 
-                    |> makeTransparent 0.5
-                    |> (let
-                            x = xpos (ur + 7.5) d
-                            y = ypos (ur + 7.5) d
-                        in move (x + if quad == One || quad == Four then strlen 1.5 else -(strlen 1.5), 
-                                 y + if quad == One || quad == Two  then -3     else 0)),
-                circle 0.5 
-                    |> filled black
-                    |> move (pos ur d) 
+                group [ 
+                    rect (strlen 3) 8
+                        |> ghost
+                        |> move (x, y + 1),
+                    text str
+                        |> customFont fonts.monospace
+                        |> size 4
+                        |> centered 
+                        |> (if angle == d then bold else identity)
+                        |> filled black 
+                        |> makeTransparent 0.5
+                        |> move (x, y),
+                    circle 0.5 
+                        |> filled black
+                        |> move (pos ur d) 
                 ]
                 |> notifyTap (UpdateAngle d)) 
         specialAngles
@@ -185,7 +188,7 @@ pos  r angle = (xpos r angle, ypos r angle)
 specialAngles = [
     (0,   "0 (2π)"), (30,  "π/6"),   (45,  "π/4"),  (60,  "π/3"), 
     (90,  "π/2"),    (120, "2π/3"),  (135, "3π/4"), (150, "5π/6"),
-    (180, "π"),      (210, "7π/6π"), (225, "5π/4"), (240, "4π/3"),
+    (180, "π"),      (210, "7π/6"),  (225, "5π/4"), (240, "4π/3"),
     (270, "3π/2"),   (300, "5π/3"),  (315, "7π/4"), (330, "11π/6")]
 adjLengths = [(0, "1"), (30, "(√3)/2"), (45, "1/(√2)"), (60, "1/2"),    (90, "0")]
 oppLengths = [(0, "0"), (30, "1/2"),    (45, "1/(√2)"), (60, "(√3)/2"), (90, "1")]

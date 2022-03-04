@@ -101,19 +101,26 @@ triangle col angle quad showSLengths =
             if angle == 0 then group [] else
             if angle == 90 || angle == 270 then 
                 square 3
-                    |> outlined (solid 0.4) darkGrey
+                    |> outlined (solid 0.3) darkGrey
                     |> move (1.5, 1.5)
                     |> scaleX (if angle == 90 then 1 else -1)
                     |> scaleY (if angle == 90 then 1 else -1)
             else
                 wedge 3 (alpha / 360)
-                    |> outlined (solid 0.4) darkGrey
+                    |> outlined (solid 0.3) darkGrey
                     |> rotate (degrees (alpha / 2))
                     |> scaleX (if quad == Two   || quad == Three then -1 else 1)
                     |> scaleY (if quad == Three || quad == Four  then -1 else 1)
         ]
             |> makeTransparent 0.7,
-        
+
+        -- Full angle
+        circle 2 
+            |> outlined (solid 0.3) red
+            |> makeTransparent 0.6
+            |> clip (wedge 5 (angle / 360)
+                |> filled red
+                |> rotate (degrees (angle / 2))),
         -- Adjacent
         line org (xpos ur angle, 0)
             |> outlined (dotted 0.5) col.adj,

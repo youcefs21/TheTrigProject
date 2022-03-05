@@ -2,6 +2,7 @@ module Circle exposing (..)
 
 import GraphicSVG exposing (..)
 import GraphicSVG.EllieApp exposing (..)
+import Consts exposing (..)
 
 fonts = {
     monospace = "Consolas",
@@ -212,8 +213,6 @@ updateQuad angle =
     if angle > 180 && angle <= 270 then Three else
                                         Four
 
-type Msg = Tick Float GetKeyState
-         | UpdateAngle Float
 
 type alias Model = { 
     time         : Float,
@@ -234,24 +233,25 @@ init = {
     showSLengths = True,
     radians      = True,
     col          = lightTheme }
-
+update : Consts.Msg -> Model -> Model
 update msg model = 
     case msg of
         Tick t _ -> 
-            ({ model | time = t }, Cmd.none)
+            { model | time = t }
         UpdateAngle newAngle -> 
             let 
                 newNewAngle = limitAngle newAngle
             in
-                ({ model | angle = newNewAngle,
-                           quad  = updateQuad newNewAngle }, Cmd.none)
+                { model | angle = newNewAngle,
+                           quad  = updateQuad newNewAngle }
+        -- _ -> model
 
-main : EllieAppWithTick () Model Msg
-main = ellieAppWithTick Tick { 
-    init = \_ -> ( init, Cmd.none ), 
-    update = update, 
-    view = \model -> { title = "Unit Circle", body = view model },
-    subscriptions = \_ -> Sub.none }
+main = gameApp Tick {
+    model = init,
+    view = view,
+    update = update,
+    title = "Unit Circle" 
+    }
 
 view model = collage 192 128 (myShapes model)
 

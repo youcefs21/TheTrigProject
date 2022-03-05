@@ -23,9 +23,18 @@ jobs:
     steps:
       - uses: youcefs21/setup-elm@1.2.1
       - uses: actions/checkout@v2
+      
       - name: switch directory 
         run: cd ${{ github.workspace }};
+        
       - name: compile project
         run: elm make src/Main.elm --output=docs/index.html
+        
+      - name: Update resources
+        uses: test-room-7/action-update-file@v1
+        with:
+            file-path: docs/index.html
+            commit-msg: Update webpage
+            github-token: ${{ secrets.GITHUB_TOKEN }}
 
       

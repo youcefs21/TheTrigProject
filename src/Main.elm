@@ -32,6 +32,6 @@ update msg model =
     case msg of
         Tick _ _ -> {model |circle = Circle.update msg model.circle}
         -- Circle
-        _ -> model
+        UpdateAngle _ ->  {model |circle = Circle.update msg model.circle}
 
 view model = collage 192 128 (myShapes model)

@@ -7,12 +7,13 @@ import Circle
 import Graphing
 
 myShapes model = [
-        group (Circle.myShapes model.circle)
-        |> scale 0.6
-        |> move (-60,0),
         group (Graphing.myShapes model.graph)
-        |> scale 0.5
-        |> move (40,0)
+        |> scale 0.6
+        |> move (10,20)
+        ,
+        group (Circle.myShapes model.circle)
+        |> scale 0.72
+        |> move (-44,20)
     ]
 
 

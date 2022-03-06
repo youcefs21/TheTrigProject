@@ -6,6 +6,7 @@ import String
 import Element.Font exposing (monospace)
 import Set exposing (Set)
 import String exposing (fromFloat)
+import Consts exposing (..)
 
 myShapes model =
   (rect 250 150 -- Background
@@ -139,18 +140,6 @@ changeCurveFunc model color = {
     movingLine = model.col.movingLine
   }
 
-type Msg = Tick Float GetKeyState |
-           ClickButton Float | 
-           SetFunc Int Color (Float -> Float) | 
-           SetCol Theme
-
-type alias Theme = {
-    curve      : Color, 
-    grid       : Color, 
-    buttons    : Color,
-    background : Color,
-    movingLine : Color
-  }
 
 type alias Model = { 
       time   : Float ,
@@ -160,12 +149,13 @@ type alias Model = {
       col    : Theme
     }
 
-update : Msg -> Model -> Model
+update : Consts.Msg -> Model -> Model
 update msg model = case msg of
                      Tick t _ -> { time = t , func = model.func, posX = model.posX, scaleY = model.scaleY, col = model.col}
                      ClickButton x -> {time = model.time, func = model.func, posX = x, scaleY = model.scaleY, col = model.col}
                      SetFunc s c f -> {time = model.time, func = f, posX = model.posX, scaleY = toFloat s, col = (changeCurveFunc model c)}
                      SetCol t -> {time = model.time, func = model.func, posX = model.posX, scaleY = model.scaleY, col = t}
+                     _ -> model
 
 init : Model
 init = { time = 0 , func = sin, posX = -90, scaleY = 45, col = lightTheme green}

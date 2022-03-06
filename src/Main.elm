@@ -4,34 +4,46 @@ import GraphicSVG exposing (..)
 import GraphicSVG.EllieApp exposing (..)
 import Consts exposing (..)
 import Circle 
+import Graphing
 
 myShapes model = [
         group (Circle.myShapes model.circle)
+        |> scale 0.6
+        |> move (-60,0),
+        group (Graphing.myShapes model.graph)
         |> scale 0.5
-        |> move (-40,0)
+        |> move (40,0)
     ]
 
 
-init = { circle = Circle.init
+init = 
+    {
+        circle = Circle.init,
+        graph  = Graphing.init 
     }
 
 main = gameApp Tick {
     model = init,
     view = view,
     update = update,
-    title = "Game Slot" 
+    title = "Trig Project" 
     }
 
 
 type alias Model = { 
-      circle   : Circle.Model
+      circle   : Circle.Model,
+      graph    : Graphing.Model
     }
 
 update : Consts.Msg -> Model -> Model
 update msg model =
     case msg of
-        Tick _ _ -> {model |circle = Circle.update msg model.circle}
+        Tick _ _ -> {model | circle = Circle.update msg model.circle}
         -- Circle
-        UpdateAngle _ ->  {model |circle = Circle.update msg model.circle}
+        UpdateAngle _ ->  {model | circle = Circle.update msg model.circle}
+        -- Graphing
+        ClickButton _ -> {model | graph = Graphing.update msg model.graph}
+        SetFunc _ _ _ -> {model | graph = Graphing.update msg model.graph}
+        SetCol _ -> {model | graph = Graphing.update msg model.graph}
 
 view model = collage 192 128 (myShapes model)

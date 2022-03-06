@@ -244,7 +244,7 @@ update msg model =
             in
                 { model | angle = newNewAngle,
                            quad  = updateQuad newNewAngle }
-        -- _ -> model
+        _ -> model
 
 main = gameApp Tick {
     model = init,

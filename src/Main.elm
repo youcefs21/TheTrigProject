@@ -5,6 +5,7 @@ import GraphicSVG.EllieApp exposing (..)
 import Consts exposing (..)
 import Circle
 import Graphing
+import Questions
 
 
 myShapes model = 
@@ -79,5 +80,7 @@ update msg model =
                       graph  = Graphing.update msg model.graph }
         SetFunc _ _ -> 
             { model | graph = Graphing.update msg model.graph }
+        _ ->
+            model
 
 view model = collage 192 128 (myShapes model)

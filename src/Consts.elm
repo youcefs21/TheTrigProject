@@ -5,11 +5,22 @@ import GraphicSVG.EllieApp exposing (..)
 
 
 type Msg = Tick Float GetKeyState
-            -- Circle Message
+         -- Circle Message
          | UpdateAngle Float
-            -- Graphing Message
+         -- Graphing Message
          | SetFunc Int Func
          | SetCol Theme
+         -- Questions Message
+         | Choice Question 
+         | NewSeed Int
+         | Select String
+         | UpdateState State
+
+--                Question, Right Answer, [Incorrect Answers]
+type Question = Q String String (List String)
+
+-- States if we want to add effects based on answer
+type State = Waiting | Correct | Incorrect
 
 type Func = Sin
           | Cos

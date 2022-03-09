@@ -54,11 +54,11 @@ shuffle list =
         Random.independentSeed
 
 rawQs = [ 
-    Q "sin(π/4)" "2/√2" ["-2/√2", "1/2", "-√3/2", "1"],
-    Q "sin(11π/6)" "-1/2" ["1/2", "-√3/2", "0", "√3/2"],
+    Q "sin(π/4)" "1/(√2)" ["-1/(√2)", "1/2", "-(√3)/2", "1"],
+    Q "sin(11π/6)" "-1/2" ["1/2", "-(√3)/2", "0", "(√3)/2"],
     Q "cos(π)" "-1" ["0", "1", "1/2", "-1/2"],
-    Q "sin(2π)" "0" ["-1", "1", "-√3/2", "√3/2"],
-    Q "sin(4π/3)" "-√3/2" ["-1/2", "-2/√2", "2/√2", "-1"]
+    Q "sin(2π)" "0" ["-1", "1", "-(√3)/2", "(√3)/2"],
+    Q "sin(4π/3)" "-(√3)/2" ["-1/2", "-1/(√2)", "1/(√2)", "-1"]
     ]
     
 -- Generates questions
@@ -117,7 +117,8 @@ getFunc f =
 
 fonts = {
     monospace = "Consolas",
-    sansserif = "Arial"
+    sansserif = "Arial",
+    math      = "Cambria Math"
     }
 
 lightTheme = {
@@ -132,7 +133,14 @@ lightTheme = {
     buttons    = grey,
     words      = black,
     dots       = black,
-    background = white }
+    background = white,
+    scoreWait  = rgb 125 245 245,
+    scoreCorrect  = rgb 87 255 85,
+    scoreWrong    = rgb 255 87 85,
+    question      = rgb 255 87 85,
+    optionWait    = rgb 126 217 132,
+    optionFade    = rgb 94 219 102,
+    optionText    = white }
 
     -- {
     -- adj = blue,

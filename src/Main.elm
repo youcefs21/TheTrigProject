@@ -14,19 +14,22 @@ myShapes model =
         col = getTheme model.col
     in
     [
-        Questions.myShapes model.questions
-            |> group,
         group [
-            Graphing.myShapes model.graph
-                |> group
-                |> scale 0.6
-                |> move (35, 0),
-            Circle.myShapes model.circle
-                |> group
-                |> scale 0.72
-                |> move (-60, 0)
+            Questions.myShapes model.questions
+                |> group,
+            group [
+                Graphing.myShapes model.graph
+                    |> group
+                    |> scale 0.6
+                    |> move (35, 0),
+                Circle.myShapes model.circle
+                    |> group
+                    |> scale 0.72
+                    |> move (-60, 0)
+                ]
+                |> move (0, 10)
             ]
-            |> move (0, 10)
+            --|> move (sin model.time, cos model.time)
         -- ,
         -- -- Buttons to change theme
         -- group [
@@ -58,8 +61,8 @@ init = {
     circle    = Circle.init,
     graph     = Graphing.init,
     questions = Questions.init,
-    seed      = 0,
-    col       = Light 
+    col       = Light,
+    time      = 0
     }
 
 main : EllieAppWithTick () Model Consts.Msg
@@ -76,14 +79,14 @@ type alias Model = {
     circle    : Circle.Model,
     graph     : Graphing.Model,
     questions : Questions.Model,
-    seed      : Int,
-    col       : Theme
+    col       : Theme,
+    time      : Float
     }
 
 update : Consts.Msg -> Model -> ( Model, Cmd Consts.Msg )
 update msg model =
     case msg of
-        Tick _ _ -> 
+        Tick t _ -> 
             let
                 (newCircle, circleCmds) = Circle.update msg model.circle
                 (newGraph,  graphCmds)  = Graphing.update msg model.graph 
@@ -91,7 +94,8 @@ update msg model =
             in 
                 ( { model | circle     = newCircle,
                             graph      = newGraph,
-                            questions  = newQs }, Cmd.batch [circleCmds, graphCmds, qCmds] )
+                            questions  = newQs,
+                            time       = t }, Cmd.batch [circleCmds, graphCmds, qCmds] )
         UpdateAngle _ -> 
             let
                 (newCircle, circleCmds) = Circle.update msg model.circle
@@ -99,7 +103,7 @@ update msg model =
             in
                 ( { model | circle = newCircle,
                             graph  = newGraph}, Cmd.batch [circleCmds, graphCmds] )
-        SetCol _ -> 
+        SetCol t -> 
             let
                 (newCircle, circleCmds) = Circle.update msg model.circle
                 (newGraph,  graphCmds)  = Graphing.update msg model.graph 
@@ -107,7 +111,8 @@ update msg model =
             in 
                 ( { model | circle     = newCircle,
                             graph      = newGraph,
-                            questions  = newQs }, Cmd.batch [circleCmds, graphCmds, qCmds] )
+                            questions  = newQs,
+                            col        = t }, Cmd.batch [circleCmds, graphCmds, qCmds] )
         SetFunc _ _ -> 
             let
                 (newGraph, graphCmds)  = Graphing.update msg model.graph 

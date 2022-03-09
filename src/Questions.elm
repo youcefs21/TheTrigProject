@@ -6,24 +6,26 @@ import GraphicSVG.EllieApp exposing (..)
 import Consts exposing (..)
 
 -- Model and initialization
-type alias Model = 
-    { time : Float
-    , currentQ : Question
-    , weightedQs : List (Float, Question)
-    , state : State
-    , score : (Int, Int)
-    , seed : Int
+type alias Model = { 
+    time       : Float, 
+    currentQ   : Question, 
+    weightedQs : List (Float, Question),
+    state      : State, 
+    score      : (Int, Int), 
+    seed       : Int, 
+    col        : Theme
     }
 
 init : Model
 init = { 
-         time = 0
-       , currentQ = Q "" "" ["", "", "", ""]
-       , weightedQs = List.indexedMap (\_ q -> (1.0, q) ) rawQs
-       , state = Waiting
-       , score = (0, 0)
-       , seed = 1337
-       }
+    time       = 0, 
+    currentQ   = Q "" "" ["", "", "", ""], 
+    weightedQs = List.indexedMap (\_ q -> (1.0, q) ) rawQs, 
+    state      = Waiting, 
+    score      = (0, 0), 
+    seed       = 0, 
+    col        = Light
+    }
          
 -- Determines if chosen answer is correct
 correctAnswer (Q _ correct _) answer = 
@@ -31,16 +33,18 @@ correctAnswer (Q _ correct _) answer =
     
 {-
  - Change weights based on correctness:
- -     If the answer is correct, make the chance the question shows up again decrease by 25%.
- -     Otherwise, make the chance increase by 125%.
+ -     If the answer is correct, make the chance the question shows up again decrease by hard%.
+ -     Otherwise, make the chance increase by easy%.
  -}
+easy = 1.25
+hard = 0.25
 updateWeights weightedQs (Q q _ _) correct =
     case weightedQs of
         [] -> []
         ((weight, Q question c incs)::qs) -> 
             if question == q then 
                 let 
-                    newWeights = if correct then 0.25 else 1.25 |> (*) weight |> max 0.1 |> min 3.0
+                    newWeights = if correct then hard else easy |> (*) weight |> max 0.1 |> min 3.0
                 in (newWeights, Q question c incs)::qs
             else (weight, Q question c incs)::(updateWeights qs (Q q "" []) correct)
                    
@@ -50,17 +54,23 @@ view model = collage 192 128 <|
         myShapes model
     ]
 
-myShapes model = [
-    showQuestion model.currentQ model.seed model.state,
-    showScore2 model.state model.time (showScore model.score)
+myShapes model = 
+    let 
+        col = getTheme model.col
+    in [
+        showQuestion col model.currentQ model.seed model.state,
+        showScore2 col model.state model.time (showScore model.score)
     ]
 
-showScore2 state time score = group [ 
+paraY t = sin (2 * t) + sin (60 * t)
+paraX t = 2 * (cos t) + sin (2 * t) * cos (60 * t)
+showScore2 col state time score = group [ 
     text score
         |> sansserif
         |> size 10
-        |> filled (if state == Waiting then (rgb 125 245 245) else if state == Incorrect then (rgb 255 87 85) else green)
+        |> filled (if state == Waiting then col.scoreWait else if state == Incorrect then col.scoreWrong else col.scoreCorrect )
         |> move (-95, 23)
+        |> (if state == Waiting then move (paraX (0.05 * time), paraY (0.05 * time) / 2) else identity)
         |> move (0 + (if state == Incorrect then (1 * sin (time * 20)) else 0), 30 + (if state == Correct then jump 1 time else 0)),
     if state == Waiting then group []
     else group [
@@ -72,40 +82,40 @@ showScore2 state time score = group [
     ]
     
 -- Draws the question
-showQuestion (Q question correct incorrects) seed state = group [
+showQuestion col (Q question correct incorrects) seed state = group [
     text question
-        |> sansserif
+        |> customFont fonts.math
         |> size 8.5
-        |> filled (rgb 255 87 85)
+        |> filled col.question
         |> move (-84,-45),
     text "Q."
-        |> sansserif
+        |> customFont fonts.sansserif
         |> size 8.5
-        |> filled (rgb 255 87 85)
+        |> filled col.question
         |> move (-95,-45),
-    drawBubbles state correct (Tuple.first <| Random.step (shuffle (correct::incorrects)) <| Random.initialSeed seed) 0
+    drawBubbles col state correct (Tuple.first <| Random.step (shuffle (correct::incorrects)) <| Random.initialSeed seed) 0
     ]
 jump amt time = amt * abs (sin (time * 10))
 
 -- Draws out the options
-drawBubbles state correct answers c =
+drawBubbles col state correct answers c =
     case answers of 
         [] -> group []
         (x::xs) -> group [
             group [ 
                 roundedRect 30 10 3
-                    |> filled (if state == Waiting || correct /= x then (rgb 126 217 132) else (rgb 94 219 102))|> move (-40, 0),
+                    |> filled (if state == Waiting || correct /= x then col.optionWait else col.optionFade)|> move (-40, 0),
                 text x
-                    |> sansserif
+                    |> customFont fonts.math
                     |> (if state == Waiting || correct /= x then centered else bold)
                     |> centered
                     |> size 5
-                    |> filled white
+                    |> filled col.optionText
                     |> move (-40, -2) 
                 ]
                 |> move(-40 + 37 * c, -55)
                 |> notifyTap (Select x),
-            drawBubbles state correct xs <| c + 1
+            drawBubbles col state correct xs <| c + 1
             ]
 
 -- Draws the score

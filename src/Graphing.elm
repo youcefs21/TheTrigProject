@@ -30,7 +30,7 @@ myShapes model =
                             (line (x1, y1) (x2, y2)
                                 |> outlined (solid 0.5) (getCol model.func col)
                                 |> move (-90, 0))) 
-            (rangeStep deltaX (2 * pi) deltaX)
+            (rangeStep 0 (2 * pi) deltaX)
             |> group,
 
         -- Vertical scale
@@ -40,11 +40,13 @@ myShapes model =
                     |> customFont fonts.monospace
                     |> size 4
                     |> centered
-                    |> filled col.grid
+                    |> filled black
+                    |> makeTransparent 0.5 -- to be changed by theme
                     |> move (-95, i * model.scaleY - 1.3),
                     --|> notifyTap (ClickButton (-90 + i * scaleX)),
                 line (-2, 0) (2, 0)
                     |> outlined (solid 0.5) black
+                    |> makeTransparent 0.3
                     |> move (-90, i * model.scaleY)
                 ])                      
                 [-1, 0, 1]
@@ -52,20 +54,22 @@ myShapes model =
 
         -- Vertical Grid
         line (-90, -50) (-90, 50)
-            |> outlined (solid 0.5) col.grid,
+            |> outlined (solid 0.5) black -- to be changed by theme
+            |> makeTransparent 0.3,
 
         -- Moving line
         let
-            x = model.angle - 90
+            x = -90 + (degrees model.angle) * scaleX
             y1 = 0
-            y2 = model.scaleY * func model.angle
+            y2 = model.scaleY * func (degrees model.angle)
         in 
             line (x, y1) (x, y2)
                 |> outlined (dotted 0.5) (getCol model.func col),
 
         -- Horizontal Grid
         line (-93, 0) (100, 0)
-            |> outlined (solid 0.5) col.grid,
+            |> outlined (solid 0.5) black -- to be changed by theme
+            |> makeTransparent 0.3,
 
         -- Buttons to change function
         group [
@@ -130,27 +134,33 @@ myShapes model =
         List.map 
             (\(deg, rad) -> 
                 group [
-                    roundedRect 10 5 2
-                    |> ghost
-                    |> move (-90 + deg / 2, 3)
-                    |> notifyTap (UpdateAngle deg),
+                    roundedRect 7 3 1
+                        |> filled grey
+                        |> makeTransparent
+                            (if deg == model.angle then 0.7 else 0.5)
+                        |> move (if deg == 0 then 2 else 0, 0),
+                    circle 0.5
+                        |> filled black -- to be changed according to theme
+                        |> move (0, 3),
                     text rad
-                    |> size 2
-                    |> customFont fonts.monospace
-                    |> (if (deg == model.angle) then bold else identity)
-                    |> centered
-                    |> filled black
-                    |> makeTransparent 0.5
-                    |> move (-90 + deg / 2, 2)
-                    |> notifyTap (UpdateAngle deg)
-                ])                     
+                        |> size 2
+                        |> customFont fonts.monospace
+                        |> (if (deg == model.angle) then bold else identity)
+                        |> centered
+                        |> filled black
+                        |> makeTransparent 0.5
+                        |> move (if deg == 0 then 2 else 0, -0.75)
+                ]
+                    |> move (-90 + (degrees deg) * scaleX, -3)
+                    |> notifyTap (UpdateAngle deg))                     
             specialAngles
             |> group,
         square 5
             |> filled black
+            |> move (2 * pi * scaleX, 0)
     ]
 
-deltaX = 0.01
+deltaX = 0.005
 scaleX = 28
 
 type alias Model = { 
@@ -198,4 +208,6 @@ view model = collage 192 128 (myShapes model)
 
 rangeStep : Float -> Float -> Float -> List Float
 rangeStep start stop step = 
-    List.map (\x -> (toFloat x - start) * step + start) (List.range (round start) (floor (stop / step)))
+    List.map 
+        (\x -> (toFloat x - start) * step + start) 
+        (List.range (round start) (floor (stop / step)))

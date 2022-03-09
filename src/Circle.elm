@@ -65,6 +65,11 @@ angles radians angle = group <|
                     rect (strlen 3) 8
                         |> ghost
                         |> move (x, y + 1),
+                    roundedRect 13 5 1
+                        |> filled grey -- to be changed by theme
+                        |> move (x, y + 1)
+                        |> makeTransparent 
+                            (if angle == d then 0.7 else 0.5),
                     text str
                         |> customFont fonts.monospace
                         |> size 4
@@ -185,7 +190,7 @@ type alias Model = {
 
 init = { 
     time         = 0,
-    angle        = 30,
+    angle        = 45,
     quad         = One,
     showCast     = True,
     showSAngles  = True,

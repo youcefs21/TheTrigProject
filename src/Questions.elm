@@ -35,7 +35,7 @@ type alias Model =
 init : Model
 init = { 
          time = 0
-       , currentQ = Q "" "" []
+       , currentQ = Q "a" "a" ["a", "b"]
        , weightedQs = List.indexedMap (\_ q -> (1.0, q) ) rawQs
        , state = Waiting
        , score = (0, 0)
@@ -92,15 +92,9 @@ view model = collage 256 128 <|
     ]
 
 myShapes model = [
-            background
-          --, text (showScore model.score) 
-          --      |> sansserif
-          --      |> size 10
-          --      |> filled (rgb 243 85 83)
-          --      |> move (-96, 53)
-          , showScore2 model.currentQ model.seed model.state model.time (showScore model.score)
-          , showQuestion model.currentQ model.seed model.state model.time
-        ]
+    showScore2 model.currentQ model.seed model.state model.time (showScore model.score),
+    showQuestion model.currentQ model.seed model.state model.time
+    ]
 
 showScore2 (Q question correct incorrects) seed state time score = group [ 
     text score
@@ -109,7 +103,6 @@ showScore2 (Q question correct incorrects) seed state time score = group [
         |> filled (if state == Waiting then (rgb 125 245 245) else if state == Incorrect then (rgb 255 87 85) else green)
         |> move (-95, 23)
         |> move (0 + (if state == Incorrect then (1 * sin (time * 20)) else 0), 30 + (if state == Correct then jump 1 time else 0)),
-    drawBubbles state correct (Tuple.first <| Random.step (shuffle (correct::incorrects)) <| Random.initialSeed seed) 0,
     if state == Waiting then group []
     else group [
         rect 256 128
@@ -130,7 +123,8 @@ showQuestion (Q question correct incorrects) seed state time = group [
         |> sansserif
         |> size 8.5
         |> filled (rgb 255 87 85)
-        |> move (-95,-45)
+        |> move (-95,-45),
+    drawBubbles state correct (Tuple.first <| Random.step (shuffle (correct::incorrects)) <| Random.initialSeed seed) 0
     ]
 jump amt time = amt * abs (sin (time * 10))
 
@@ -183,16 +177,12 @@ showScore (correct, incorrect) =
     let
         score = correct - incorrect
     in "Score: " ++ String.fromInt score
- 
--- Draws the background
-background = group
-  [square 200 |> filled (rgb 53 54 58)]
     
 main : EllieAppWithTick () Model Consts.Msg
 main =
     ellieAppWithTick Tick
         { init = \ _ -> ( init, Cmd.batch [genQ <| List.indexedMap (\_ q -> (1.0, q) ) rawQs, Random.generate NewSeed anyInt] )
         , update = update
-        , view = \ model -> { title = "MCQ by Lab 3 Group 2", body = view model }
+        , view = \ model -> { title = "Questions", body = view model }
         , subscriptions = \_ -> Sub.none
         }

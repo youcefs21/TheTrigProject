@@ -13,6 +13,8 @@ myShapes model =
         col = getTheme model.col
     in
     [
+        Questions.myShapes model.questions
+            |> group,
         group (Graphing.myShapes model.graph)
         |> scale 0.6
         |> move (35,20)
@@ -48,23 +50,25 @@ myShapes model =
 
 
 init = {
-    circle = Circle.init,
-    graph  = Graphing.init,
-    col    = Light 
+    circle    = Circle.init,
+    graph     = Graphing.init,
+    questions = Questions.init,
+    col       = Light 
     }
 
 main = gameApp Tick {
-    model = init,
-    view = view,
+    model  = init,
+    view   = view,
     update = update,
-    title = "Trig Project" 
+    title  = "Trig Project" 
     }
 
 
 type alias Model = { 
-      circle   : Circle.Model,
-      graph    : Graphing.Model,
-      col      : Theme
+      circle    : Circle.Model,
+      graph     : Graphing.Model,
+      questions : Questions.Model,
+      col       : Theme
     }
 
 update : Consts.Msg -> Model -> Model
@@ -76,8 +80,9 @@ update msg model =
             { model | circle = Circle.update msg model.circle,
                       graph  = Graphing.update msg model.graph }
         SetCol _ -> 
-            { model | circle = Circle.update msg model.circle,
-                      graph  = Graphing.update msg model.graph }
+            { model | circle     = Circle.update msg model.circle,
+                      graph      = Graphing.update msg model.graph,
+                      questions  = Tuple.first <| Questions.update msg model.questions }
         SetFunc _ _ -> 
             { model | graph = Graphing.update msg model.graph }
         _ ->

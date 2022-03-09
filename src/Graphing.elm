@@ -3,8 +3,6 @@ module Graphing exposing (..)
 import GraphicSVG exposing (..)
 import GraphicSVG.EllieApp exposing (..)
 import String
-import Set exposing (Set)
-import String exposing (fromFloat)
 import Consts exposing (..)
 
 myShapes model = 

@@ -59,12 +59,23 @@ myShapes model =
 
         -- Moving line
         let
+            fcol = getCol model.func col
             x = -90 + (degrees model.angle) * scaleX
             y1 = 0
             y2 = model.scaleY * func (degrees model.angle)
-        in 
-            line (x, y1) (x, y2)
-                |> outlined (dotted 0.5) (getCol model.func col),
+            l = line (x, y1) (x, y2)
+                        |> outlined (dotted 0.5) fcol
+            dne = 
+                text "DNE"
+                    |> customFont fonts.monospace
+                    |> size 4
+                    |> centered
+                    |> filled fcol
+                    |> move (x, y1 + 1)
+            ra = round model.angle
+        in
+            if ((ra == 90 || ra == 270) && model.func == Tan) then dne
+            else l,
 
         -- Horizontal Grid
         line (-93, 0) (100, 0)

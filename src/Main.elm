@@ -27,7 +27,7 @@ myShapes model =
                     |> scale 0.72
                     |> move (-60, 0)
                 ]
-                |> move (0, 10)
+                |> move (0, 7)
             ]
             --|> move (sin model.time, cos model.time)
         -- ,

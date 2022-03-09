@@ -198,30 +198,36 @@ init = {
     radians      = True,
     col          = Light }
 
-update : Consts.Msg -> Model -> Model
+update : Consts.Msg -> Model -> ( Model, Cmd Consts.Msg )
 update msg model = 
     case msg of
         Tick t _ -> 
-            { model | time = t }
+            ( { model | time = t }, Cmd.none )
         UpdateAngle newAngle -> 
             let 
                 newNewAngle = limitAngle newAngle
             in
-                { model | angle = newNewAngle,
-                          quad  = updateQuad newNewAngle }
+                ( { model | angle = newNewAngle,
+                          quad  = updateQuad newNewAngle }, Cmd.none )
         SetCol t -> 
-            { model | col = t }
+            ( { model | col = t }, Cmd.none )
         _ ->
-            model
+            ( model, Cmd.none )
 
-main = gameApp Tick {
-    model = init,
-    view = view,
-    update = update,
-    title = "Unit Circle" 
-    }
+main : EllieAppWithTick () Model Consts.Msg
+main =
+    ellieAppWithTick Tick
+        { init = \_ -> ( init, Cmd.none )
+        , update = update
+        , view = \model -> { title = "TheTrigProject", body = view model }
+        , subscriptions = \_ -> Sub.none
+        }
 
-view model = collage 192 128 (myShapes model)
+view : Model -> Collage Consts.Msg
+view model = collage 192 128 <|
+    List.concat <| [
+        myShapes model
+    ]
 
 
 

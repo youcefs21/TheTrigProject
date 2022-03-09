@@ -145,31 +145,31 @@ deltaX = 0.005
 scaleX = 28
 
 type alias Model = { 
-      time   : Float,
-      quad   : Quadrant,
-      func   : Func,
-      angle  : Float,
-      scaleY : Float,
-      col    : Theme
+    time   : Float,
+    quad   : Quadrant,
+    func   : Func,
+    angle  : Float,
+    scaleY : Float,
+    col    : Theme
     }
 
-update : Consts.Msg -> Model -> Model
+update : Consts.Msg -> Model -> ( Model, Cmd Consts.Msg )
 update msg model = 
     case msg of
         Tick t _ -> 
-            { model | time = t}
+            ( { model | time = t }, Cmd.none )
         SetFunc s f -> 
-            { model | func = f, scaleY = toFloat s }
+            ( { model | func = f, scaleY = toFloat s }, Cmd.none )
         SetCol t -> 
-            { model | col = t }
+            ( { model | col = t }, Cmd.none )
         UpdateAngle newAngle -> 
             let 
                 newNewAngle = limitAngle newAngle
             in
-                { model | angle = newNewAngle,
-                          quad  = updateQuad newNewAngle }
+                ( { model | angle = newNewAngle,
+                          quad  = updateQuad newNewAngle }, Cmd.none )
         _ ->
-            model
+            ( model, Cmd.none )
 
 init : Model
 init = { 
@@ -180,14 +180,20 @@ init = {
     scaleY = 45, 
     col = Light }
 
-main = 
-    gameApp Tick { 
-        model = init, 
-        view = view, 
-        update = update, 
-        title = "Game Slot" }
+main : EllieAppWithTick () Model Consts.Msg
+main =
+    ellieAppWithTick Tick
+        { init = \_ -> ( init, Cmd.none )
+        , update = update
+        , view = \model -> { title = "TheTrigProject", body = view model }
+        , subscriptions = \_ -> Sub.none
+        }
 
-view model = collage 192 128 (myShapes model)
+view : Model -> Collage Consts.Msg
+view model = collage 192 128 <|
+    List.concat <| [
+        myShapes model
+    ]
 
 rangeStep : Float -> Float -> Float -> List Float
 rangeStep start stop step = 

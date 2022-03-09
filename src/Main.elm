@@ -53,39 +53,76 @@ init = {
     circle    = Circle.init,
     graph     = Graphing.init,
     questions = Questions.init,
+    seed      = 0,
     col       = Light 
     }
 
-main = gameApp Tick {
-    model  = init,
-    view   = view,
-    update = update,
-    title  = "Trig Project" 
-    }
+main : EllieAppWithTick () Model Consts.Msg
+main =
+    ellieAppWithTick Tick
+        { init = \_ -> ( init, Cmd.none )
+        , update = update
+        , view = \model -> { title = "TheTrigProject", body = view model }
+        , subscriptions = \_ -> Sub.none
+        }
 
 
 type alias Model = { 
-      circle    : Circle.Model,
-      graph     : Graphing.Model,
-      questions : Questions.Model,
-      col       : Theme
+    circle    : Circle.Model,
+    graph     : Graphing.Model,
+    questions : Questions.Model,
+    seed      : Int,
+    col       : Theme
     }
 
-update : Consts.Msg -> Model -> Model
+update : Consts.Msg -> Model -> ( Model, Cmd Consts.Msg )
 update msg model =
     case msg of
         Tick _ _ -> 
-            { model | circle = Circle.update msg model.circle }
+            let
+                (newCircle, circleCmds) = Circle.update msg model.circle
+                (newGraph,  graphCmds)  = Graphing.update msg model.graph 
+                (newQs,     qCmds)      = Questions.update msg model.questions
+            in 
+                ( { model | circle     = newCircle,
+                            graph      = newGraph,
+                            questions  = newQs }, Cmd.batch [circleCmds, graphCmds, qCmds] )
         UpdateAngle _ -> 
-            { model | circle = Circle.update msg model.circle,
-                      graph  = Graphing.update msg model.graph }
+            let
+                (newCircle, circleCmds) = Circle.update msg model.circle
+                (newGraph,  graphCmds)  = Graphing.update msg model.graph 
+            in
+                ( { model | circle = newCircle,
+                            graph  = newGraph}, Cmd.batch [circleCmds, graphCmds] )
         SetCol _ -> 
-            { model | circle     = Circle.update msg model.circle,
-                      graph      = Graphing.update msg model.graph,
-                      questions  = Tuple.first <| Questions.update msg model.questions }
+            let
+                (newCircle, circleCmds) = Circle.update msg model.circle
+                (newGraph,  graphCmds)  = Graphing.update msg model.graph 
+                (newQs,     qCmds)      = Questions.update msg model.questions
+            in 
+                ( { model | circle     = newCircle,
+                            graph      = newGraph,
+                            questions  = newQs }, Cmd.batch [circleCmds, graphCmds, qCmds] )
         SetFunc _ _ -> 
-            { model | graph = Graphing.update msg model.graph }
-        _ ->
-            model
+            let
+                (newGraph, graphCmds)  = Graphing.update msg model.graph 
+            in 
+                ( { model | graph = newGraph }, Cmd.batch [graphCmds] )
+        NewSeed _ ->
+            let
+                (newQs, qCmds)      = Questions.update msg model.questions
+            in
+                ( { model | questions = newQs }, Cmd.batch [qCmds] )
+        UpdateState _ ->
+            let
+                (newQs, qCmds)      = Questions.update msg model.questions
+            in
+                ( { model | questions = newQs }, Cmd.batch [qCmds] )
+        _ -> 
+            ( model, Cmd.none )
 
-view model = collage 192 128 (myShapes model)
+view : Model -> Collage Consts.Msg
+view model = collage 192 128 <|
+    List.concat <| [
+        myShapes model
+    ]

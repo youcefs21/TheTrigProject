@@ -1,5 +1,6 @@
 module Consts exposing (..)
 
+import Random
 import GraphicSVG exposing (..)
 import GraphicSVG.EllieApp exposing (..)
 
@@ -28,6 +29,21 @@ type Func = Sin
 
 type Theme = Light
            | Dark
+
+rawQs = [ 
+    Q "sin(π/4)" "2/√2" ["-2/√2", "1/2", "-√3/2", "1"],
+    Q "sin(11π/6)" "-1/2" ["1/2", "-√3/2", "0", "√3/2"],
+    Q "cos(π)" "-1" ["0", "1", "1/2", "-1/2"],
+    Q "sin(2π)" "0" ["-1", "1", "-√3/2", "√3/2"],
+    Q "sin(4π/3)" "-√3/2" ["-1/2", "-2/√2", "2/√2", "-1"]
+    ]
+    
+-- Generates questions
+qGen qss = 
+    case qss of
+        [] -> Random.constant <| Q "ERROR" "ERROR" ["ERROR"]
+        (q::qs) -> Random.weighted q qs
+genQ qss = Random.generate Choice <| qGen qss
 
 -- Angles are shown as (degrees as Float, radians as String)
 -- everything is technically done through degrees

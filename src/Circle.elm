@@ -4,22 +4,10 @@ import GraphicSVG exposing (..)
 import GraphicSVG.EllieApp exposing (..)
 import Consts exposing (..)
 
-fonts = {
-    monospace = "Consolas",
-    sansserif = "Arial"
-    }
-
-lightTheme = {
-    adj = blue,
-    opp = green,
-    hyp = red,
-    tan = rgb 0 128 128,
-    cir = lightBlue }
-
 myShapes model = [
     group [
-        unitCircle model.col model.showCast model.showSAngles model.radians model.angle,
-        triangle model.col model.angle model.quad model.showSLengths
+        unitCircle (getTheme model.col) model.showCast model.showSAngles model.radians model.angle,
+        triangle (getTheme model.col) model.angle model.quad model.showSLengths
     ]
         |> scale 0.75
     ]
@@ -184,36 +172,6 @@ xpos r angle = r * cos (degrees angle)
 ypos r angle = r * sin (degrees angle)
 pos  r angle = (xpos r angle, ypos r angle)
 
--- Angles are shown as (degrees as Float, radians as String)
--- everything is technically done through degrees
-specialAngles = [
-    (0,   "0 (2π)"), (30,  "π/6"),   (45,  "π/4"),  (60,  "π/3"), 
-    (90,  "π/2"),    (120, "2π/3"),  (135, "3π/4"), (150, "5π/6"),
-    (180, "π"),      (210, "7π/6"),  (225, "5π/4"), (240, "4π/3"),
-    (270, "3π/2"),   (300, "5π/3"),  (315, "7π/4"), (330, "11π/6")]
-adjLengths = [(0, "1"), (30, "(√3)/2"), (45, "1/(√2)"), (60, "1/2"),    (90, "0")]
-oppLengths = [(0, "0"), (30, "1/2"),    (45, "1/(√2)"), (60, "(√3)/2"), (90, "1")]
-
-getString i xss = 
-    case xss of
-        [] -> "ERR"
-        ((x1, x2)::xs) -> if i == x1 then x2 else getString i xs
-
-limitAngle angle = 
-    if angle > 360 then limitAngle (angle - 360) else angle
-
-type Quadrant = One 
-              | Two 
-              | Three 
-              | Four
-
-updateQuad angle =
-    if angle >= 0  && angle <= 90  then One   else
-    if angle > 90  && angle <= 180 then Two   else
-    if angle > 180 && angle <= 270 then Three else
-                                        Four
-
-
 type alias Model = { 
     time         : Float,
     angle        : Float,
@@ -222,7 +180,7 @@ type alias Model = {
     showSAngles  : Bool,
     showSLengths : Bool,
     radians      : Bool,
-    col          : { adj : Color, opp : Color, hyp : Color, tan : Color, cir : Color }}
+    col          : Theme }
 
 init = { 
     time         = 0,
@@ -232,7 +190,8 @@ init = {
     showSAngles  = True,
     showSLengths = True,
     radians      = True,
-    col          = lightTheme }
+    col          = Light }
+
 update : Consts.Msg -> Model -> Model
 update msg model = 
     case msg of

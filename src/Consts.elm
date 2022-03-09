@@ -30,6 +30,29 @@ type Func = Sin
 type Theme = Light
            | Dark
 
+-- Shuffles a list (taken from Random.List)
+anyInt =
+    Random.int Random.minInt Random.maxInt
+    
+shuffle list =
+    Random.map
+        (\independentSeed ->
+            list
+                |> List.foldl
+                    (\item ( acc, seed ) ->
+                        let
+                            ( tag, nextSeed ) =
+                                Random.step anyInt seed
+                        in
+                        ( ( item, tag ) :: acc, nextSeed )
+                    )
+                    ( [], independentSeed )
+                |> Tuple.first
+                |> List.sortBy Tuple.second
+                |> List.map Tuple.first
+        )
+        Random.independentSeed
+
 rawQs = [ 
     Q "sin(π/4)" "2/√2" ["-2/√2", "1/2", "-√3/2", "1"],
     Q "sin(11π/6)" "-1/2" ["1/2", "-√3/2", "0", "√3/2"],

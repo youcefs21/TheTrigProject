@@ -18,7 +18,7 @@ type alias Model =
 init : Model
 init = { 
          time = 0
-       , currentQ = Q "a" "a" ["a", "b"]
+       , currentQ = Q "" "" ["", "", "", ""]
        , weightedQs = List.indexedMap (\_ q -> (1.0, q) ) rawQs
        , state = Waiting
        , score = (0, 0)
@@ -51,10 +51,8 @@ view model = collage 192 128 <|
     ]
 
 myShapes model = [
-    showScore2 model.state model.time (showScore model.score),
     showQuestion model.currentQ model.seed model.state,
-    text (String.fromInt model.seed)
-        |> filled black
+    showScore2 model.state model.time (showScore model.score)
     ]
 
 showScore2 state time score = group [ 
@@ -66,7 +64,7 @@ showScore2 state time score = group [
         |> move (0 + (if state == Incorrect then (1 * sin (time * 20)) else 0), 30 + (if state == Correct then jump 1 time else 0)),
     if state == Waiting then group []
     else group [
-        rect 256 128
+        rect 192 128
             |> ghost
             |> makeTransparent 0
             |> notifyTap (UpdateState state)
@@ -88,29 +86,6 @@ showQuestion (Q question correct incorrects) seed state = group [
     drawBubbles state correct (Tuple.first <| Random.step (shuffle (correct::incorrects)) <| Random.initialSeed seed) 0
     ]
 jump amt time = amt * abs (sin (time * 10))
-
--- Shuffles a list (taken from Random.List)
-anyInt =
-    Random.int Random.minInt Random.maxInt
-    
-shuffle list =
-    Random.map
-        (\independentSeed ->
-            list
-                |> List.foldl
-                    (\item ( acc, seed ) ->
-                        let
-                            ( tag, nextSeed ) =
-                                Random.step anyInt seed
-                        in
-                        ( ( item, tag ) :: acc, nextSeed )
-                    )
-                    ( [], independentSeed )
-                |> Tuple.first
-                |> List.sortBy Tuple.second
-                |> List.map Tuple.first
-        )
-        Random.independentSeed
 
 -- Draws out the options
 drawBubbles state correct answers c =

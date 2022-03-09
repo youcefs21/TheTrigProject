@@ -1,5 +1,6 @@
 module Main exposing (..)
 
+import Random
 import GraphicSVG exposing (..)
 import GraphicSVG.EllieApp exposing (..)
 import Consts exposing (..)
@@ -15,13 +16,17 @@ myShapes model =
     [
         Questions.myShapes model.questions
             |> group,
-        group (Graphing.myShapes model.graph)
-        |> scale 0.6
-        |> move (35,20)
-        ,
-        group (Circle.myShapes model.circle)
-        |> scale 0.72
-        |> move (-60,20)
+        group [
+            Graphing.myShapes model.graph
+                |> group
+                |> scale 0.6
+                |> move (35, 0),
+            Circle.myShapes model.circle
+                |> group
+                |> scale 0.72
+                |> move (-60, 0)
+            ]
+            |> move (0, 10)
         -- ,
         -- -- Buttons to change theme
         -- group [
@@ -60,7 +65,7 @@ init = {
 main : EllieAppWithTick () Model Consts.Msg
 main =
     ellieAppWithTick Tick
-        { init = \_ -> ( init, Cmd.none )
+        { init = \_ -> ( init, Cmd.batch [genQ <| List.indexedMap (\_ q -> (1.0, q) ) rawQs, Random.generate NewSeed anyInt] )
         , update = update
         , view = \model -> { title = "TheTrigProject", body = view model }
         , subscriptions = \_ -> Sub.none
@@ -118,8 +123,16 @@ update msg model =
                 (newQs, qCmds)      = Questions.update msg model.questions
             in
                 ( { model | questions = newQs }, Cmd.batch [qCmds] )
-        _ -> 
-            ( model, Cmd.none )
+        Choice _ ->
+            let
+                (newQs, qCmds)      = Questions.update msg model.questions
+            in
+                ( { model | questions = newQs }, Cmd.batch [qCmds] )
+        Select _ ->
+            let
+                (newQs, qCmds)      = Questions.update msg model.questions
+            in
+                ( { model | questions = newQs }, Cmd.batch [qCmds] )
 
 view : Model -> Collage Consts.Msg
 view model = collage 192 128 <|

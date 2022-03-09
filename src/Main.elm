@@ -7,7 +7,11 @@ import Circle
 import Graphing
 
 
-myShapes model = [
+myShapes model = 
+    let
+        col = getTheme model.col
+    in
+    [
         group (Graphing.myShapes model.graph)
         |> scale 0.6
         |> move (35,20)
@@ -15,13 +19,37 @@ myShapes model = [
         group (Circle.myShapes model.circle)
         |> scale 0.72
         |> move (-60,20)
+        -- ,
+        -- -- Buttons to change theme
+        -- group [
+        --     roundedRect 25 5 2
+        --         |> filled col.buttons
+        --         |> move (34, 37),
+        --     text "Light Theme"
+        --         |> size 4
+        --         |> centered
+        --         |> filled col.words
+        --         |> move (34, 36)
+        -- ]
+        --     |> notifyTap (SetCol Light),
+        -- group [
+        --     roundedRect 25 5 2
+        --         |> filled col.buttons
+        --         |> move (61, 37),
+        --     text "Dark Theme"
+        --         |> size 4
+        --         |> centered
+        --         |> filled col.words
+        --         |> move (61, 36)
+        -- ]
+        --     |> notifyTap (SetCol Dark)
     ]
 
 
-init = 
-    {
-        circle = Circle.init,
-        graph  = Graphing.init 
+init = {
+    circle = Circle.init,
+    graph  = Graphing.init,
+    col    = Light 
     }
 
 main = gameApp Tick {
@@ -34,7 +62,8 @@ main = gameApp Tick {
 
 type alias Model = { 
       circle   : Circle.Model,
-      graph    : Graphing.Model
+      graph    : Graphing.Model,
+      col      : Theme
     }
 
 update : Consts.Msg -> Model -> Model

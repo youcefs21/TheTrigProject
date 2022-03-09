@@ -11,6 +11,7 @@ myShapes model =
     let
         col = getTheme model.col
         func = getFunc model.func
+        fcol = getCol model.func col
     in [
         -- Function
         List.map 
@@ -28,7 +29,7 @@ myShapes model =
                             y2 = model.scaleY * func i
                         in
                             (line (x1, y1) (x2, y2)
-                                |> outlined (solid 0.5) (getCol model.func col)
+                                |> outlined (solid 0.5) fcol
                                 |> move (-90, 0))) 
             (rangeStep 0 (2 * pi) deltaX)
             |> group,
@@ -40,12 +41,11 @@ myShapes model =
                     |> customFont fonts.monospace
                     |> size 4
                     |> centered
-                    |> filled black
-                    |> makeTransparent 0.5 -- to be changed by theme
+                    |> filled col.words
+                    |> makeTransparent 0.5
                     |> move (-95, i * model.scaleY - 1.3),
-                    --|> notifyTap (ClickButton (-90 + i * scaleX)),
                 line (-2, 0) (2, 0)
-                    |> outlined (solid 0.5) black
+                    |> outlined (solid 0.5) col.grid
                     |> makeTransparent 0.3
                     |> move (-90, i * model.scaleY)
                 ])                      
@@ -54,12 +54,11 @@ myShapes model =
 
         -- Vertical Grid
         line (-90, -50) (-90, 50)
-            |> outlined (solid 0.5) black -- to be changed by theme
+            |> outlined (solid 0.5) col.grid
             |> makeTransparent 0.3,
 
         -- Moving line
         let
-            fcol = getCol model.func col
             x = -90 + (degrees model.angle) * scaleX
             y1 = 0
             y2 = model.scaleY * func (degrees model.angle)
@@ -79,7 +78,7 @@ myShapes model =
 
         -- Horizontal Grid
         line (-93, 0) (100, 0)
-            |> outlined (solid 0.5) black -- to be changed by theme
+            |> outlined (solid 0.5) col.grid
             |> makeTransparent 0.3,
 
         -- Buttons to change function
@@ -90,7 +89,7 @@ myShapes model =
             text "Sin"
                 |> size 4
                 |> centered
-                |> filled black
+                |> filled col.words
                 |> move (30, 29)
         ]
             |> notifyTap (SetFunc 45 Sin),
@@ -101,7 +100,7 @@ myShapes model =
         text "Cos"
             |> size 4
             |> centered
-            |> filled black
+            |> filled col.words
             |> move (48, 29)
         ]
             |> notifyTap (SetFunc 45 Cos),
@@ -112,63 +111,36 @@ myShapes model =
             text "Tan"
                 |> size 4
                 |> centered
-                |> filled black
+                |> filled col.words
                 |> move (66, 29)
         ]
             |> notifyTap (SetFunc 8 Tan),
-
-        -- Buttons to change theme
-        group [
-            roundedRect 25 5 2
-                |> filled col.buttons
-                |> move (34, 37),
-            text "Light Theme"
-                |> size 4
-                |> centered
-                |> filled black
-                |> move (34, 36)
-        ]
-            |> notifyTap (SetCol Light),
-        group [
-            roundedRect 25 5 2
-                |> filled col.buttons
-                |> move (61, 37),
-            text "Dark Theme"
-                |> size 4
-                |> centered
-                |> filled black
-                |> move (61, 36)
-        ]
-            |> notifyTap (SetCol Dark),
 
         -- Buttons to move the line
         List.map 
             (\(deg, rad) -> 
                 group [
                     roundedRect 7 3 1
-                        |> filled grey
+                        |> filled col.buttons
                         |> makeTransparent
                             (if deg == model.angle then 0.7 else 0.5)
                         |> move (if deg == 0 then 2 else 0, 0),
                     circle 0.5
-                        |> filled black -- to be changed according to theme
+                        |> filled col.words
                         |> move (0, 3),
                     text rad
                         |> size 2
                         |> customFont fonts.monospace
                         |> (if (deg == model.angle) then bold else identity)
                         |> centered
-                        |> filled black
+                        |> filled col.words
                         |> makeTransparent 0.5
                         |> move (if deg == 0 then 2 else 0, -0.75)
                 ]
                     |> move (-90 + (degrees deg) * scaleX, -3)
                     |> notifyTap (UpdateAngle deg))                     
             specialAngles
-            |> group,
-        square 5
-            |> filled black
-            |> move (2 * pi * scaleX, 0)
+            |> group
     ]
 
 deltaX = 0.005

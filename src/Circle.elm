@@ -16,9 +16,9 @@ unitCircle col showCast showSAngles radians angle = group [
     -- Grid
     group [
         rect 0.5 110
-            |> filled black,
+            |> filled col.grid,
         rect 110 0.5
-            |> filled black 
+            |> filled col.grid 
         ]
         |> makeTransparent 0.3,
 
@@ -31,7 +31,7 @@ unitCircle col showCast showSAngles radians angle = group [
     if showCast then cast col else group [],
 
     -- Special Angles
-    if showSAngles then angles radians angle else group []
+    if showSAngles then angles col radians angle else group []
     ]
 
 cast col =
@@ -50,7 +50,7 @@ cast col =
             |> move (-r, -r)
     ]
 
-angles radians angle = group <| 
+angles col radians angle = group <| 
     List.map 
         (\(d, r) -> 
             if d == 360 then group [] else
@@ -66,7 +66,7 @@ angles radians angle = group <|
                         |> ghost
                         |> move (x, y + 1),
                     roundedRect 13 5 1
-                        |> filled grey -- to be changed by theme
+                        |> filled col.buttons
                         |> move (x, y + 1)
                         |> makeTransparent 
                             (if angle == d then 0.7 else 0.5),
@@ -75,11 +75,11 @@ angles radians angle = group <|
                         |> size 4
                         |> centered 
                         |> (if angle == d then bold else identity)
-                        |> filled black 
+                        |> filled col.words 
                         |> makeTransparent 0.5
                         |> move (x, y),
                     circle 0.5 
-                        |> filled black
+                        |> filled col.dots
                         |> move (pos ur d) 
                 ]
                 |> notifyTap (UpdateAngle d)) 
@@ -99,13 +99,13 @@ triangle col angle quad showSLengths =
             if angle == 0 then group [] else
             if angle == 90 || angle == 270 then 
                 square 3
-                    |> outlined (solid 0.3) darkGrey
+                    |> outlined (solid 0.3) col.alpha
                     |> move (1.5, 1.5)
                     |> scaleX (if angle == 90 then 1 else -1)
                     |> scaleY (if angle == 90 then 1 else -1)
             else
                 wedge 3 (alpha / 360)
-                    |> outlined (solid 0.3) darkGrey
+                    |> outlined (solid 0.3) col.alpha
                     |> rotate (degrees (alpha / 2))
                     |> scaleX (if quad == Two   || quad == Three then -1 else 1)
                     |> scaleY (if quad == Three || quad == Four  then -1 else 1)
@@ -114,10 +114,10 @@ triangle col angle quad showSLengths =
 
         -- Full angle
         circle 2 
-            |> outlined (solid 0.3) red
+            |> outlined (solid 0.3) col.angle
             |> makeTransparent 0.6
             |> clip (wedge 5 (angle / 360)
-                |> filled red
+                |> filled col.angle
                 |> rotate (degrees (angle / 2))),
         -- Adjacent
         line org (xpos ur angle, 0)

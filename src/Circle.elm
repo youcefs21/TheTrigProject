@@ -53,6 +53,7 @@ cast col =
 angles radians angle = group <| 
     List.map 
         (\(d, r) -> 
+            if d == 360 then group [] else
             let 
                 str      = if radians then r else (String.fromFloat d)
                 strlen s = (*) s <| toFloat <| String.length str
@@ -202,8 +203,11 @@ update msg model =
                 newNewAngle = limitAngle newAngle
             in
                 { model | angle = newNewAngle,
-                           quad  = updateQuad newNewAngle }
-        _ -> model
+                          quad  = updateQuad newNewAngle }
+        SetCol t -> 
+            { model | col = t }
+        _ ->
+            model
 
 main = gameApp Tick {
     model = init,

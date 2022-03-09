@@ -42,16 +42,13 @@ update msg model =
     case msg of
         Tick _ _ -> 
             { model | circle = Circle.update msg model.circle }
-        -- Circle
         UpdateAngle _ -> 
             { model | circle = Circle.update msg model.circle,
                       graph  = Graphing.update msg model.graph }
-        -- Graphing
-        ClickButton _ -> 
-            { model | graph = Graphing.update msg model.graph }
-        SetFunc _ _ -> 
-            { model | graph = Graphing.update msg model.graph }
         SetCol _ -> 
+            { model | circle = Circle.update msg model.circle,
+                      graph  = Graphing.update msg model.graph }
+        SetFunc _ _ -> 
             { model | graph = Graphing.update msg model.graph }
 
 view model = collage 192 128 (myShapes model)

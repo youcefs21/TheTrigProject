@@ -13,7 +13,7 @@ myShapes model =
         showQuestion col model.currentQ model.seed model.state,
         showScore col model.state model.time model.score,
         if model.state == Waiting then group []
-        else if (model.time - model.waitTime > 5) then group [
+        else if (model.time - model.waitTime > 10) then group [
             square 1000
                 |> ghost
                 |> notifyEnter (UpdateState model.state)

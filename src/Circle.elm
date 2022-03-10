@@ -12,14 +12,18 @@ myShapes model = [
         group [
             unitCircle col model.showCast model.showSAngles model.radians model.angle,
             triangle col model.angle model.quad model.showSLengths,
-            circle (ur * 1.1)
-                |> ghost
-                |> notifyMouseDown (ToggleDrag True)
-                |> notifyMouseUp (ToggleDrag False)
-                |> if model.drag then 
-                    notifyMouseMoveAt (\(x, y) -> UpdateAngle (poiToDeg (x + 60, y - 7)))
-                   else
-                    identity
+            let
+                f = \(x, y) -> UpdateAngle (poiToDeg (x + 60, y - 7))
+            in
+                (circle (ur * 1.1)
+                    |> ghost
+                    |> notifyMouseDown (ToggleDrag True)
+                    |> notifyMouseUp (ToggleDrag False)
+                    |> notifyTapAt f
+                    |> if model.drag then 
+                        notifyMouseMoveAt f
+                    else
+                        identity)
         ]
             |> scale 0.75
         ]
@@ -95,7 +99,7 @@ angles col radians angle = group <|
                         |> filled col.words 
                         |> makeTransparent 0.5
                         |> move (x, y),
-                    circle 0.5 
+                    circle 0.75
                         |> filled col.dots
                         |> move (pos ur d) 
                 ]
@@ -159,7 +163,7 @@ triangle col angle quad showSLengths =
                     text str
                         |> customFont "Consolas"
                         |> centered
-                        |> size 3
+                        |> size 4
                         |> filled c
                     
             in
@@ -172,8 +176,8 @@ triangle col angle quad showSLengths =
                     -- Opp
                     tText opp col.opp
                         |> move (xpos ur angle +
-                                 if quad == One || quad == Four then (toFloat (String.length opp) + 1)
-                                 else -(toFloat (String.length opp) + 1), ypos (ur / 2) angle),
+                                 if quad == One || quad == Four then (toFloat (String.length opp) + 2)
+                                 else -(toFloat (String.length opp) + 2), ypos (ur / 2) angle),
                     -- Hyp
                     tText "1" col.hyp
                         |> move (xpos (ur / 2) angle +

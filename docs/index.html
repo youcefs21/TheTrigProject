@@ -9212,13 +9212,13 @@ var $author$project$Graphing$update = F2(
 	});
 var $author$project$Consts$Correct = {$: 'Correct'};
 var $author$project$Consts$Incorrect = {$: 'Incorrect'};
-var $author$project$Questions$correctAnswer = F2(
+var $author$project$Consts$correctAnswer = F2(
 	function (_v0, answer) {
 		var correct = _v0.b;
 		return _Utils_eq(answer, correct) ? true : false;
 	});
-var $author$project$Questions$easy = 1.25;
-var $author$project$Questions$hard = 0.25;
+var $author$project$Consts$easy = 1.25;
+var $author$project$Consts$hard = 0.25;
 var $elm$core$Basics$min = F2(
 	function (x, y) {
 		return (_Utils_cmp(x, y) < 0) ? x : y;
@@ -9237,10 +9237,10 @@ var $author$project$Questions$updateWeights = F3(
 			var incs = _v3.c;
 			var qs = weightedQs.b;
 			if (_Utils_eq(question, q)) {
-				var newWeights = correct ? $author$project$Questions$hard : A2(
+				var newWeights = correct ? $author$project$Consts$easy : A2(
 					$elm$core$Basics$min,
 					3.0,
-					A2($elm$core$Basics$max, 0.1, weight * $author$project$Questions$easy));
+					A2($elm$core$Basics$max, 0.1, weight * $author$project$Consts$hard));
 				return A2(
 					$elm$core$List$cons,
 					_Utils_Tuple2(
@@ -9288,7 +9288,7 @@ var $author$project$Questions$update = F2(
 			case 'Select':
 				var answer = msg.a;
 				return _Utils_Tuple2(
-					A2($author$project$Questions$correctAnswer, model.currentQ, answer) ? _Utils_update(
+					A2($author$project$Consts$correctAnswer, model.currentQ, answer) ? _Utils_update(
 						model,
 						{
 							score: _Utils_Tuple2(model.score.a + 1, model.score.b),
@@ -10460,7 +10460,7 @@ var $author$project$Consts$getFunc = function (f) {
 			return $elm$core$Basics$tan;
 	}
 };
-var $author$project$Graphing$rangeStep = F3(
+var $author$project$Consts$rangeStep = F3(
 	function (start, stop, step) {
 		return A2(
 			$elm$core$List$map,
@@ -10505,7 +10505,7 @@ var $author$project$Graphing$myShapes = function (model) {
 									_Utils_Tuple2(x2, y2))));
 					}
 				},
-				A3($author$project$Graphing$rangeStep, 0, 2 * $elm$core$Basics$pi, $author$project$Graphing$deltaX))),
+				A3($author$project$Consts$rangeStep, 0, 2 * $elm$core$Basics$pi, $author$project$Graphing$deltaX))),
 			$MacCASOutreach$graphicsvg$GraphicSVG$group(
 			A2(
 				$elm$core$List$map,
@@ -10900,24 +10900,18 @@ var $author$project$Questions$showQuestion = F4(
 					0)
 				]));
 	});
-var $author$project$Questions$showScore = function (_v0) {
-	var correct = _v0.a;
-	var incorrect = _v0.b;
-	var score = correct - incorrect;
-	return 'Score: ' + $elm$core$String$fromInt(score);
-};
 var $author$project$Consts$UpdateState = function (a) {
 	return {$: 'UpdateState', a: a};
 };
-var $author$project$Questions$jump = F2(
+var $author$project$Consts$jump = F2(
 	function (amt, time) {
 		return amt * $elm$core$Basics$abs(
 			$elm$core$Basics$sin(time * 10));
 	});
-var $author$project$Questions$paraX = function (t) {
+var $author$project$Consts$paraX = function (t) {
 	return (2 * $elm$core$Basics$cos(t)) + ($elm$core$Basics$sin(2 * t) * $elm$core$Basics$cos(60 * t));
 };
-var $author$project$Questions$paraY = function (t) {
+var $author$project$Consts$paraY = function (t) {
 	return $elm$core$Basics$sin(2 * t) + $elm$core$Basics$sin(60 * t);
 };
 var $MacCASOutreach$graphicsvg$GraphicSVG$Sansserif = {$: 'Sansserif'};
@@ -10942,8 +10936,14 @@ var $MacCASOutreach$graphicsvg$GraphicSVG$sansserif = function (stencil) {
 		return a;
 	}
 };
-var $author$project$Questions$showScore2 = F4(
+var $author$project$Questions$showScore = F4(
 	function (col, state, time, score) {
+		var displayScore = function (_v0) {
+			var correct = _v0.a;
+			var incorrect = _v0.b;
+			var finalScore = correct - incorrect;
+			return 'Score: ' + $elm$core$String$fromInt(finalScore);
+		};
 		return $MacCASOutreach$graphicsvg$GraphicSVG$group(
 			_List_fromArray(
 				[
@@ -10951,11 +10951,11 @@ var $author$project$Questions$showScore2 = F4(
 					$MacCASOutreach$graphicsvg$GraphicSVG$move,
 					_Utils_Tuple2(
 						0 + (_Utils_eq(state, $author$project$Consts$Incorrect) ? (1 * $elm$core$Basics$sin(time * 20)) : 0),
-						30 + (_Utils_eq(state, $author$project$Consts$Correct) ? A2($author$project$Questions$jump, 1, time) : 0)),
+						30 + (_Utils_eq(state, $author$project$Consts$Correct) ? A2($author$project$Consts$jump, 1, time) : 0)),
 					(_Utils_eq(state, $author$project$Consts$Waiting) ? $MacCASOutreach$graphicsvg$GraphicSVG$move(
 						_Utils_Tuple2(
-							$author$project$Questions$paraX(0.05 * time),
-							$author$project$Questions$paraY(0.05 * time) / 2)) : $elm$core$Basics$identity)(
+							$author$project$Consts$paraX(0.05 * time),
+							$author$project$Consts$paraY(0.05 * time) / 2)) : $elm$core$Basics$identity)(
 						A2(
 							$MacCASOutreach$graphicsvg$GraphicSVG$move,
 							_Utils_Tuple2(-95, 23),
@@ -10966,7 +10966,8 @@ var $author$project$Questions$showScore2 = F4(
 									$MacCASOutreach$graphicsvg$GraphicSVG$size,
 									10,
 									$MacCASOutreach$graphicsvg$GraphicSVG$sansserif(
-										$MacCASOutreach$graphicsvg$GraphicSVG$text(score))))))),
+										$MacCASOutreach$graphicsvg$GraphicSVG$text(
+											displayScore(score)))))))),
 					_Utils_eq(state, $author$project$Consts$Waiting) ? $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil) : $MacCASOutreach$graphicsvg$GraphicSVG$group(
 					_List_fromArray(
 						[
@@ -10986,12 +10987,7 @@ var $author$project$Questions$myShapes = function (model) {
 	return _List_fromArray(
 		[
 			A4($author$project$Questions$showQuestion, col, model.currentQ, model.seed, model.state),
-			A4(
-			$author$project$Questions$showScore2,
-			col,
-			model.state,
-			model.time,
-			$author$project$Questions$showScore(model.score))
+			A4($author$project$Questions$showScore, col, model.state, model.time, model.score)
 		]);
 };
 var $author$project$Main$myShapes = function (model) {

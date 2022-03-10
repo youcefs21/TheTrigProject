@@ -9502,12 +9502,16 @@ var $author$project$Consts$lightTheme = {
 	tan: A3($MacCASOutreach$graphicsvg$GraphicSVG$rgb, 0, 128, 128),
 	words: $MacCASOutreach$graphicsvg$GraphicSVG$black
 };
+var $author$project$Consts$amoTheme = $author$project$Consts$lightTheme;
 var $author$project$Consts$darkTheme = $author$project$Consts$lightTheme;
 var $author$project$Consts$getTheme = function (t) {
-	if (t.$ === 'Light') {
-		return $author$project$Consts$lightTheme;
-	} else {
-		return $author$project$Consts$darkTheme;
+	switch (t.$) {
+		case 'Light':
+			return $author$project$Consts$lightTheme;
+		case 'Dark':
+			return $author$project$Consts$darkTheme;
+		default:
+			return $author$project$Consts$amoTheme;
 	}
 };
 var $MacCASOutreach$graphicsvg$GraphicSVG$blank = A4($MacCASOutreach$graphicsvg$GraphicSVG$rgba, 0, 0, 0, 0);

@@ -6,12 +6,26 @@ import Consts exposing (..)
 
 
 myShapes model = [
-    group [
-        unitCircle (getTheme model.col) model.showCast model.showSAngles model.radians model.angle,
-        triangle (getTheme model.col) model.angle model.quad model.showSLengths
-    ]
-        |> scale 0.75
-    ]
+    let 
+        col = getTheme model.col
+    in
+        group [
+            unitCircle col model.showCast model.showSAngles model.radians model.angle,
+            triangle col model.angle model.quad model.showSLengths,
+            circle ur
+                |> ghost
+                |> notifyMouseDown (ToggleDrag True)
+                |> notifyMouseUp (ToggleDrag False)
+                |> if model.drag then 
+                    notifyMouseMoveAt (\(x, y) -> UpdateAngle (poiToDeg (x + 60, y - 7)))
+                   else
+                    identity
+        ]
+            |> scale 0.75
+        ]
+
+type Drag = Wait
+          | Hold
   
 unitCircle col showCast showSAngles radians angle = group [
     -- Grid
@@ -24,7 +38,7 @@ unitCircle col showCast showSAngles radians angle = group [
         |> makeTransparent 0.3,
 
     -- Circle
-    circle 50 
+    circle ur 
         |> outlined (solid 0.5) col.cir
         |> makeTransparent 0.7,
 
@@ -137,8 +151,8 @@ triangle col angle quad showSLengths =
         -- Side Lengths
         if showSLengths then 
             let
-                rawAdj = getString alpha adjLengths
-                rawOpp = getString alpha oppLengths
+                rawAdj = getString cos alpha adjLengths
+                rawOpp = getString sin alpha oppLengths
                 adj = (if quad == Two   || quad == Three && rawAdj /= "0" then "-" else "") ++ rawAdj
                 opp = (if quad == Three || quad == Four  && rawOpp /= "0" then "-" else "") ++ rawOpp
                 tText str c = 
@@ -175,12 +189,6 @@ triangle col angle quad showSLengths =
             |> move (pos ur angle)
         ]
 
--- Radius of unit circle
-ur = 50
-
--- Origin
-org = (0, 0)
-
 -- Returns positions pased on radius and angle
 xpos r angle = r * cos (degrees angle)
 ypos r angle = r * sin (degrees angle)
@@ -195,6 +203,7 @@ type alias Model = {
     showSAngles  : Bool,
     showSLengths : Bool,
     radians      : Bool,
+    drag         : Bool,
     col          : Theme }
 
 init = { 
@@ -205,6 +214,7 @@ init = {
     showSAngles  = True,
     showSLengths = True,
     radians      = True,
+    drag         = False,
     col          = Light }
 
 update : Consts.Msg -> Model -> ( Model, Cmd Consts.Msg )
@@ -217,9 +227,11 @@ update msg model =
                 newNewAngle = limitAngle newAngle
             in
                 ( { model | angle = newNewAngle,
-                          quad  = updateQuad newNewAngle }, Cmd.none )
+                            quad  = updateQuad newNewAngle }, Cmd.none )
         SetCol t -> 
             ( { model | col = t }, Cmd.none )
+        ToggleDrag b ->
+            ( { model | drag = b }, Cmd.none )
         _ ->
             ( model, Cmd.none )
 

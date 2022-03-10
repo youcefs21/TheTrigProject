@@ -55,6 +55,7 @@ myShapes model =
         -- ]
         --     |> notifyTap (SetCol Dark)
     ]
+    
 
 type alias Model = { 
     circle    : Circle.Model,
@@ -92,6 +93,11 @@ update msg model =
             in
                 ( { model | circle = newCircle,
                             graph  = newGraph}, Cmd.batch [circleCmds, graphCmds] )
+        ToggleDrag _ -> 
+            let
+                (newCircle, circleCmds) = Circle.update msg model.circle
+            in
+                ( { model | circle = newCircle}, Cmd.batch [circleCmds] )
         SetCol t -> 
             let
                 (newCircle, circleCmds) = Circle.update msg model.circle

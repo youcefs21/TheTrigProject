@@ -8,6 +8,7 @@ import GraphicSVG.EllieApp exposing (..)
 type Msg = Tick Float GetKeyState
          -- Circle Message
          | UpdateAngle Float
+         | ToggleDrag Bool
          -- Graphing Message
          | SetFunc Int Func
          | SetCol Theme
@@ -99,6 +100,25 @@ specialAngles = [
 adjLengths = [(0, "1"), (30, "(√3)/2"), (45, "1/(√2)"), (60, "1/2"),    (90, "0")]
 oppLengths = [(0, "0"), (30, "1/2"),    (45, "1/(√2)"), (60, "(√3)/2"), (90, "1")]
 
+-- Converts from radians to degrees
+radToDeg r = 
+    let
+        absRad = if r < 0 then 2 * pi + r else r
+    in 
+        round <| 180 * absRad / pi
+
+-- Converts from degrees to radians
+degToRad d = (d / 180) * pi
+
+-- Converts from points to degrees
+poiToDeg (x, y) = toFloat <| radToDeg <| atan2 y x
+
+-- Radius of unit circle
+ur = 50
+
+-- Origin
+org = (0, 0)
+
 -- Step for floats instead of ints
 rangeStep : Float -> Float -> Float -> List Float
 rangeStep start stop step = 
@@ -123,10 +143,10 @@ updateQuad angle =
 -- Getter functions
 
 -- Gets the radians from specialAngles given the degrees
-getString i xss = 
+getString f i xss = 
     case xss of
-        [] -> "ERR"
-        ((x1, x2)::xs) -> if i == x1 then x2 else getString i xs
+        [] -> String.fromFloat <| (abs <| toFloat <| round (100 * f (degrees i))) / 100
+        ((x1, x2)::xs) -> if i == x1 then x2 else getString f i xs
 
 getTheme t = 
     case t of

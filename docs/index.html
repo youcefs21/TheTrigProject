@@ -11067,13 +11067,41 @@ var $author$project$Questions$showScore = F4(
 						_List_fromArray(
 							[
 								A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$move,
+								_Utils_Tuple2(-3, -50),
+								$MacCASOutreach$graphicsvg$GraphicSVG$ghost(
+									A2($MacCASOutreach$graphicsvg$GraphicSVG$rect, 192, 40))),
+								A2(
 								$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
 								$author$project$Consts$UpdateState(state),
 								A2(
-									$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
-									0,
-									$MacCASOutreach$graphicsvg$GraphicSVG$ghost(
-										A2($MacCASOutreach$graphicsvg$GraphicSVG$rect, 192, 128))))
+									$MacCASOutreach$graphicsvg$GraphicSVG$move,
+									_Utils_Tuple2(70, -41),
+									A2(
+										$MacCASOutreach$graphicsvg$GraphicSVG$scale,
+										0.5,
+										$MacCASOutreach$graphicsvg$GraphicSVG$group(
+											_List_fromArray(
+												[
+													A2(
+													$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
+													0.7,
+													A2(
+														$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+														col.buttons,
+														A3($MacCASOutreach$graphicsvg$GraphicSVG$roundedRect, 40, 18, 5))),
+													A2(
+													$MacCASOutreach$graphicsvg$GraphicSVG$move,
+													_Utils_Tuple2(0, -4),
+													A2(
+														$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+														col.words,
+														A2(
+															$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
+															$author$project$Consts$fonts.sansserif,
+															$MacCASOutreach$graphicsvg$GraphicSVG$centered(
+																$MacCASOutreach$graphicsvg$GraphicSVG$text('Next')))))
+												])))))
 							]))
 					])));
 	});
@@ -11088,7 +11116,7 @@ var $author$project$Questions$myShapes = function (model) {
 				[
 					A2(
 					$MacCASOutreach$graphicsvg$GraphicSVG$notifyEnter,
-					$author$project$Consts$UpdateState($author$project$Consts$Waiting),
+					$author$project$Consts$UpdateState(model.state),
 					$MacCASOutreach$graphicsvg$GraphicSVG$ghost(
 						$MacCASOutreach$graphicsvg$GraphicSVG$square(1000)))
 				])) : $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil))

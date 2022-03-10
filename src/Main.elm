@@ -21,6 +21,8 @@ myShapes model =
                 Graphing.myShapes model.graph
                     |> group
                     |> scale 0.6
+                    |> clip
+                        (rect 130 60 |> ghost)
                     |> move (35, 0),
                 Circle.myShapes model.circle
                     |> group

@@ -5,6 +5,7 @@ import GraphicSVG.EllieApp exposing (..)
 import String
 import Consts exposing (..)
 
+
 myShapes model = 
     let
         col = getTheme model.col
@@ -60,8 +61,15 @@ myShapes model =
             x = -90 + (degrees model.angle) * scaleX
             y1 = 0
             y2 = model.scaleY * func (degrees model.angle)
-            l = line (x, y1) (x, y2)
-                        |> outlined (dotted 0.5) fcol
+            l = group [
+                line (x, y1) (x, y2)
+                    |> outlined (dotted 0.5) fcol,
+                text (String.fromFloat <| toThree <| getFunc model.func <| (degrees model.angle))
+                    |> customFont fonts.monospace
+                    |> size 4
+                    |> filled (getCol model.func col)
+                    |> move (x + 2, y2 / 4)
+                ]
             dne = 
                 text "DNE"
                     |> customFont fonts.monospace
@@ -112,7 +120,7 @@ myShapes model =
                 |> filled col.words
                 |> move (66, 29)
         ]
-            |> notifyTap (SetFunc 8 Tan),
+            |> notifyTap (SetFunc 45 Tan),
 
         -- Buttons to move the line
         List.map 

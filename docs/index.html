@@ -10491,7 +10491,7 @@ var $author$project$Circle$myShapes = function (model) {
 									$MacCASOutreach$graphicsvg$GraphicSVG$notifyMouseDown,
 									$author$project$Consts$ToggleDrag(true),
 									$MacCASOutreach$graphicsvg$GraphicSVG$ghost(
-										$MacCASOutreach$graphicsvg$GraphicSVG$circle($author$project$Consts$ur)))))
+										$MacCASOutreach$graphicsvg$GraphicSVG$circle($author$project$Consts$ur * 1.1)))))
 						])));
 		}()
 		]);
@@ -10641,6 +10641,21 @@ var $author$project$Graphing$myShapes = function (model) {
 							$MacCASOutreach$graphicsvg$GraphicSVG$line,
 							_Utils_Tuple2(x, y1),
 							_Utils_Tuple2(x, y2))),
+						A3(
+						$MacCASOutreach$graphicsvg$GraphicSVG$outlined,
+						$MacCASOutreach$graphicsvg$GraphicSVG$dotted(0.5),
+						fcol,
+						A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$line,
+							_Utils_Tuple2(-90, y2),
+							_Utils_Tuple2(90, y2))),
+						A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$move,
+						_Utils_Tuple2(x, y2),
+						A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+							fcol,
+							$MacCASOutreach$graphicsvg$GraphicSVG$circle(1))),
 						A2(
 						$MacCASOutreach$graphicsvg$GraphicSVG$move,
 						_Utils_Tuple2(x + 2, y2 / 4),

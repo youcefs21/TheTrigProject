@@ -32,6 +32,7 @@ type Func = Sin
 
 type Theme = Light
            | Dark
+           | AMOLED
 
 type Quadrant = One 
               | Two 
@@ -153,8 +154,9 @@ getString f i xss =
 
 getTheme t = 
     case t of
-        Light -> lightTheme
-        Dark  -> darkTheme
+        Light  -> lightTheme
+        Dark   -> darkTheme
+        AMOLED -> amoTheme
 
 getCol f t = 
     case f of
@@ -210,3 +212,5 @@ lightTheme = {
     -- background = white }
 
 darkTheme = lightTheme
+
+amoTheme = lightTheme

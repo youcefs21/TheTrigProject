@@ -4,60 +4,56 @@ import Random
 import GraphicSVG exposing (..)
 import GraphicSVG.EllieApp exposing (..)
 import Consts exposing (..)
-         
--- Determines if chosen answer is correct
-correctAnswer (Q _ correct _) answer = 
-    if answer == correct then True else False
-    
-{-
- - Change weights based on correctness:
- -     If the answer is correct, make the chance the question shows up again decrease by hard%.
- -     Otherwise, make the chance increase by easy%.
- -}
-easy = 1.25
-hard = 0.25
-updateWeights weightedQs (Q q _ _) correct =
-    case weightedQs of
-        [] -> []
-        ((weight, Q question c incs)::qs) -> 
-            if question == q then 
-                let 
-                    newWeights = if correct then hard else easy |> (*) weight |> max 0.1 |> min 3.0
-                in (newWeights, Q question c incs)::qs
-            else (weight, Q question c incs)::(updateWeights qs (Q q "" []) correct)
-                   
-view : Model -> Collage Consts.Msg
-view model = collage 192 128 <|
-    List.concat <| [
-        myShapes model
-    ]
+
 
 myShapes model = 
     let 
         col = getTheme model.col
     in [
         showQuestion col model.currentQ model.seed model.state,
-        showScore2 col model.state model.time (showScore model.score)
+        showScore col model.state model.time model.score
     ]
+    
+{-
+ - Change weights based on correctness:
+ -     If the answer is correct, the probability the question shows up again decrease by easy%.
+ -     Otherwise, the probability increase by hard%.
+ -}
+updateWeights weightedQs (Q q _ _) correct =
+    case weightedQs of
+        [] -> []
+        ((weight, Q question c incs)::qs) -> 
+            if question == q then 
+                let 
+                    -- The probability is at least 10% and at most 300%
+                    newWeights = if correct then easy else hard |> (*) weight |> max 0.1 |> min 3.0
+                in (newWeights, Q question c incs)::qs
+            else (weight, Q question c incs)::(updateWeights qs (Q q "" []) correct)
 
-paraY t = sin (2 * t) + sin (60 * t)
-paraX t = 2 * (cos t) + sin (2 * t) * cos (60 * t)
-showScore2 col state time score = group [ 
-    text score
-        |> sansserif
-        |> size 10
-        |> filled (if state == Waiting then col.scoreWait else if state == Incorrect then col.scoreWrong else col.scoreCorrect )
-        |> move (-95, 23)
-        |> (if state == Waiting then move (paraX (0.05 * time), paraY (0.05 * time) / 2) else identity)
-        |> move (0 + (if state == Incorrect then (1 * sin (time * 20)) else 0), 30 + (if state == Correct then jump 1 time else 0)),
-    if state == Waiting then group []
-    else group [
-        rect 192 128
-            |> ghost
-            |> makeTransparent 0
-            |> notifyTap (UpdateState state)
-        ]
-    ]
+-- Draws the score and controls clickability
+showScore col state time score = 
+    let
+        displayScore (correct, incorrect) =
+            let
+                finalScore = correct - incorrect
+            in "Score: " ++ String.fromInt finalScore
+    in 
+        group [ 
+            text (displayScore score)
+                |> sansserif
+                |> size 10
+                |> filled (if state == Waiting then col.scoreWait else if state == Incorrect then col.scoreWrong else col.scoreCorrect )
+                |> move (-95, 23)
+                |> (if state == Waiting then move (paraX (0.05 * time), paraY (0.05 * time) / 2) else identity)
+                |> move (0 + (if state == Incorrect then (1 * sin (time * 20)) else 0), 30 + (if state == Correct then jump 1 time else 0)),
+            if state == Waiting then group []
+            else group [
+                rect 192 128
+                    |> ghost
+                    |> makeTransparent 0
+                    |> notifyTap (UpdateState state)
+                ]
+            ]
     
 -- Draws the question
 showQuestion col (Q question correct incorrects) seed state = group [
@@ -73,9 +69,8 @@ showQuestion col (Q question correct incorrects) seed state = group [
         |> move (-95,-45),
     drawBubbles col state correct (Tuple.first <| Random.step (shuffle (correct::incorrects)) <| Random.initialSeed seed) 0
     ]
-jump amt time = amt * abs (sin (time * 10))
 
--- Draws out the options
+-- Draws the options
 drawBubbles col state correct answers c =
     case answers of 
         [] -> group []
@@ -96,13 +91,7 @@ drawBubbles col state correct answers c =
             drawBubbles col state correct xs <| c + 1
             ]
 
--- Draws the score
-showScore (correct, incorrect) =
-    let
-        score = correct - incorrect
-    in "Score: " ++ String.fromInt score
 
--- Model and initialization
 type alias Model = { 
     time       : Float, 
     currentQ   : Question, 
@@ -146,6 +135,12 @@ update msg model =
                         seed = Tuple.first <| Random.step anyInt (Random.initialSeed model.seed) }, 
               genQ model.weightedQs )
         _ -> (model, Cmd.none)
+
+view : Model -> Collage Consts.Msg
+view model = collage 192 128 <|
+    List.concat <| [
+        myShapes model
+    ]
     
 main : EllieAppWithTick () Model Consts.Msg
 main =

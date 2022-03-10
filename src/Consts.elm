@@ -41,6 +41,18 @@ rawQs = [
     Q "sin(2π)" "0" ["-1", "1", "-(√3)/2", "(√3)/2"],
     Q "sin(4π/3)" "-(√3)/2" ["-1/2", "-1/(√2)", "1/(√2)", "-1"]
     ]
+
+-- easy and hard for updating weights for spaced repetition
+easy = 1.25
+hard = 0.25
+
+-- Parametric functions for "natural" movement
+paraY t = sin (2 * t) + sin (60 * t)
+paraX t = 2 * (cos t) + sin (2 * t) * cos (60 * t)
+
+-- Determines if chosen answer is correct
+correctAnswer (Q _ correct _) answer = 
+    if answer == correct then True else False
     
 -- Generates questions
 qGen qss = 
@@ -88,6 +100,8 @@ rangeStep start stop step =
     List.map 
         (\x -> (toFloat x - start) * step + start) 
         (List.range (round start) (floor (stop / step)))
+
+jump amt time = amt * abs (sin (time * 10))
 
 getString i xss = 
     case xss of

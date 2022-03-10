@@ -4,6 +4,7 @@ import GraphicSVG exposing (..)
 import GraphicSVG.EllieApp exposing (..)
 import Consts exposing (..)
 
+
 myShapes model = [
     group [
         unitCircle (getTheme model.col) model.showCast model.showSAngles model.radians model.angle,
@@ -34,6 +35,7 @@ unitCircle col showCast showSAngles radians angle = group [
     if showSAngles then angles col radians angle else group []
     ]
 
+-- Draws CAST at the corners of the unit circle
 cast col =
     let 
         r = 50
@@ -50,6 +52,7 @@ cast col =
             |> move (-r, -r)
     ]
 
+-- Draws the special angles around the unit circle
 angles col radians angle = group <| 
     List.map 
         (\(d, r) -> 
@@ -85,6 +88,7 @@ angles col radians angle = group <|
                 |> notifyTap (UpdateAngle d)) 
         specialAngles
 
+-- Draws the triangle inside the unit circle
 triangle col angle quad showSLengths =
     let
         alpha = case quad of
@@ -171,11 +175,17 @@ triangle col angle quad showSLengths =
             |> move (pos ur angle)
         ]
 
+-- Radius of unit circle
 ur = 50
+
+-- Origin
 org = (0, 0)
+
+-- Returns positions pased on radius and angle
 xpos r angle = r * cos (degrees angle)
 ypos r angle = r * sin (degrees angle)
 pos  r angle = (xpos r angle, ypos r angle)
+
 
 type alias Model = { 
     time         : Float,

@@ -16,7 +16,7 @@ myShapes model =
         else if (model.time - model.waitTime > 5) then group [
             square 1000
                 |> ghost
-                |> notifyEnter (UpdateState Waiting)
+                |> notifyEnter (UpdateState model.state)
         ]
         else group []
     ]
@@ -56,9 +56,21 @@ showScore col state time score =
             if state == Waiting then group []
             else group [
                 -- Implement next button
-                rect 192 128
+                rect 192 40
                     |> ghost
-                    |> makeTransparent 0
+                    |> move (-3, -50),
+                group [
+                    roundedRect 40 18 5
+                        |> filled col.buttons
+                        |> makeTransparent 0.7,
+                    text "Next"
+                        |> centered
+                        |> customFont fonts.sansserif
+                        |> filled col.words
+                        |> move (0, -4)
+                    ]
+                    |> scale 0.5
+                    |> move (70, -41)
                     |> notifyTap (UpdateState state)
                 ]
             ]

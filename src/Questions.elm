@@ -11,7 +11,14 @@ myShapes model =
         col = getTheme model.col
     in [
         showQuestion col model.currentQ model.seed model.state,
-        showScore col model.state model.time model.score
+        showScore col model.state model.time model.score,
+        if model.state == Waiting then group []
+        else if (model.time - model.waitTime > 5) then group [
+            square 1000
+                |> ghost
+                |> notifyEnter (UpdateState Waiting)
+        ]
+        else group []
     ]
     
 {-
@@ -44,16 +51,18 @@ showScore col state time score =
                 |> size 10
                 |> filled (if state == Waiting then col.scoreWait else if state == Incorrect then col.scoreWrong else col.scoreCorrect )
                 |> move (-95, 23)
-                |> (if state == Waiting then move (paraX (0.05 * time), paraY (0.05 * time) / 2) else identity)
-                |> move (0 + (if state == Incorrect then (1 * sin (time * 20)) else 0), 30 + (if state == Correct then jump 1 time else 0)),
+                |> move (paraX (0.05 * time), paraY (0.05 * time) / 2)
+                |> move (0 + (if state == Incorrect then (0.5 * sin (time * 20)) else 0), 30 + (if state == Correct then jump 0.5 time else 0)),
             if state == Waiting then group []
             else group [
+                -- Implement next button
                 rect 192 128
                     |> ghost
                     |> makeTransparent 0
                     |> notifyTap (UpdateState state)
                 ]
             ]
+            |> move (3, -3)
     
 -- Draws the question
 showQuestion col (Q question correct incorrects) seed state = group [
@@ -94,6 +103,7 @@ drawBubbles col state correct answers c =
 
 type alias Model = { 
     time       : Float, 
+    waitTime   : Float,
     currentQ   : Question, 
     weightedQs : List (Float, Question),
     state      : State, 
@@ -105,6 +115,7 @@ type alias Model = {
 init : Model
 init = { 
     time       = 0, 
+    waitTime   = 0,
     currentQ   = Q "" "" ["", "", "", ""], 
     weightedQs = List.indexedMap (\_ q -> (1.0, q) ) rawQs, 
     state      = Waiting, 
@@ -125,9 +136,11 @@ update msg model =
         Select answer ->
             ( if correctAnswer model.currentQ answer 
               then { model | score = (Tuple.first model.score + 1, Tuple.second model.score),
-                             state = Correct }
+                             state = Correct,
+                             waitTime = model.time }
               else { model | score = (Tuple.first model.score, Tuple.second model.score + 1),
-                             state = Incorrect },
+                             state = Incorrect,
+                             waitTime = model.time },
               Cmd.none )
         UpdateState currentState ->
             ( { model | state = Waiting,

@@ -9468,6 +9468,10 @@ var $elm$core$List$append = F2(
 var $elm$core$List$concat = function (lists) {
 	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
 };
+var $MacCASOutreach$graphicsvg$GraphicSVG$clip = F2(
+	function (shape1, shape2) {
+		return A2($MacCASOutreach$graphicsvg$GraphicSVG$Clip, shape1, shape2);
+	});
 var $MacCASOutreach$graphicsvg$GraphicSVG$blue = A4($MacCASOutreach$graphicsvg$GraphicSVG$rgba, 52, 101, 164, 1);
 var $MacCASOutreach$graphicsvg$GraphicSVG$darkGrey = A4($MacCASOutreach$graphicsvg$GraphicSVG$rgba, 186, 189, 182, 1);
 var $MacCASOutreach$graphicsvg$GraphicSVG$green = A4($MacCASOutreach$graphicsvg$GraphicSVG$rgba, 115, 210, 22, 1);
@@ -9506,6 +9510,14 @@ var $author$project$Consts$getTheme = function (t) {
 		return $author$project$Consts$darkTheme;
 	}
 };
+var $MacCASOutreach$graphicsvg$GraphicSVG$blank = A4($MacCASOutreach$graphicsvg$GraphicSVG$rgba, 0, 0, 0, 0);
+var $MacCASOutreach$graphicsvg$GraphicSVG$ghost = function (stencil) {
+	return A3(
+		$MacCASOutreach$graphicsvg$GraphicSVG$Inked,
+		$elm$core$Maybe$Just($MacCASOutreach$graphicsvg$GraphicSVG$blank),
+		$elm$core$Maybe$Nothing,
+		stencil);
+};
 var $author$project$Consts$ToggleDrag = function (a) {
 	return {$: 'ToggleDrag', a: a};
 };
@@ -9517,14 +9529,6 @@ var $MacCASOutreach$graphicsvg$GraphicSVG$Circle = function (a) {
 };
 var $MacCASOutreach$graphicsvg$GraphicSVG$circle = function (r) {
 	return $MacCASOutreach$graphicsvg$GraphicSVG$Circle(r);
-};
-var $MacCASOutreach$graphicsvg$GraphicSVG$blank = A4($MacCASOutreach$graphicsvg$GraphicSVG$rgba, 0, 0, 0, 0);
-var $MacCASOutreach$graphicsvg$GraphicSVG$ghost = function (stencil) {
-	return A3(
-		$MacCASOutreach$graphicsvg$GraphicSVG$Inked,
-		$elm$core$Maybe$Just($MacCASOutreach$graphicsvg$GraphicSVG$blank),
-		$elm$core$Maybe$Nothing,
-		stencil);
 };
 var $MacCASOutreach$graphicsvg$GraphicSVG$notifyMouseDown = F2(
 	function (msg, shape) {
@@ -9591,10 +9595,6 @@ var $MacCASOutreach$graphicsvg$GraphicSVG$centered = function (stencil) {
 		return a;
 	}
 };
-var $MacCASOutreach$graphicsvg$GraphicSVG$clip = F2(
-	function (shape1, shape2) {
-		return A2($MacCASOutreach$graphicsvg$GraphicSVG$Clip, shape1, shape2);
-	});
 var $MacCASOutreach$graphicsvg$GraphicSVG$Custom = function (a) {
 	return {$: 'Custom', a: a};
 };
@@ -9645,6 +9645,9 @@ var $MacCASOutreach$graphicsvg$GraphicSVG$dotted = function (th) {
 			]),
 		th);
 };
+var $author$project$Consts$toThree = function (f) {
+	return $elm$core$Basics$round(1000 * f) / 1000;
+};
 var $author$project$Consts$getString = F3(
 	function (f, i, xss) {
 		getString:
@@ -9652,9 +9655,9 @@ var $author$project$Consts$getString = F3(
 			if (!xss.b) {
 				return $elm$core$String$fromFloat(
 					$elm$core$Basics$abs(
-						$elm$core$Basics$round(
-							100 * f(
-								$elm$core$Basics$degrees(i)))) / 100);
+						$author$project$Consts$toThree(
+							f(
+								$elm$core$Basics$degrees(i)))));
 			} else {
 				var _v1 = xss.a;
 				var x1 = _v1.a;
@@ -10627,14 +10630,37 @@ var $author$project$Graphing$myShapes = function (model) {
 			var y1 = 0;
 			var x = (-90) + ($elm$core$Basics$degrees(model.angle) * $author$project$Graphing$scaleX);
 			var ra = $elm$core$Basics$round(model.angle);
-			var l = A3(
-				$MacCASOutreach$graphicsvg$GraphicSVG$outlined,
-				$MacCASOutreach$graphicsvg$GraphicSVG$dotted(0.5),
-				fcol,
-				A2(
-					$MacCASOutreach$graphicsvg$GraphicSVG$line,
-					_Utils_Tuple2(x, y1),
-					_Utils_Tuple2(x, y2)));
+			var l = $MacCASOutreach$graphicsvg$GraphicSVG$group(
+				_List_fromArray(
+					[
+						A3(
+						$MacCASOutreach$graphicsvg$GraphicSVG$outlined,
+						$MacCASOutreach$graphicsvg$GraphicSVG$dotted(0.5),
+						fcol,
+						A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$line,
+							_Utils_Tuple2(x, y1),
+							_Utils_Tuple2(x, y2))),
+						A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$move,
+						_Utils_Tuple2(x + 2, y2 / 4),
+						A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+							A2($author$project$Consts$getCol, model.func, col),
+							A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$size,
+								4,
+								A2(
+									$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
+									$author$project$Consts$fonts.monospace,
+									$MacCASOutreach$graphicsvg$GraphicSVG$text(
+										$elm$core$String$fromFloat(
+											$author$project$Consts$toThree(
+												A2(
+													$author$project$Consts$getFunc,
+													model.func,
+													$elm$core$Basics$degrees(model.angle)))))))))
+					]));
 			var dne = A2(
 				$MacCASOutreach$graphicsvg$GraphicSVG$move,
 				_Utils_Tuple2(x, y1 + 1),
@@ -10714,7 +10740,7 @@ var $author$project$Graphing$myShapes = function (model) {
 					]))),
 			A2(
 			$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
-			A2($author$project$Consts$SetFunc, 8, $author$project$Consts$Tan),
+			A2($author$project$Consts$SetFunc, 45, $author$project$Consts$Tan),
 			$MacCASOutreach$graphicsvg$GraphicSVG$group(
 				_List_fromArray(
 					[
@@ -11087,10 +11113,14 @@ var $author$project$Main$myShapes = function (model) {
 								$MacCASOutreach$graphicsvg$GraphicSVG$move,
 								_Utils_Tuple2(35, 0),
 								A2(
-									$MacCASOutreach$graphicsvg$GraphicSVG$scale,
-									0.6,
-									$MacCASOutreach$graphicsvg$GraphicSVG$group(
-										$author$project$Graphing$myShapes(model.graph)))),
+									$MacCASOutreach$graphicsvg$GraphicSVG$clip,
+									$MacCASOutreach$graphicsvg$GraphicSVG$ghost(
+										A2($MacCASOutreach$graphicsvg$GraphicSVG$rect, 130, 60)),
+									A2(
+										$MacCASOutreach$graphicsvg$GraphicSVG$scale,
+										0.6,
+										$MacCASOutreach$graphicsvg$GraphicSVG$group(
+											$author$project$Graphing$myShapes(model.graph))))),
 								A2(
 								$MacCASOutreach$graphicsvg$GraphicSVG$move,
 								_Utils_Tuple2(-60, 0),

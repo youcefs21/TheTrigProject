@@ -140,12 +140,15 @@ updateQuad angle =
     if angle > 180 && angle <= 270 then Three else
                                         Four
 
+-- Returns a float to 3 decimal points
+toThree f = (toFloat <| round (1000 * f)) / 1000
+
 -- Getter functions
 
 -- Gets the radians from specialAngles given the degrees
 getString f i xss = 
     case xss of
-        [] -> String.fromFloat <| (abs <| toFloat <| round (100 * f (degrees i))) / 100
+        [] -> String.fromFloat <| (abs <| toThree <| f (degrees i))
         ((x1, x2)::xs) -> if i == x1 then x2 else getString f i xs
 
 getTheme t = 

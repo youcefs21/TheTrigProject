@@ -9542,6 +9542,10 @@ var $MacCASOutreach$graphicsvg$GraphicSVG$notifyMouseUp = F2(
 	function (msg, shape) {
 		return A2($MacCASOutreach$graphicsvg$GraphicSVG$MouseUp, msg, shape);
 	});
+var $MacCASOutreach$graphicsvg$GraphicSVG$notifyTapAt = F2(
+	function (msg, shape) {
+		return A2($MacCASOutreach$graphicsvg$GraphicSVG$TapAt, msg, shape);
+	});
 var $elm$core$Basics$atan2 = _Basics_atan2;
 var $author$project$Consts$radToDeg = function (r) {
 	var absRad = (r < 0) ? ((2 * $elm$core$Basics$pi) + r) : r;
@@ -10218,7 +10222,7 @@ var $author$project$Circle$triangle = F4(
 									c,
 									A2(
 										$MacCASOutreach$graphicsvg$GraphicSVG$size,
-										3,
+										4,
 										$MacCASOutreach$graphicsvg$GraphicSVG$centered(
 											A2(
 												$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
@@ -10245,7 +10249,7 @@ var $author$project$Circle$triangle = F4(
 									A2(
 									$MacCASOutreach$graphicsvg$GraphicSVG$move,
 									_Utils_Tuple2(
-										A2($author$project$Circle$xpos, $author$project$Consts$ur, angle) + ((_Utils_eq(quad, $author$project$Consts$One) || _Utils_eq(quad, $author$project$Consts$Four)) ? ($elm$core$String$length(opp) + 1) : (-($elm$core$String$length(opp) + 1))),
+										A2($author$project$Circle$xpos, $author$project$Consts$ur, angle) + ((_Utils_eq(quad, $author$project$Consts$One) || _Utils_eq(quad, $author$project$Consts$Four)) ? ($elm$core$String$length(opp) + 2) : (-($elm$core$String$length(opp) + 2))),
 										A2($author$project$Circle$ypos, $author$project$Consts$ur / 2, angle)),
 									A2(tText, opp, col.opp)),
 									A2(
@@ -10388,7 +10392,7 @@ var $author$project$Circle$angles = F3(
 										A2(
 											$MacCASOutreach$graphicsvg$GraphicSVG$filled,
 											col.dots,
-											$MacCASOutreach$graphicsvg$GraphicSVG$circle(0.5)))
+											$MacCASOutreach$graphicsvg$GraphicSVG$circle(0.75)))
 									])));
 					}
 				},
@@ -10476,22 +10480,27 @@ var $author$project$Circle$myShapes = function (model) {
 						[
 							A5($author$project$Circle$unitCircle, col, model.showCast, model.showSAngles, model.radians, model.angle),
 							A4($author$project$Circle$triangle, col, model.angle, model.quad, model.showSLengths),
-							(model.drag ? $MacCASOutreach$graphicsvg$GraphicSVG$notifyMouseMoveAt(
-							function (_v0) {
+							function () {
+							var f = function (_v0) {
 								var x = _v0.a;
 								var y = _v0.b;
 								return $author$project$Consts$UpdateAngle(
 									$author$project$Consts$poiToDeg(
 										_Utils_Tuple2(x + 60, y - 7)));
-							}) : $elm$core$Basics$identity)(
-							A2(
-								$MacCASOutreach$graphicsvg$GraphicSVG$notifyMouseUp,
-								$author$project$Consts$ToggleDrag(false),
+							};
+							return (model.drag ? $MacCASOutreach$graphicsvg$GraphicSVG$notifyMouseMoveAt(f) : $elm$core$Basics$identity)(
 								A2(
-									$MacCASOutreach$graphicsvg$GraphicSVG$notifyMouseDown,
-									$author$project$Consts$ToggleDrag(true),
-									$MacCASOutreach$graphicsvg$GraphicSVG$ghost(
-										$MacCASOutreach$graphicsvg$GraphicSVG$circle($author$project$Consts$ur * 1.1)))))
+									$MacCASOutreach$graphicsvg$GraphicSVG$notifyTapAt,
+									f,
+									A2(
+										$MacCASOutreach$graphicsvg$GraphicSVG$notifyMouseUp,
+										$author$project$Consts$ToggleDrag(false),
+										A2(
+											$MacCASOutreach$graphicsvg$GraphicSVG$notifyMouseDown,
+											$author$project$Consts$ToggleDrag(true),
+											$MacCASOutreach$graphicsvg$GraphicSVG$ghost(
+												$MacCASOutreach$graphicsvg$GraphicSVG$circle($author$project$Consts$ur * 1.1))))));
+						}()
 						])));
 		}()
 		]);
@@ -11126,7 +11135,7 @@ var $author$project$Questions$myShapes = function (model) {
 		[
 			A4($author$project$Questions$showQuestion, col, model.currentQ, model.seed, model.state),
 			A4($author$project$Questions$showScore, col, model.state, model.time, model.score),
-			_Utils_eq(model.state, $author$project$Consts$Waiting) ? $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil) : (((model.time - model.waitTime) > 5) ? $MacCASOutreach$graphicsvg$GraphicSVG$group(
+			_Utils_eq(model.state, $author$project$Consts$Waiting) ? $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil) : (((model.time - model.waitTime) > 10) ? $MacCASOutreach$graphicsvg$GraphicSVG$group(
 			_List_fromArray(
 				[
 					A2(

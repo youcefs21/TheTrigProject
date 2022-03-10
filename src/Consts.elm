@@ -83,6 +83,12 @@ specialAngles = [
 adjLengths = [(0, "1"), (30, "(√3)/2"), (45, "1/(√2)"), (60, "1/2"),    (90, "0")]
 oppLengths = [(0, "0"), (30, "1/2"),    (45, "1/(√2)"), (60, "(√3)/2"), (90, "1")]
 
+rangeStep : Float -> Float -> Float -> List Float
+rangeStep start stop step = 
+    List.map 
+        (\x -> (toFloat x - start) * step + start) 
+        (List.range (round start) (floor (stop / step)))
+
 getString i xss = 
     case xss of
         [] -> "ERR"

@@ -4,28 +4,6 @@ import Random
 import GraphicSVG exposing (..)
 import GraphicSVG.EllieApp exposing (..)
 import Consts exposing (..)
-
--- Model and initialization
-type alias Model = { 
-    time       : Float, 
-    currentQ   : Question, 
-    weightedQs : List (Float, Question),
-    state      : State, 
-    score      : (Int, Int), 
-    seed       : Int, 
-    col        : Theme
-    }
-
-init : Model
-init = { 
-    time       = 0, 
-    currentQ   = Q "" "" ["", "", "", ""], 
-    weightedQs = List.indexedMap (\_ q -> (1.0, q) ) rawQs, 
-    state      = Waiting, 
-    score      = (0, 0), 
-    seed       = 0, 
-    col        = Light
-    }
          
 -- Determines if chosen answer is correct
 correctAnswer (Q _ correct _) answer = 
@@ -123,6 +101,28 @@ showScore (correct, incorrect) =
     let
         score = correct - incorrect
     in "Score: " ++ String.fromInt score
+
+-- Model and initialization
+type alias Model = { 
+    time       : Float, 
+    currentQ   : Question, 
+    weightedQs : List (Float, Question),
+    state      : State, 
+    score      : (Int, Int), 
+    seed       : Int, 
+    col        : Theme
+    }
+
+init : Model
+init = { 
+    time       = 0, 
+    currentQ   = Q "" "" ["", "", "", ""], 
+    weightedQs = List.indexedMap (\_ q -> (1.0, q) ) rawQs, 
+    state      = Waiting, 
+    score      = (0, 0), 
+    seed       = 0, 
+    col        = Light
+    }
 
 update : Consts.Msg -> Model -> ( Model, Cmd Consts.Msg )
 update msg model = 

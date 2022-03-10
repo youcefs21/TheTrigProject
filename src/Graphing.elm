@@ -153,6 +153,15 @@ type alias Model = {
     col    : Theme
     }
 
+init : Model
+init = { 
+    time = 0, 
+    func = Sin,
+    angle = 45,
+    quad  = One,
+    scaleY = 45, 
+    col = Light }
+
 update : Consts.Msg -> Model -> ( Model, Cmd Consts.Msg )
 update msg model = 
     case msg of
@@ -171,14 +180,11 @@ update msg model =
         _ ->
             ( model, Cmd.none )
 
-init : Model
-init = { 
-    time = 0, 
-    func = Sin,
-    angle = 45,
-    quad  = One,
-    scaleY = 45, 
-    col = Light }
+view : Model -> Collage Consts.Msg
+view model = collage 192 128 <|
+    List.concat <| [
+        myShapes model
+    ]
 
 main : EllieAppWithTick () Model Consts.Msg
 main =
@@ -188,15 +194,3 @@ main =
         , view = \model -> { title = "TheTrigProject", body = view model }
         , subscriptions = \_ -> Sub.none
         }
-
-view : Model -> Collage Consts.Msg
-view model = collage 192 128 <|
-    List.concat <| [
-        myShapes model
-    ]
-
-rangeStep : Float -> Float -> Float -> List Float
-rangeStep start stop step = 
-    List.map 
-        (\x -> (toFloat x - start) * step + start) 
-        (List.range (round start) (floor (stop / step)))

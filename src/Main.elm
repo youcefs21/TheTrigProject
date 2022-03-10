@@ -56,6 +56,13 @@ myShapes model =
         --     |> notifyTap (SetCol Dark)
     ]
 
+type alias Model = { 
+    circle    : Circle.Model,
+    graph     : Graphing.Model,
+    questions : Questions.Model,
+    col       : Theme,
+    time      : Float
+    }
 
 init = {
     circle    = Circle.init,
@@ -63,24 +70,6 @@ init = {
     questions = Questions.init,
     col       = Light,
     time      = 0
-    }
-
-main : EllieAppWithTick () Model Consts.Msg
-main =
-    ellieAppWithTick Tick
-        { init = \_ -> ( init, Cmd.batch [genQ <| List.indexedMap (\_ q -> (1.0, q) ) rawQs, Random.generate NewSeed anyInt] )
-        , update = update
-        , view = \model -> { title = "TheTrigProject", body = view model }
-        , subscriptions = \_ -> Sub.none
-        }
-
-
-type alias Model = { 
-    circle    : Circle.Model,
-    graph     : Graphing.Model,
-    questions : Questions.Model,
-    col       : Theme,
-    time      : Float
     }
 
 update : Consts.Msg -> Model -> ( Model, Cmd Consts.Msg )
@@ -144,3 +133,12 @@ view model = collage 192 128 <|
     List.concat <| [
         myShapes model
     ]
+
+main : EllieAppWithTick () Model Consts.Msg
+main =
+    ellieAppWithTick Tick
+        { init = \_ -> ( init, Cmd.batch [genQ <| List.indexedMap (\_ q -> (1.0, q) ) rawQs, Random.generate NewSeed anyInt] )
+        , update = update
+        , view = \model -> { title = "TheTrigProject", body = view model }
+        , subscriptions = \_ -> Sub.none
+        }

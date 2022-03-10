@@ -84,7 +84,6 @@ angles col radians angle = group <|
                 ]
                 |> notifyTap (UpdateAngle d)) 
         specialAngles
-    
 
 triangle col angle quad showSLengths =
     let
@@ -214,6 +213,12 @@ update msg model =
         _ ->
             ( model, Cmd.none )
 
+view : Model -> Collage Consts.Msg
+view model = collage 192 128 <|
+    List.concat <| [
+        myShapes model
+    ]
+
 main : EllieAppWithTick () Model Consts.Msg
 main =
     ellieAppWithTick Tick
@@ -222,12 +227,4 @@ main =
         , view = \model -> { title = "TheTrigProject", body = view model }
         , subscriptions = \_ -> Sub.none
         }
-
-view : Model -> Collage Consts.Msg
-view model = collage 192 128 <|
-    List.concat <| [
-        myShapes model
-    ]
-
-
 

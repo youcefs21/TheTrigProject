@@ -12,7 +12,7 @@ myShapes model = [
         group [
             unitCircle col model.showCast model.showSAngles model.radians model.angle,
             triangle col model.angle model.quad model.showSLengths,
-            circle ur
+            circle (ur * 1.1)
                 |> ghost
                 |> notifyMouseDown (ToggleDrag True)
                 |> notifyMouseUp (ToggleDrag False)

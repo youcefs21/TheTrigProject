@@ -64,6 +64,11 @@ myShapes model =
             l = group [
                 line (x, y1) (x, y2)
                     |> outlined (dotted 0.5) fcol,
+                line (-90, y2) (90, y2)
+                    |> outlined (dotted 0.5) fcol,
+                circle 1
+                    |> filled fcol
+                    |> move (x, y2),
                 text (String.fromFloat <| toThree <| getFunc model.func <| (degrees model.angle))
                     |> customFont fonts.monospace
                     |> size 4

@@ -17,6 +17,9 @@ type Msg = Tick Float GetKeyState
          | Select String
          | UpdateState State
 
+
+-- Types needed for other files
+
 -- Q (Question) (Right Answer) ([Incorrect Answers])
 type Question = Q String String (List String)
 
@@ -34,6 +37,8 @@ type Quadrant = One
               | Three 
               | Four
 
+
+-- Questions
 rawQs = [ 
     Q "sin(π/4)" "1/(√2)" ["-1/(√2)", "1/2", "-(√3)/2", "1"],
     Q "sin(11π/6)" "-1/2" ["1/2", "-(√3)/2", "0", "(√3)/2"],
@@ -64,7 +69,6 @@ genQ qss = Random.generate Choice <| qGen qss
 -- Shuffles a list (taken from Random.List)
 anyInt =
     Random.int Random.minInt Random.maxInt
-    
 shuffle list =
     Random.map
         (\independentSeed ->
@@ -95,27 +99,34 @@ specialAngles = [
 adjLengths = [(0, "1"), (30, "(√3)/2"), (45, "1/(√2)"), (60, "1/2"),    (90, "0")]
 oppLengths = [(0, "0"), (30, "1/2"),    (45, "1/(√2)"), (60, "(√3)/2"), (90, "1")]
 
+-- Step for floats instead of ints
 rangeStep : Float -> Float -> Float -> List Float
 rangeStep start stop step = 
     List.map 
         (\x -> (toFloat x - start) * step + start) 
         (List.range (round start) (floor (stop / step)))
 
+-- "Jump" movement
 jump amt time = amt * abs (sin (time * 10))
 
-getString i xss = 
-    case xss of
-        [] -> "ERR"
-        ((x1, x2)::xs) -> if i == x1 then x2 else getString i xs
-
+-- Forces angle to be between 0 and 360
 limitAngle angle = 
     if angle > 360 then limitAngle (angle - 360) else angle
 
+-- Returns the quadrant the angle is in
 updateQuad angle =
     if angle >= 0  && angle <= 90  then One   else
     if angle > 90  && angle <= 180 then Two   else
     if angle > 180 && angle <= 270 then Three else
                                         Four
+
+-- Getter functions
+
+-- Gets the radians from specialAngles given the degrees
+getString i xss = 
+    case xss of
+        [] -> "ERR"
+        ((x1, x2)::xs) -> if i == x1 then x2 else getString i xs
 
 getTheme t = 
     case t of

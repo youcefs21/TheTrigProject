@@ -110,7 +110,7 @@ myShapes model =
                         |> (if (deg == model.angle) then bold else identity)
                         |> centered
                         |> filled col.words
-                        |> makeTransparent 0.5
+                        |> makeTransparent 0.9
                         |> move (if deg == 0 then 2 else 0, -2)
                 ]
                     |> move (-90 + (degrees deg) * scaleX, -3)

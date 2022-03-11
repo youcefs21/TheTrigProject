@@ -97,7 +97,7 @@ angles col radians angle = group <|
                         |> centered 
                         |> (if angle == d then bold else identity)
                         |> filled col.words 
-                        |> makeTransparent 0.5
+                        |> makeTransparent 0.9
                         |> move (x, y),
                     circle 0.75
                         |> filled col.dots

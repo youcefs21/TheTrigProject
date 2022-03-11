@@ -257,6 +257,12 @@ update msg model =
             ( { model | drag = b }, Cmd.none )
         ToggleRad r ->
             ( { model | radians = r }, Cmd.none )
+        ToggleCAST ->
+            ( { model | showCast = not model.showCast }, Cmd.none )
+        ToggleSAngles ->
+            ( { model | showSAngles = not model.showSAngles }, Cmd.none )
+        ToggleSLengths ->
+            ( { model | showSLengths = not model.showSLengths }, Cmd.none )
         _ ->
             ( model, Cmd.none )
 

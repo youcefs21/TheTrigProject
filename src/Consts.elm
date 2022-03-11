@@ -6,13 +6,18 @@ import GraphicSVG.EllieApp exposing (..)
 
 
 type Msg = Tick Float GetKeyState
+         | ToggleSettings
          -- Circle Message
          | UpdateAngle Float
          | ToggleDrag Bool
+         | ToggleCAST
+         | ToggleSAngles
+         | ToggleSLengths
          | ToggleRad Bool
          -- Graphing Message
          | SetFunc Int Func
          | SetCol Theme
+         | ToggleYLine
          -- Questions Message
          | Choice Question 
          | NewSeed Int
@@ -54,8 +59,8 @@ easy = 1.25
 hard = 0.25
 
 -- Parametric functions for "natural" movement
-paraY t = sin (2 * t) + sin (60 * t)
-paraX t = 2 * (cos t) + sin (2 * t) * cos (60 * t)
+paraX t = sin (7 * pi * t)
+paraY t = cos (5 * pi * t)
 
 -- Determines if chosen answer is correct
 correctAnswer (Q _ correct _) answer = 

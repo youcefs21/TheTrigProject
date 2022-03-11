@@ -64,8 +64,11 @@ myShapes model =
             l = group [
                 line (x, y1) (x, y2)
                     |> outlined (dotted 0.5) fcol,
-                line (-90, y2) (90, y2)
-                    |> outlined (dotted 0.5) fcol,
+                if model.yLine then 
+                    (line (-90, y2) (90, y2)
+                        |> outlined (dotted 0.5) fcol)
+                else
+                    group [],
                 circle 1
                     |> filled fcol
                     |> move (x, y2),
@@ -129,6 +132,7 @@ type alias Model = {
     func    : Func,
     angle   : Float,
     scaleY  : Float,
+    yLine   : Bool,
     radians : Bool,
     col     : Theme
     }
@@ -140,6 +144,7 @@ init = {
     angle   = 45,
     quad    = One,
     scaleY  = 45, 
+    yLine   = False,
     radians = True,
     col     = Light }
 
@@ -160,6 +165,8 @@ update msg model =
                           quad  = updateQuad newNewAngle }, Cmd.none )
         ToggleRad r ->
             ( { model | radians = r }, Cmd.none )
+        ToggleYLine ->
+            ( { model | yLine = not model.yLine }, Cmd.none )
         _ ->
             ( model, Cmd.none )
 

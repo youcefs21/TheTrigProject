@@ -52,10 +52,10 @@ showScore col state time score =
                 |> size 10
                 |> filled (if state == Waiting then col.scoreWait else if state == Incorrect then col.scoreWrong else col.scoreCorrect )
                 |> move (-95, 23)
-                |> move (paraX (0.05 * time), paraY (0.05 * time) / 2)
-                |> move (0 + (if state == Incorrect then (0.5 * sin (time * 20)) else 0), 30 + (if state == Correct then jump 0.5 time else 0))
+                |> move (paraX (0.1 * time), paraY (0.1 * time))
+                |> move (0 + (if state == Incorrect then (0.25 * sin (time * 20)) else 0), 30 + (if state == Correct then jump 0.5 time else 0))
             ]
-            |> move (2, -1)
+            |> move (5, -2)
     
 -- Draws the question
 showQuestion col (Q question correct incorrects) seed state hover = group [

@@ -11,7 +11,7 @@ myShapes model = [
     in
         group [
             unitCircle col model.showCast model.showSAngles model.radians model.angle,
-            triangle col model.angle model.quad model.showSLengths,
+            triangle col model.angle model.quad model.showSLengths model.radians,
             let
                 f = \(x, y) -> UpdateAngle (poiToDeg (x + 60, y - 7))
             in
@@ -76,7 +76,7 @@ angles col radians angle = group <|
         (\(d, r) -> 
             if d == 360 then group [] else
             let 
-                str      = if radians then r else (String.fromFloat d)
+                str      = if radians then r else (String.fromFloat d ++ "°")
                 strlen s = (*) s <| toFloat <| String.length str
                 quad     = updateQuad d
                 x = xpos (ur + 7.5) d + if quad == One || quad == Four then strlen 1.5 else -(strlen 1.5)
@@ -107,7 +107,7 @@ angles col radians angle = group <|
         specialAngles
 
 -- Draws the triangle inside the unit circle
-triangle col angle quad showSLengths =
+triangle col angle quad showSLengths radians =
     let
         alpha = case quad of
                 One -> angle
@@ -140,6 +140,14 @@ triangle col angle quad showSLengths =
             |> clip (wedge 5 (angle / 360)
                 |> filled col.angle
                 |> rotate (degrees (angle / 2))),
+
+        text (if radians then (String.fromFloat <| toN (degToRad angle) 2) ++ " rad" else (String.fromFloat alpha) ++ "°")
+            |> size 4
+            |> centered
+            |> customFont fonts.monospace
+            |> filled col.angle
+            |> move ((if radians then 26 else 13) * cos (degrees angle), (if radians then 10 else 5) * sin (degrees angle) - 2),
+
         -- Adjacent
         line org (xpos ur angle, 0)
             |> outlined (dotted 0.5) col.adj,
@@ -236,6 +244,8 @@ update msg model =
             ( { model | col = t }, Cmd.none )
         ToggleDrag b ->
             ( { model | drag = b }, Cmd.none )
+        ToggleRad r ->
+            ( { model | radians = r }, Cmd.none )
         _ ->
             ( model, Cmd.none )
 

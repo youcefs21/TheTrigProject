@@ -53,27 +53,7 @@ showScore col state time score =
                 |> filled (if state == Waiting then col.scoreWait else if state == Incorrect then col.scoreWrong else col.scoreCorrect )
                 |> move (-95, 23)
                 |> move (paraX (0.05 * time), paraY (0.05 * time) / 2)
-                |> move (0 + (if state == Incorrect then (0.5 * sin (time * 20)) else 0), 30 + (if state == Correct then jump 0.5 time else 0)),
-            if state == Waiting then group []
-            else group [
-                -- Implement next button
-                rect 192 40
-                    |> ghost
-                    |> move (-3, -50),
-                group [
-                    roundedRect 40 18 5
-                        |> filled col.buttons
-                        |> makeTransparent 0.7,
-                    text "Next"
-                        |> centered
-                        |> customFont fonts.sansserif
-                        |> filled col.words
-                        |> move (0, -4)
-                    ]
-                    |> scale 0.5
-                    |> move (70, -41)
-                    |> notifyTap (UpdateState state)
-                ]
+                |> move (0 + (if state == Incorrect then (0.5 * sin (time * 20)) else 0), 30 + (if state == Correct then jump 0.5 time else 0))
             ]
             |> move (3, -3)
     
@@ -89,7 +69,28 @@ showQuestion col (Q question correct incorrects) seed state hover = group [
         |> size 8.5
         |> filled col.question
         |> move (-95,-45),
-    drawBubbles col state correct (Tuple.first <| Random.step (shuffle (correct::incorrects)) <| Random.initialSeed seed) 0 hover
+    drawBubbles col state correct (Tuple.first <| Random.step (shuffle (correct::incorrects)) <| Random.initialSeed seed) 0 hover,
+    if state == Waiting then group []
+    else 
+        group [
+            -- Implement next button
+            rect 192 40
+                |> ghost
+                |> move (-3, -50),
+            group [
+                roundedRect 40 18 5
+                    |> filled col.buttons
+                    |> makeTransparent 0.7,
+                text "Next"
+                    |> centered
+                    |> customFont fonts.sansserif
+                    |> filled col.words
+                    |> move (0, -4)
+                ]
+                |> scale 0.5
+                |> move (73, -43)
+                |> notifyTap (UpdateState state)
+        ]
     ]
 
 -- Draws the options
@@ -149,6 +150,7 @@ type alias Model = {
     hover      : String,
     score      : (Int, Int), 
     seed       : Int, 
+    radians    : Bool,
     col        : Theme
     }
 
@@ -162,6 +164,7 @@ init = {
     hover      = "",
     score      = (0, 0), 
     seed       = 0, 
+    radians    = True,
     col        = Light
     }
 
@@ -193,6 +196,8 @@ update msg model =
             ( { model | hover = if h then option else "" }, Cmd.none )
         SetCol t ->
             ( { model | col = t }, Cmd.none )
+        ToggleRad r ->
+            ( { model | radians = r }, Cmd.none )
         _ -> (model, Cmd.none)
 
 view : Model -> Collage Consts.Msg

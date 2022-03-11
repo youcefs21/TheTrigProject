@@ -69,7 +69,7 @@ myShapes model =
                 circle 1
                     |> filled fcol
                     |> move (x, y2),
-                text (String.fromFloat <| toThree <| getFunc model.func <| (degrees model.angle))
+                text (String.fromFloat <| toN (getFunc model.func <| (degrees model.angle)) 3)
                     |> customFont fonts.monospace
                     |> size 4
                     |> filled (getCol model.func col)
@@ -92,65 +92,30 @@ myShapes model =
             |> outlined (solid 0.5) col.grid
             |> makeTransparent 0.3,
 
-        -- Buttons to change function
-        group [
-            roundedRect 15 5 2
-                |> filled col.buttons
-                |> move (30, 30),
-            text "Sin"
-                |> size 4
-                |> centered
-                |> filled col.words
-                |> move (30, 29)
-        ]
-            |> notifyTap (SetFunc 45 Sin),
-        group [
-        roundedRect 15 5 2
-            |> filled col.buttons
-            |> move (48, 30),
-        text "Cos"
-            |> size 4
-            |> centered
-            |> filled col.words
-            |> move (48, 29)
-        ]
-            |> notifyTap (SetFunc 45 Cos),
-        group [
-            roundedRect 15 5 2
-                |> filled col.buttons
-                |> move (66, 30),
-            text "Tan"
-                |> size 4
-                |> centered
-                |> filled col.words
-                |> move (66, 29)
-        ]
-            |> notifyTap (SetFunc 45 Tan),
-
         -- Buttons to move the line
         List.map 
             (\(deg, rad) -> 
                 group [
-                    roundedRect 7 3 1
+                    roundedRect 12 5 1
                         |> filled col.buttons
                         |> makeTransparent
                             (if deg == model.angle then 0.7 else 0.5)
-                        |> move (if deg == 0 then 2 else 0, 0),
+                        |> move (if deg == 0 then 2 else 0, -0.75),
                     circle 0.5
                         |> filled col.dots
                         |> move (0, 3),
-                    text rad
-                        |> size 2
+                    text (if model.radians then rad else String.fromFloat deg ++ "°")
+                        |> size 4
                         |> customFont fonts.monospace
                         |> (if (deg == model.angle) then bold else identity)
                         |> centered
                         |> filled col.words
                         |> makeTransparent 0.5
-                        |> move (if deg == 0 then 2 else 0, -0.75)
+                        |> move (if deg == 0 then 2 else 0, -2)
                 ]
                     |> move (-90 + (degrees deg) * scaleX, -3)
                     |> notifyTap (UpdateAngle deg))                     
-            specialAngles
+            specialAnglesSimple
             |> group
     ]
 
@@ -159,22 +124,24 @@ scaleX = 28
 
 
 type alias Model = { 
-    time   : Float,
-    quad   : Quadrant,
-    func   : Func,
-    angle  : Float,
-    scaleY : Float,
-    col    : Theme
+    time    : Float,
+    quad    : Quadrant,
+    func    : Func,
+    angle   : Float,
+    scaleY  : Float,
+    radians : Bool,
+    col     : Theme
     }
 
 init : Model
 init = { 
-    time = 0, 
-    func = Sin,
-    angle = 45,
-    quad  = One,
-    scaleY = 45, 
-    col = Light }
+    time    = 0, 
+    func    = Sin,
+    angle   = 45,
+    quad    = One,
+    scaleY  = 45, 
+    radians = True,
+    col     = Light }
 
 update : Consts.Msg -> Model -> ( Model, Cmd Consts.Msg )
 update msg model = 
@@ -191,6 +158,8 @@ update msg model =
             in
                 ( { model | angle = newNewAngle,
                           quad  = updateQuad newNewAngle }, Cmd.none )
+        ToggleRad r ->
+            ( { model | radians = r }, Cmd.none )
         _ ->
             ( model, Cmd.none )
 

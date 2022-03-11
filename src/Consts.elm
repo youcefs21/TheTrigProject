@@ -9,6 +9,7 @@ type Msg = Tick Float GetKeyState
          -- Circle Message
          | UpdateAngle Float
          | ToggleDrag Bool
+         | ToggleRad Bool
          -- Graphing Message
          | SetFunc Int Func
          | SetCol Theme
@@ -97,6 +98,12 @@ specialAngles = [
     (180, "π"),      (210, "7π/6"),  (225, "5π/4"), (240, "4π/3"),
     (270, "3π/2"),   (300, "5π/3"),  (315, "7π/4"), (330, "11π/6"),
     (360, "2π")]
+specialAnglesSimple = [
+    (0,   "0"),      (45,  "π/4"),  
+    (90,  "π/2"),    (135, "3π/4"),
+    (180, "π"),      (225, "5π/4"),
+    (270, "3π/2"),    (315, "7π/4"),
+    (360, "2π")]
 adjLengths = [(0, "1"), (30, "(√3)/2"), (45, "1/(√2)"), (60, "1/2"),    (90, "0")]
 oppLengths = [(0, "0"), (30, "1/2"),    (45, "1/(√2)"), (60, "(√3)/2"), (90, "1")]
 
@@ -140,15 +147,15 @@ updateQuad angle =
     if angle > 180 && angle <= 270 then Three else
                                         Four
 
--- Returns a float to 3 decimal points
-toThree f = (toFloat <| round (1000 * f)) / 1000
+-- Returns a float to n decimal points
+toN f n = (toFloat <| round (10^n * f)) / 10^n
 
 -- Getter functions
 
 -- Gets the radians from specialAngles given the degrees
 getString f i xss = 
     case xss of
-        [] -> String.fromFloat <| (abs <| toThree <| f (degrees i))
+        [] -> String.fromFloat <| (abs <| toN (f (degrees i)) 3)
         ((x1, x2)::xs) -> if i == x1 then x2 else getString f i xs
 
 getTheme t = 
@@ -172,7 +179,7 @@ getFunc f =
 
 fonts = {
     monospace = "Consolas",
-    sansserif = "Arial",
+    sansserif = "Helvetica",
     math      = "Consolas"--"Cambria Math"
     }
 

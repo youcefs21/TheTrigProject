@@ -25,40 +25,114 @@ myShapes model =
                     |> scale 0.6
                     |> clip
                         (rect 130 60 |> ghost)
-                    |> move (35, 0),
+                    |> move (37, 0),
                 Circle.myShapes model.circle
                     |> group
                     |> scale 0.72
-                    |> move (-60, 0)
+                    |> move (-58, 0)
                 ]
                 |> move (0, 5)
                 --|> move (paraX (-0.02 * model.time), 0.5 * paraY (-0.02 * model.time))
-            ]
+            ],
+
+        -- Buttons to change function
+        group [
+            roundedRect 15 5 2
+                |> filled col.buttons
+                |> makeTransparent 0.7
+                |> move (30, 30),
+            text "Sin"
+                |> customFont fonts.sansserif
+                |> size 4
+                |> centered
+                |> filled col.words
+                |> move (30, 28.5)
+        ]
+            |> notifyTap (SetFunc 45 Sin),
+        group [
+        roundedRect 15 5 2
+            |> filled col.buttons
+            |> makeTransparent 0.7
+            |> move (48, 30),
+        text "Cos"
+            |> customFont fonts.sansserif
+            |> size 4
+            |> centered
+            |> filled col.words
+            |> move (48, 28.5)
+        ]
+            |> notifyTap (SetFunc 45 Cos),
+        group [
+            roundedRect 15 5 2
+                |> filled col.buttons
+                |> makeTransparent 0.7
+                |> move (66, 30),
+            text "Tan"
+                |> customFont fonts.sansserif
+                |> size 4
+                |> centered
+                |> filled col.words
+                |> move (66, 28.5)
+        ]
+            |> notifyTap (SetFunc 45 Tan),
             
-        ,
         -- Buttons to change theme
         group [
             roundedRect 25 5 2
                 |> filled col.buttons
-                |> move (34, 37),
-            text "Light Theme"
+                |> makeTransparent 0.7
+                |> move (35, 37),
+            text "Light Mode"
+                |> customFont fonts.sansserif
                 |> size 4
                 |> centered
                 |> filled col.words
-                |> move (34, 36)
+                |> move (35, 35.5)
         ]
             |> notifyTap (SetCol Light),
         group [
             roundedRect 25 5 2
                 |> filled col.buttons
+                |> makeTransparent 0.7
                 |> move (61, 37),
-            text "Dark Theme"
+            text "Dark Mode"
+                |> customFont fonts.sansserif
                 |> size 4
                 |> centered
                 |> filled col.words
-                |> move (61, 36)
+                |> move (61, 35.5)
         ]
-            |> notifyTap (SetCol Dark)
+            |> notifyTap (SetCol Dark),
+
+        -- Buttons to change degrees/radians
+        group [
+            roundedRect 25 5 2
+                |> filled col.buttons
+                |> makeTransparent 0.7
+                |> move (35, 37),
+            text "Degrees"
+                |> customFont fonts.sansserif
+                |> size 4
+                |> centered
+                |> filled col.words
+                |> move (35, 35.5)
+        ]
+            |> move (0, 7)
+            |> notifyTap (ToggleRad False),
+        group [
+            roundedRect 25 5 2
+                |> filled col.buttons
+                |> makeTransparent 0.7
+                |> move (61, 37),
+            text "Radians"
+                |> customFont fonts.sansserif
+                |> size 4
+                |> centered
+                |> filled col.words
+                |> move (61, 35.5)
+        ]
+            |> move (0, 7)
+            |> notifyTap (ToggleRad True)
     ]
     
 
@@ -67,6 +141,7 @@ type alias Model = {
     graph     : Graphing.Model,
     questions : Questions.Model,
     col       : Theme,
+    radians   : Bool,
     time      : Float
     }
 
@@ -75,6 +150,7 @@ init = {
     graph     = Graphing.init,
     questions = Questions.init,
     col       = Light,
+    radians   = True,
     time      = 0
     }
 
@@ -113,6 +189,16 @@ update msg model =
                             graph      = newGraph,
                             questions  = newQs,
                             col        = t }, Cmd.batch [circleCmds, graphCmds, qCmds] )
+        ToggleRad r -> 
+            let
+                (newCircle, circleCmds) = Circle.update msg model.circle
+                (newGraph,  graphCmds)  = Graphing.update msg model.graph 
+                (newQs,     qCmds)      = Questions.update msg model.questions
+            in 
+                ( { model | circle     = newCircle,
+                            graph      = newGraph,
+                            questions  = newQs,
+                            radians    = r }, Cmd.batch [circleCmds, graphCmds, qCmds] )
         SetFunc _ _ -> 
             let
                 (newGraph, graphCmds)  = Graphing.update msg model.graph 

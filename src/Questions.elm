@@ -10,7 +10,7 @@ myShapes model =
     let 
         col = getTheme model.col
     in [
-        showQuestion col model.currentQ model.seed model.state,
+        showQuestion col model.currentQ model.seed model.state model.hover,
         showScore col model.state model.time model.score,
         if model.state == Waiting then group []
         else if (model.time - model.waitTime > 10) then group [
@@ -77,7 +77,7 @@ showScore col state time score =
             |> move (3, -3)
     
 -- Draws the question
-showQuestion col (Q question correct incorrects) seed state = group [
+showQuestion col (Q question correct incorrects) seed state hover = group [
     text question
         |> customFont fonts.math
         |> size 8.5
@@ -88,28 +88,54 @@ showQuestion col (Q question correct incorrects) seed state = group [
         |> size 8.5
         |> filled col.question
         |> move (-95,-45),
-    drawBubbles col state correct (Tuple.first <| Random.step (shuffle (correct::incorrects)) <| Random.initialSeed seed) 0
+    drawBubbles col state correct (Tuple.first <| Random.step (shuffle (correct::incorrects)) <| Random.initialSeed seed) 0 hover
     ]
 
 -- Draws the options
-drawBubbles col state correct answers c =
+drawBubbles col state correct answers c hover =
     case answers of 
         [] -> group []
         (x::xs) -> group [
-            group [ 
-                roundedRect 30 10 3
-                    |> filled (if state == Waiting || correct /= x then col.optionWait else col.optionFade)|> move (-40, 0),
-                text x
-                    |> customFont fonts.math
-                    |> (if state == Waiting || correct /= x then centered else bold)
-                    |> centered
-                    |> size 5
-                    |> filled col.optionText
-                    |> move (-40, -2) 
-                ]
-                |> move(-40 + 37 * c, -55)
-                |> notifyTap (Select x),
-            drawBubbles col state correct xs <| c + 1
+            let
+                waitingOrIncorrect = state == Waiting || correct /= x && x /= hover
+                hovered = state == Waiting && x == hover
+            in
+                group [ 
+                    roundedRect 30 10 3
+                        |> filled (
+                            if state == Waiting then
+                                if x == hover then
+                                    col.optionHover
+                                else
+                                    col.optionWait
+                            else if x == hover then
+                                if state == Correct then
+                                    col.optionCorrect
+                                else
+                                    col.optionWrong
+                            else 
+                                if x == correct then
+                                    col.optionCorrect
+                                else 
+                                    col.optionFade)
+                        |> move (-40, 0),
+                    text x
+                        |> customFont fonts.math
+                        |> (if waitingOrIncorrect then centered else bold)
+                        |> centered
+                        |> size 5
+                        |> filled (
+                            if hovered then
+                                col.optionTextH
+                            else
+                                col.optionText)
+                        |> move (-40, -2) 
+                    ]
+                    |> move(-40 + 37 * c, -55)
+                    |> notifyEnter (Hover x True)
+                    |> (if state == Waiting then notifyLeave (Hover x False) else identity)
+                    |> notifyTap (Select x),
+            drawBubbles col state correct xs (c + 1) hover
             ]
 
 
@@ -119,6 +145,7 @@ type alias Model = {
     currentQ   : Question, 
     weightedQs : List (Float, Question),
     state      : State, 
+    hover      : String,
     score      : (Int, Int), 
     seed       : Int, 
     col        : Theme
@@ -131,6 +158,7 @@ init = {
     currentQ   = Q "" "" ["", "", "", ""], 
     weightedQs = List.indexedMap (\_ q -> (1.0, q) ) rawQs, 
     state      = Waiting, 
+    hover      = "",
     score      = (0, 0), 
     seed       = 0, 
     col        = Light
@@ -147,18 +175,21 @@ update msg model =
             ( { model | seed = i }, Cmd.none )
         Select answer ->
             ( if correctAnswer model.currentQ answer 
-              then { model | score = (Tuple.first model.score + 1, Tuple.second model.score),
-                             state = Correct,
+              then { model | score    = (Tuple.first model.score + 1, Tuple.second model.score),
+                             state    = Correct,
                              waitTime = model.time }
-              else { model | score = (Tuple.first model.score, Tuple.second model.score + 1),
-                             state = Incorrect,
+              else { model | score    = (Tuple.first model.score, Tuple.second model.score + 1),
+                             state    = Incorrect,
                              waitTime = model.time },
               Cmd.none )
         UpdateState currentState ->
-            ( { model | state = Waiting,
+            ( { model | state      = Waiting,
                         weightedQs = updateWeights model.weightedQs model.currentQ (currentState == Correct),
-                        seed = Tuple.first <| Random.step anyInt (Random.initialSeed model.seed) }, 
+                        seed       = Tuple.first <| Random.step anyInt (Random.initialSeed model.seed),
+                        hover      = "" }, 
               genQ model.weightedQs )
+        Hover option h ->
+            ( { model | hover = if h then option else "" }, Cmd.none )
         _ -> (model, Cmd.none)
 
 view : Model -> Collage Consts.Msg

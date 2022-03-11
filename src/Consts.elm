@@ -17,6 +17,7 @@ type Msg = Tick Float GetKeyState
          | NewSeed Int
          | Select String
          | UpdateState State
+         | Hover String Bool
 
 
 -- Types needed for other files
@@ -170,46 +171,54 @@ getFunc f =
         Cos -> cos
         Tan -> tan
 
+-- Fonts and Themes
+
 fonts = {
     monospace = "Consolas",
     sansserif = "Arial",
     math      = "Cambria Math"
     }
 
+burple = rgb 88 101 242
+bluerBurple = rgb 86 99 247
+darkerBurple = rgb 64 78 237
+hazyBurple = rgb 114 137 218
+black = rgb 35 39 42
+lighterBlack = rgb 44 47 51
+darkGrey = rgb 153 170 181
+lightGrey = rgb 246 246 246
+brown = rgb 88 40 18
+pink = rgb 235 69 158
+yellow = rgb 254 231 92
+green = rgb 87 242 135
+white = rgb 255 255 255
+
+
+
 lightTheme = {
-    adj = blue,
-    opp = green,
-    hyp = red,
-    tan = rgb 0 128 128,
-    cir = blue,
-    alpha      = darkGrey,
-    angle      = red,
-    grid       = black,
-    buttons    = grey,
-    words      = black,
-    dots       = black,
-    background = white,
-    scoreWait  = rgb 125 245 245,
+    background    = white,
+    adj           = blue,
+    opp           = green,
+    hyp           = red,
+    tan           = rgb 0 128 128,
+    cir           = blue,
+    alpha         = darkGrey,
+    angle         = red,
+    grid          = black,
+    buttons       = grey,
+    words         = black,
+    dots          = black,
+    scoreWait     = rgb 35 39 42,
     scoreCorrect  = rgb 87 255 85,
     scoreWrong    = rgb 255 87 85,
     question      = rgb 255 87 85,
     optionWait    = rgb 126 217 132,
-    optionFade    = rgb 94 219 102,
+    optionHover   = black,
+    optionFade    = grey,
+    optionCorrect = rgb 94 219 102,
+    optionWrong   = red,
+    optionTextH   = brown,
     optionText    = white }
-
-    -- {
-    -- adj = blue,
-    -- opp = green,
-    -- hyp = red,
-    -- tan = rgb 0 128 128,
-    -- cir = lightBlue,
-    -- alpha      = darkGrey,
-    -- angle      = red,
-    -- grid       = black,
-    -- buttons    = grey,
-    -- words      = black,
-    -- dots       = black,
-    -- background = white }
 
 darkTheme = lightTheme
 

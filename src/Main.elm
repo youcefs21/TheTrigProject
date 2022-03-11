@@ -14,6 +14,8 @@ myShapes model =
         col = getTheme model.col
     in
     [
+        rect 192 128
+            |> filled col.background,
         group [
             Questions.myShapes model.questions
                 |> group,
@@ -131,6 +133,11 @@ update msg model =
             in
                 ( { model | questions = newQs }, Cmd.batch [qCmds] )
         Select _ ->
+            let
+                (newQs, qCmds)      = Questions.update msg model.questions
+            in
+                ( { model | questions = newQs }, Cmd.batch [qCmds] )
+        Hover _ _ ->
             let
                 (newQs, qCmds)      = Questions.update msg model.questions
             in

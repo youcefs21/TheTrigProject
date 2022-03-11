@@ -10,7 +10,8 @@ myShapes model =
     let 
         col = getTheme model.col
     in [
-        showQuestion col model.currentQ model.seed model.state model.hover,
+        showQuestion col model.currentQ model.seed model.state model.hover
+            |> move (6, 0),
         showScore col model.state model.time model.score,
         if model.state == Waiting then group []
         else if (model.time - model.waitTime > 10) then group [
@@ -190,6 +191,8 @@ update msg model =
               genQ model.weightedQs )
         Hover option h ->
             ( { model | hover = if h then option else "" }, Cmd.none )
+        SetCol t ->
+            ( { model | col = t }, Cmd.none )
         _ -> (model, Cmd.none)
 
 view : Model -> Collage Consts.Msg

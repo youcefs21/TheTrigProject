@@ -31,33 +31,34 @@ myShapes model =
                     |> scale 0.72
                     |> move (-60, 0)
                 ]
-                |> move (0, 7)
+                |> move (0, 5)
+                --|> move (paraX (-0.02 * model.time), 0.5 * paraY (-0.02 * model.time))
             ]
-            --|> move (sin model.time, cos model.time)
-        -- ,
-        -- -- Buttons to change theme
-        -- group [
-        --     roundedRect 25 5 2
-        --         |> filled col.buttons
-        --         |> move (34, 37),
-        --     text "Light Theme"
-        --         |> size 4
-        --         |> centered
-        --         |> filled col.words
-        --         |> move (34, 36)
-        -- ]
-        --     |> notifyTap (SetCol Light),
-        -- group [
-        --     roundedRect 25 5 2
-        --         |> filled col.buttons
-        --         |> move (61, 37),
-        --     text "Dark Theme"
-        --         |> size 4
-        --         |> centered
-        --         |> filled col.words
-        --         |> move (61, 36)
-        -- ]
-        --     |> notifyTap (SetCol Dark)
+            
+        ,
+        -- Buttons to change theme
+        group [
+            roundedRect 25 5 2
+                |> filled col.buttons
+                |> move (34, 37),
+            text "Light Theme"
+                |> size 4
+                |> centered
+                |> filled col.words
+                |> move (34, 36)
+        ]
+            |> notifyTap (SetCol Light),
+        group [
+            roundedRect 25 5 2
+                |> filled col.buttons
+                |> move (61, 37),
+            text "Dark Theme"
+                |> size 4
+                |> centered
+                |> filled col.words
+                |> move (61, 36)
+        ]
+            |> notifyTap (SetCol Dark)
     ]
     
 

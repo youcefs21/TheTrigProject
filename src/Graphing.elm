@@ -137,7 +137,7 @@ myShapes model =
                             (if deg == model.angle then 0.7 else 0.5)
                         |> move (if deg == 0 then 2 else 0, 0),
                     circle 0.5
-                        |> filled col.words
+                        |> filled col.dots
                         |> move (0, 3),
                     text rad
                         |> size 2

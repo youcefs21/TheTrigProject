@@ -141,12 +141,23 @@ triangle col angle quad showSLengths radians =
                 |> filled col.angle
                 |> rotate (degrees (angle / 2))),
 
-        text (if radians then (String.fromFloat <| toN (degToRad angle) 2) ++ " rad" else (String.fromFloat alpha) ++ "°")
+        -- Alpha angle text
+        text (if radians then (String.fromFloat <| toN (degToRad alpha) 2) ++ " rad" else (String.fromFloat alpha) ++ "°")
             |> size 4
             |> centered
             |> customFont fonts.monospace
             |> filled col.angle
-            |> move ((if radians then 26 else 13) * cos (degrees angle), (if radians then 10 else 5) * sin (degrees angle) - 2),
+            |> move ((if radians then 26 else 13) * cos (degrees angle), (if radians then 10 else 5) * sin (degrees angle) - 1),
+
+        -- Full angle text
+        if quad == One then group [] else
+        text (if radians then (String.fromFloat <| toN (degToRad angle) 2) ++ " rad" else (String.fromFloat angle) ++ "°")
+            |> size 4
+            |> centered
+            |> customFont fonts.monospace
+            |> filled col.angle
+            |> move (-13 * cos (degrees angle), 
+                     -5 * sin (degrees angle) - 1),
 
         -- Adjacent
         line org (xpos ur angle, 0)

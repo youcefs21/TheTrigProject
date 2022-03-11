@@ -55,7 +55,7 @@ showScore col state time score =
                 |> move (paraX (0.05 * time), paraY (0.05 * time) / 2)
                 |> move (0 + (if state == Incorrect then (0.5 * sin (time * 20)) else 0), 30 + (if state == Correct then jump 0.5 time else 0))
             ]
-            |> move (3, -3)
+            |> move (1, 0)
     
 -- Draws the question
 showQuestion col (Q question correct incorrects) seed state hover = group [

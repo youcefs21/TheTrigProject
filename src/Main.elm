@@ -37,102 +37,105 @@ myShapes model =
 
         -- Buttons to change function
         group [
+            group [
+                roundedRect 15 5 2
+                    |> filled col.buttons
+                    |> makeTransparent 0.7
+                    |> move (30, 30),
+                text "Sin"
+                    |> customFont fonts.sansserif
+                    |> size 4
+                    |> centered
+                    |> filled col.words
+                    |> move (30, 28.5)
+            ]
+                |> notifyTap (SetFunc 45 Sin),
+            group [
             roundedRect 15 5 2
                 |> filled col.buttons
                 |> makeTransparent 0.7
-                |> move (30, 30),
-            text "Sin"
+                |> move (48, 30),
+            text "Cos"
                 |> customFont fonts.sansserif
                 |> size 4
                 |> centered
                 |> filled col.words
-                |> move (30, 28.5)
-        ]
-            |> notifyTap (SetFunc 45 Sin),
-        group [
-        roundedRect 15 5 2
-            |> filled col.buttons
-            |> makeTransparent 0.7
-            |> move (48, 30),
-        text "Cos"
-            |> customFont fonts.sansserif
-            |> size 4
-            |> centered
-            |> filled col.words
-            |> move (48, 28.5)
-        ]
-            |> notifyTap (SetFunc 45 Cos),
-        group [
-            roundedRect 15 5 2
-                |> filled col.buttons
-                |> makeTransparent 0.7
-                |> move (66, 30),
-            text "Tan"
-                |> customFont fonts.sansserif
-                |> size 4
-                |> centered
-                |> filled col.words
-                |> move (66, 28.5)
-        ]
-            |> notifyTap (SetFunc 45 Tan),
-            
-        -- Buttons to change theme
-        group [
-            roundedRect 25 5 2
-                |> filled col.buttons
-                |> makeTransparent 0.7
-                |> move (35, 37),
-            text "Light Mode"
-                |> customFont fonts.sansserif
-                |> size 4
-                |> centered
-                |> filled col.words
-                |> move (35, 35.5)
-        ]
-            |> notifyTap (SetCol Light),
-        group [
-            roundedRect 25 5 2
-                |> filled col.buttons
-                |> makeTransparent 0.7
-                |> move (61, 37),
-            text "Dark Mode"
-                |> customFont fonts.sansserif
-                |> size 4
-                |> centered
-                |> filled col.words
-                |> move (61, 35.5)
-        ]
-            |> notifyTap (SetCol Dark),
+                |> move (48, 28.5)
+            ]
+                |> notifyTap (SetFunc 45 Cos),
+            group [
+                roundedRect 15 5 2
+                    |> filled col.buttons
+                    |> makeTransparent 0.7
+                    |> move (66, 30),
+                text "Tan"
+                    |> customFont fonts.sansserif
+                    |> size 4
+                    |> centered
+                    |> filled col.words
+                    |> move (66, 28.5)
+            ]
+                |> notifyTap (SetFunc 45 Tan),
+                
+            -- Buttons to change theme
+            group [
+                roundedRect 25 5 2
+                    |> filled col.buttons
+                    |> makeTransparent 0.7
+                    |> move (35, 37),
+                text "Light Mode"
+                    |> customFont fonts.sansserif
+                    |> size 4
+                    |> centered
+                    |> filled col.words
+                    |> move (35, 35.5)
+            ]
+                |> notifyTap (SetCol Light),
+            group [
+                roundedRect 25 5 2
+                    |> filled col.buttons
+                    |> makeTransparent 0.7
+                    |> move (61, 37),
+                text "Dark Mode"
+                    |> customFont fonts.sansserif
+                    |> size 4
+                    |> centered
+                    |> filled col.words
+                    |> move (61, 35.5)
+            ]
+                |> notifyTap (SetCol Dark),
 
-        -- Buttons to change degrees/radians
-        group [
-            roundedRect 25 5 2
-                |> filled col.buttons
-                |> makeTransparent 0.7
-                |> move (35, 37),
-            text "Degrees"
-                |> customFont fonts.sansserif
-                |> size 4
-                |> centered
-                |> filled col.words
-                |> move (35, 35.5)
+            -- Buttons to change degrees/radians
+            group [
+                roundedRect 25 5 2
+                    |> filled col.buttons
+                    |> makeTransparent 0.7
+                    |> move (35, 37),
+                text "Degrees"
+                    |> customFont fonts.sansserif
+                    |> size 4
+                    |> centered
+                    |> filled col.words
+                    |> move (35, 35.5)
+            ]
+                |> move (0, 7)
+                |> notifyTap (ToggleRad False),
+            group [
+                roundedRect 25 5 2
+                    |> filled col.buttons
+                    |> makeTransparent 0.7
+                    |> move (61, 37),
+                text "Radians"
+                    |> customFont fonts.sansserif
+                    |> size 4
+                    |> centered
+                    |> filled col.words
+                    |> move (61, 35.5)
+            ]
+                |> move (0, 7)
+                |> notifyTap (ToggleRad True)
         ]
-            |> move (0, 7)
-            |> notifyTap (ToggleRad False),
-        group [
-            roundedRect 25 5 2
-                |> filled col.buttons
-                |> makeTransparent 0.7
-                |> move (61, 37),
-            text "Radians"
-                |> customFont fonts.sansserif
-                |> size 4
-                |> centered
-                |> filled col.words
-                |> move (61, 35.5)
-        ]
-            |> move (0, 7)
-            |> notifyTap (ToggleRad True)
+            |> move (15, 12)
     ]
     
 

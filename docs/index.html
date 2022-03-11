@@ -9655,7 +9655,7 @@ var $author$project$Consts$cols = {
 	white: A3($MacCASOutreach$graphicsvg$GraphicSVG$rgb, 255, 255, 255),
 	yellow: A3($MacCASOutreach$graphicsvg$GraphicSVG$rgb, 254, 231, 92)
 };
-var $author$project$Consts$darkTheme = {adj: $author$project$Consts$cols.blurple, alpha: $author$project$Consts$cols.lightNitroGrey, angle: $author$project$Consts$cols.white, background: $author$project$Consts$cols.darkmodeGrey, buttons: $author$project$Consts$cols.notQuiteBlack, cir: $author$project$Consts$cols.white, dots: $author$project$Consts$cols.lightNitroGrey, grid: $author$project$Consts$cols.white, hyp: $author$project$Consts$cols.lightNitroGrey, opp: $author$project$Consts$cols.red, optionCorrect: $author$project$Consts$cols.bugHunterGreen, optionFade: $author$project$Consts$cols.lightNitroGrey, optionHover: $author$project$Consts$cols.notQuiteBlack, optionText: $author$project$Consts$cols.white, optionTextH: $author$project$Consts$cols.notSoBurple, optionWait: $author$project$Consts$cols.darkGrey, optionWrong: $author$project$Consts$cols.dndRed, question: $author$project$Consts$cols.white, scoreCorrect: $author$project$Consts$cols.bugHunterGreen, scoreWait: $author$project$Consts$cols.white, scoreWrong: $author$project$Consts$cols.dndRed, tan: $author$project$Consts$cols.braveryPurple, words: $author$project$Consts$cols.white};
+var $author$project$Consts$darkTheme = {adj: $author$project$Consts$cols.blurple, alpha: $author$project$Consts$cols.lightNitroGrey, angle: $author$project$Consts$cols.white, background: $author$project$Consts$cols.darkmodeGrey, buttons: $author$project$Consts$cols.notQuiteBlack, cir: $author$project$Consts$cols.white, dots: $author$project$Consts$cols.lightNitroGrey, grid: $author$project$Consts$cols.white, hyp: $author$project$Consts$cols.lightNitroGrey, opp: $author$project$Consts$cols.red, optionCorrect: $author$project$Consts$cols.bugHunterGreen, optionFade: $author$project$Consts$cols.darkGrey, optionHover: $author$project$Consts$cols.notQuiteBlack, optionText: $author$project$Consts$cols.white, optionTextH: $author$project$Consts$cols.notSoBurple, optionWait: $author$project$Consts$cols.darkGrey, optionWrong: $author$project$Consts$cols.dndRed, question: $author$project$Consts$cols.white, scoreCorrect: $author$project$Consts$cols.bugHunterGreen, scoreWait: $author$project$Consts$cols.white, scoreWrong: $author$project$Consts$cols.dndRed, tan: $author$project$Consts$cols.braveryPurple, words: $author$project$Consts$cols.white};
 var $author$project$Consts$lightTheme = {adj: $author$project$Consts$cols.blurple, alpha: $author$project$Consts$cols.darkGrey, angle: $author$project$Consts$cols.darkmodeGrey, background: $author$project$Consts$cols.white, buttons: $author$project$Consts$cols.lightNitroGrey, cir: $author$project$Consts$cols.lightNitroGrey, dots: $author$project$Consts$cols.darkGrey, grid: $author$project$Consts$cols.darkmodeGrey, hyp: $author$project$Consts$cols.notQuiteBlack, opp: $author$project$Consts$cols.red, optionCorrect: $author$project$Consts$cols.green, optionFade: $author$project$Consts$cols.lightNitroGrey, optionHover: $author$project$Consts$cols.nitroGrey, optionText: $author$project$Consts$cols.white, optionTextH: $author$project$Consts$cols.blurple, optionWait: $author$project$Consts$cols.lightNitroGrey, optionWrong: $author$project$Consts$cols.dndRed, question: $author$project$Consts$cols.notQuiteBlack, scoreCorrect: $author$project$Consts$cols.green, scoreWait: $author$project$Consts$cols.notQuiteBlack, scoreWrong: $author$project$Consts$cols.dndRed, tan: $author$project$Consts$cols.streamerPurple, words: $author$project$Consts$cols.notQuiteBlack};
 var $author$project$Consts$getTheme = function (t) {
 	if (t.$ === 'Light') {
@@ -10516,7 +10516,7 @@ var $author$project$Circle$angles = F3(
 										_Utils_Tuple2(x, y),
 										A2(
 											$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
-											0.5,
+											0.9,
 											A2(
 												$MacCASOutreach$graphicsvg$GraphicSVG$filled,
 												col.words,
@@ -10911,7 +10911,7 @@ var $author$project$Graphing$myShapes = function (model) {
 											-2),
 										A2(
 											$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
-											0.5,
+											0.9,
 											A2(
 												$MacCASOutreach$graphicsvg$GraphicSVG$filled,
 												col.words,
@@ -11201,7 +11201,7 @@ var $author$project$Questions$showScore = F4(
 		};
 		return A2(
 			$MacCASOutreach$graphicsvg$GraphicSVG$move,
-			_Utils_Tuple2(1, 0),
+			_Utils_Tuple2(2, -1),
 			$MacCASOutreach$graphicsvg$GraphicSVG$group(
 				_List_fromArray(
 					[

@@ -73,7 +73,7 @@ myShapes model =
                     |> customFont fonts.monospace
                     |> size 4
                     |> filled (getCol model.func col)
-                    |> move (x + 2, y2 / 4)
+                    |> move (x + 2, max -40 <| min 75 y2 / 2)
                 ]
             dne = 
                 text "DNE"

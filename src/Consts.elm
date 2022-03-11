@@ -17,6 +17,7 @@ type Msg = Tick Float GetKeyState
          | NewSeed Int
          | Select String
          | UpdateState State
+         | Hover String Bool
 
 
 -- Types needed for other files
@@ -32,8 +33,6 @@ type Func = Sin
 
 type Theme = Light
            | Dark
-           | AMOLED
-
 type Quadrant = One 
               | Two 
               | Three 
@@ -156,7 +155,6 @@ getTheme t =
     case t of
         Light  -> lightTheme
         Dark   -> darkTheme
-        AMOLED -> amoTheme
 
 getCol f t = 
     case f of
@@ -170,47 +168,91 @@ getFunc f =
         Cos -> cos
         Tan -> tan
 
+-- Fonts and Themes
+
 fonts = {
     monospace = "Consolas",
     sansserif = "Arial",
-    math      = "Cambria Math"
+    math      = "Consolas"--"Cambria Math"
     }
 
+cols = {
+    white           = rgb 255 255 255,
+    darkmodeGrey    = rgb 54  57  63 ,
+    developerBlue   = rgb 62  112 221,
+    notSoBurple     = rgb 88  102 239,
+    onlineGreen     = rgb 61  165 96 ,
+    idleYellow      = rgb 249 166 43 ,
+    dndRed          = rgb 236 65  69 ,
+    braveryPurple   = rgb 155 132 236,
+    brillianceCoral = rgb 243 123 104,
+    hypesquadYellow = rgb 248 165 50 ,
+    balanceTurqoise = rgb 73  221 193,
+    bugHunterGreen  = rgb 72  183 132,
+    nitroGrey       = rgb 79  93  126,
+    lightNitroGrey  = rgb 183 194 206,
+    nitroBlue       = rgb 79  93  127,
+    blurple         = rgb 114 137 218,
+    darkBlurple     = rgb 78  93  148,
+    partnerBlue     = rgb 65  135 237,
+    boostPink       = rgb 254 115 246,
+    streamerPurple  = rgb 88  54  148,
+    hyperlinkBlue   = rgb 9   176 242,
+    greyple         = rgb 153 170 181,
+    darkGrey        = rgb 47  49  54 ,
+    notQuiteBlack   = rgb 39  39  42 ,
+    black           = rgb 0   0   0  ,
+    green           = rgb 87  242 135,
+    yellow          = rgb 254 231 92 ,
+    fuchsia         = rgb 235 69  158,
+    red             = rgb 237 66  69 }
+
 lightTheme = {
-    adj = blue,
-    opp = green,
-    hyp = red,
-    tan = rgb 0 128 128,
-    cir = blue,
-    alpha      = darkGrey,
-    angle      = red,
-    grid       = black,
-    buttons    = grey,
-    words      = black,
-    dots       = black,
-    background = white,
-    scoreWait  = rgb 125 245 245,
-    scoreCorrect  = rgb 87 255 85,
-    scoreWrong    = rgb 255 87 85,
-    question      = rgb 255 87 85,
-    optionWait    = rgb 126 217 132,
-    optionFade    = rgb 94 219 102,
-    optionText    = white }
+    background    = cols.white,
+    adj           = cols.blurple,
+    opp           = cols.red,
+    hyp           = cols.notQuiteBlack,
+    tan           = cols.streamerPurple,
+    cir           = cols.lightNitroGrey,
+    alpha         = cols.darkGrey,
+    angle         = cols.darkmodeGrey,
+    grid          = cols.darkmodeGrey,
+    buttons       = cols.lightNitroGrey,
+    words         = cols.notQuiteBlack,
+    dots          = cols.darkGrey,
+    scoreWait     = cols.notQuiteBlack,
+    scoreCorrect  = cols.green,
+    scoreWrong    = cols.dndRed,
+    question      = cols.notQuiteBlack,
+    optionWait    = cols.lightNitroGrey,
+    optionHover   = cols.nitroGrey,
+    optionFade    = cols.lightNitroGrey,
+    optionCorrect = cols.green,
+    optionWrong   = cols.dndRed,
+    optionTextH   = cols.blurple,
+    optionText    = cols.white }
 
-    -- {
-    -- adj = blue,
-    -- opp = green,
-    -- hyp = red,
-    -- tan = rgb 0 128 128,
-    -- cir = lightBlue,
-    -- alpha      = darkGrey,
-    -- angle      = red,
-    -- grid       = black,
-    -- buttons    = grey,
-    -- words      = black,
-    -- dots       = black,
-    -- background = white }
-
-darkTheme = lightTheme
-
-amoTheme = lightTheme
+darkTheme = {
+    background    = cols.darkmodeGrey,
+    adj           = cols.blurple,
+    opp           = cols.red,
+    hyp           = cols.lightNitroGrey,
+    tan           = cols.braveryPurple,
+    cir           = cols.white,
+    alpha         = cols.lightNitroGrey,
+    angle         = cols.white,
+    grid          = cols.white,
+    buttons       = cols.notQuiteBlack,
+    words         = cols.white,
+    dots          = cols.lightNitroGrey,
+    scoreWait     = cols.white,
+    scoreCorrect  = cols.bugHunterGreen,
+    scoreWrong    = cols.dndRed,
+    question      = cols.white,
+    optionWait    = cols.darkGrey,
+    optionHover   = cols.notQuiteBlack,
+    optionFade    = cols.lightNitroGrey,
+    optionCorrect = cols.bugHunterGreen,
+    optionWrong   = cols.dndRed,
+    optionTextH   = cols.notSoBurple,
+    optionText    = cols.white }

@@ -73,7 +73,7 @@ myShapes model =
                     |> customFont fonts.monospace
                     |> size 4
                     |> filled (getCol model.func col)
-                    |> move (x + 2, y2 / 4)
+                    |> move (x + 2, max -40 <| min 75 y2 / 2)
                 ]
             dne = 
                 text "DNE"
@@ -137,7 +137,7 @@ myShapes model =
                             (if deg == model.angle then 0.7 else 0.5)
                         |> move (if deg == 0 then 2 else 0, 0),
                     circle 0.5
-                        |> filled col.words
+                        |> filled col.dots
                         |> move (0, 3),
                     text rad
                         |> size 2

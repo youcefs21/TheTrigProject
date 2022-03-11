@@ -19,7 +19,7 @@ myShapes model = [
                     |> ghost
                     |> notifyMouseDown (ToggleDrag True)
                     |> notifyMouseUp (ToggleDrag False)
-                    |> notifyTapAt f
+                    |> notifyMouseDownAt f
                     |> if model.drag then 
                         notifyMouseMoveAt f
                     else

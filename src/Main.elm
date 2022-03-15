@@ -39,192 +39,171 @@ myShapes model =
         -- Settings
         if model.settings then 
             group [
+                -- Exit out of settings
                 group [
                     rect 192 128
-                        |> ghost
-                        |> notifyTap ToggleSettings
-                ],
-                group [
-                    roundedRect 53 35 2
-                        |> filled col.optionFade
-                        |> makeTransparent 0.2
-                        |> move (48, 30),
-                    -- Buttons to change unit circle
-                    group [
-                        roundedRect 25 5 2
-                            |> filled col.buttons
-                            |> makeTransparent (if model.cast then on else off)
-                            |> move (35, 37),
-                        text "CAST"
-                            |> customFont fonts.sansserif
-                            |> size 4
-                            |> centered
-                            |> filled col.words
-                            |> move (35, 35.5)
-                    ]
-                        |> move (0, -14)
-                        |> notifyTap ToggleCAST,
-                    group [
-                        roundedRect 25 5 2
-                            |> filled col.buttons
-                            |> makeTransparent (if model.sLengths then on else off)
-                            |> move (61, 37),
-                        text "Lengths"
-                            |> customFont fonts.sansserif
-                            |> size 4
-                            |> centered
-                            |> filled col.words
-                            |> move (61, 35.5)
-                    ]
-                        |> move (0, -14)
-                        |> notifyTap ToggleSLengths,
-                    group [
-                        roundedRect 25 5 2
-                            |> filled col.buttons
-                            |> makeTransparent (if model.sAngles then on else off)
-                            |> move (35, 37),
-                        text "Angles"
-                            |> customFont fonts.sansserif
-                            |> size 4
-                            |> centered
-                            |> filled col.words
-                            |> move (35, 35.5)
-                    ]
-                        |> move (0, -21)
-                        |> notifyTap ToggleSAngles,
-
-                    -- Buttons to change graph
-                    group [
-                        roundedRect 25 5 2
-                            |> filled col.buttons
-                            |> makeTransparent (if model.yLine then on else off)
-                            |> move (61, 37),
-                        text "Y-axis Line"
-                            |> customFont fonts.sansserif
-                            |> size 4
-                            |> centered
-                            |> filled col.words
-                            |> move (61, 35.5)
-                    ]
-                        |> move (0, -21)
-                        |> notifyTap ToggleYLine,
-
-                    -- Buttons to change function
-                    group [
-                        roundedRect 15 5 2
-                            |> filled col.buttons
-                            |> makeTransparent (if model.func == Sin then on else off)
-                            |> move (30, 30),
-                        text "Sin"
-                            |> customFont fonts.sansserif
-                            |> size 4
-                            |> centered
-                            |> filled col.words
-                            |> move (30, 28.5)
-                    ]
-                        |> notifyTap (SetFunc 45 Sin),
-                    group [
-                        roundedRect 15 5 2
-                            |> filled col.buttons
-                            |> makeTransparent (if model.func == Cos then on else off)
-                            |> move (48, 30),
-                        text "Cos"
-                            |> customFont fonts.sansserif
-                            |> size 4
-                            |> centered
-                            |> filled col.words
-                            |> move (48, 28.5)
-                    ]
-                        |> notifyTap (SetFunc 45 Cos),
-                    group [
-                        roundedRect 15 5 2
-                            |> filled col.buttons
-                            |> makeTransparent (if model.func == Tan then on else off)
-                            |> move (66, 30),
-                        text "Tan"
-                            |> customFont fonts.sansserif
-                            |> size 4
-                            |> centered
-                            |> filled col.words
-                            |> move (66, 28.5)
-                    ]
-                        |> notifyTap (SetFunc 45 Tan),
-                        
-                    -- Buttons to change theme
-                    group [
-                        roundedRect 25 5 2
-                            |> filled col.buttons
-                            |> makeTransparent (if model.col == Light then on else off)
-                            |> move (35, 37),
-                        text "Light Mode"
-                            |> customFont fonts.sansserif
-                            |> size 4
-                            |> centered
-                            |> filled col.words
-                            |> move (35, 35.5)
-                    ]
-                        |> notifyTap (SetCol Light),
-                    group [
-                        roundedRect 25 5 2
-                            |> filled col.buttons
-                            |> makeTransparent (if model.col == Dark then on else off)
-                            |> move (61, 37),
-                        text "Dark Mode"
-                            |> customFont fonts.sansserif
-                            |> size 4
-                            |> centered
-                            |> filled col.words
-                            |> move (61, 35.5)
-                    ]
-                        |> notifyTap (SetCol Dark),
-
-                    -- Buttons to change degrees/radians
-                    group [
-                        roundedRect 25 5 2
-                            |> filled col.buttons
-                            |> makeTransparent (if model.radians then off else on)
-                            |> move (35, 37),
-                        text "Degrees"
-                            |> customFont fonts.sansserif
-                            |> size 4
-                            |> centered
-                            |> filled col.words
-                            |> move (35, 35.5)
-                    ]
-                        |> move (0, 7)
-                        |> notifyTap (ToggleRad False),
-                    group [
-                        roundedRect 25 5 2
-                            |> filled col.buttons
-                            |> makeTransparent (if model.radians then on else off)
-                            |> move (61, 37),
-                        text "Radians"
-                            |> customFont fonts.sansserif
-                            |> size 4
-                            |> centered
-                            |> filled col.words
-                            |> move (61, 35.5)
-                    ]
-                        |> move (0, 7)
-                        |> notifyTap (ToggleRad True)
+                        |> filled col.buttons
+                        |> makeTransparent 0.4
                 ]
-                    |> move (15, 12)
+                    |> notifyTap ToggleSettings,
+                settingsBox model col
+                    |> move (70, 10)
             ]
         else 
-            group [
-                square 10
-                    |> filled col.buttons
-                    |> makeTransparent 0,
-                text "⚙"
-                    |> size 8
-                    |> centered
-                    |> customFont fonts.sansserif
-                    |> filled col.words
-                    |> makeTransparent 0.9
-                    |> move (0, -3)
-                ]
+            settingsButton col
                 |> move (89, 57)
-                |> notifyTap ToggleSettings
+    ]
+
+settingsButton col = 
+    group [
+        square 10
+            |> filled col.buttons
+            |> makeTransparent 0,
+        text "⚙"
+            |> size 8
+            |> centered
+            |> customFont fonts.sansserif
+            |> filled col.words
+            |> makeTransparent 0.9
+            |> move (0, -3)
+    ]
+        |> notifyTap ToggleSettings
+
+option txt toggled col =
+    group [
+        square 3
+            |> filled (if toggled then col.optionCorrect else col.optionWrong)
+            |> makeTransparent 0.7
+            |> addOutline (solid 0.25) col.words
+            |> move (-17, 0),
+        text txt
+            |> customFont fonts.sansserif
+            |> size 4
+            |> filled col.words
+            |> move (-13, -1.4)
+    ]
+    
+button txt toggled col =
+    group [
+        roundedRect 35 7 1
+            |> filled col.buttons
+            |> makeTransparent (if toggled then 1 else 0.7),
+        text txt
+            |> customFont fonts.sansserif
+            |> centered
+            |> bold
+            |> size 4.5
+            |> filled col.words
+            |> move (0, -1.3)
+    ]
+
+settingsBox model col = 
+    group [
+
+        -- Settings box
+        group [
+            -- Background
+            roundedRect 45 103 2
+                |> filled col.buttons
+                |> makeTransparent 0.6
+                |> move (0, -1),
+            text "Settings"
+                |> customFont fonts.sansserif
+                |> centered
+                |> bold
+                |> size 7
+                |> filled col.words
+                |> move (0, 42),
+            rect 35 0.25
+                |> filled col.grid
+                |> move (0, 39),
+
+            
+            -- Main settings for unit circle/graphs
+            option "CAST / quadrants" model.cast col
+                |> move (0, 35)
+                |> notifyTap ToggleCAST,
+            option "special angles" model.sAngles col
+                |> move (0, 29)
+                |> notifyTap ToggleSAngles,
+            option "side lengths" model.sLengths col
+                |> move (0, 23)
+                |> notifyTap ToggleSLengths,
+            option "y-line on graph" model.yLine col
+                |> move (0, 17)
+                |> notifyTap ToggleYLine,
+
+            -- Change between degrees and radians
+            rect 35 0.25
+                |> filled col.grid
+                |> move (0, 12.5),
+            group [
+                rect 42 8
+                    |> ghost
+                    |> move (0, 1.5),
+                text "degrees"
+                    |> customFont fonts.sansserif
+                    |> size 5
+                    |> (if model.radians then identity else bold)
+                    |> filled col.words
+                    |> makeTransparent (if model.radians then 0.6 else 1)
+                    |> move (-20 - (if model.radians then 0 else 1), 0),
+                text " / "
+                    |> customFont fonts.sansserif
+                    |> centered
+                    |> size 5
+                    |> filled col.words,
+                text "radians"
+                    |> customFont fonts.sansserif
+                    |> size 5
+                    |> (if model.radians then bold else identity)
+                    |> filled col.words
+                    |> makeTransparent (if model.radians then 1 else 0.6)
+                    |> move (1.5, 0)
+                ]
+                |> makeTransparent 0.9
+                |> move (0.25, 6)
+                |> notifyTap ToggleRad,
+
+            -- Change between functions
+            rect 35 0.25
+                |> filled col.grid
+                |> move (0, 3),
+            text "Functions"
+                |> customFont fonts.sansserif
+                |> centered
+                |> bold
+                |> size 6
+                |> filled col.words
+                |> move (0, -3.5),
+            option "sin" model.showSin col
+                |> move (0, -8)
+                |> notifyTap ToggleSin,
+            option "cos" model.showCos col
+                |> move (0, -14)
+                |> notifyTap ToggleCos,
+            option "tan" model.showTan col
+                |> move (0, -20)
+                |> notifyTap ToggleTan,
+
+            -- Change themes
+            rect 35 0.25
+                |> filled col.grid
+                |> move (0, -24),
+            text "Themes"
+                |> customFont fonts.sansserif
+                |> centered
+                |> bold
+                |> size 6
+                |> filled col.words
+                |> move (0, -31),
+            button "Light" (model.col == Light) col
+                |> move (0, -37)
+                |> notifyTap (SetCol Light),
+            button "Dark" (model.col == Dark) col
+                |> move (0, -45)
+                |> notifyTap (SetCol Dark)
+        ]
     ]
     
 
@@ -239,7 +218,9 @@ type alias Model = {
     sLengths  : Bool,
     sAngles   : Bool,
     yLine     : Bool,
-    func      : Func,
+    showSin   : Bool,
+    showCos   : Bool,
+    showTan   : Bool,
     time      : Float
     }
 
@@ -254,7 +235,9 @@ init = {
     sLengths  = True,
     sAngles   = True,
     yLine     = False,
-    func      = Sin,
+    showSin   = True,
+    showCos   = False,
+    showTan   = False,
     time      = 0
     }
 
@@ -310,7 +293,7 @@ update msg model =
                             graph      = newGraph,
                             questions  = newQs,
                             col        = t }, Cmd.batch [circleCmds, graphCmds, qCmds] )
-        ToggleRad r -> 
+        ToggleRad -> 
             let
                 (newCircle, circleCmds) = Circle.update msg model.circle
                 (newGraph,  graphCmds)  = Graphing.update msg model.graph 
@@ -319,17 +302,27 @@ update msg model =
                 ( { model | circle     = newCircle,
                             graph      = newGraph,
                             questions  = newQs,
-                            radians    = r }, Cmd.batch [circleCmds, graphCmds, qCmds] )
+                            radians    = not model.radians }, Cmd.batch [circleCmds, graphCmds, qCmds] )
         ToggleYLine -> 
             let
                 (newGraph, graphCmds)  = Graphing.update msg model.graph 
             in 
                 ( { model | graph = newGraph, yLine = not model.yLine }, Cmd.batch [graphCmds] )
-        SetFunc _ f -> 
+        ToggleSin -> 
             let
                 (newGraph, graphCmds)  = Graphing.update msg model.graph 
             in 
-                ( { model | graph = newGraph, func = f }, Cmd.batch [graphCmds] )
+                ( { model | graph = newGraph, showSin = not model.showSin }, Cmd.batch [graphCmds] )
+        ToggleCos -> 
+            let
+                (newGraph, graphCmds)  = Graphing.update msg model.graph 
+            in 
+                ( { model | graph = newGraph, showCos = not model.showCos }, Cmd.batch [graphCmds] )
+        ToggleTan -> 
+            let
+                (newGraph, graphCmds)  = Graphing.update msg model.graph 
+            in 
+                ( { model | graph = newGraph, showTan = not model.showTan }, Cmd.batch [graphCmds] )
         NewSeed _ ->
             let
                 (newQs, qCmds)      = Questions.update msg model.questions

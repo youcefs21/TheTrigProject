@@ -6,13 +6,8 @@ import String
 import Consts exposing (..)
 
 
-myShapes model = 
-    let
-        col = getTheme model.col
-        func = getFunc model.func
-        fcol = getCol model.func col
-    in [
-        -- Function
+function model func fcol = 
+    group [
         List.map 
             (\i -> 
                 let
@@ -32,6 +27,58 @@ myShapes model =
                                 |> move (-90, 0))) 
             (rangeStep 0 (2 * pi) deltaX)
             |> group,
+        -- Moving line
+            let
+                x = -90 + (degrees model.angle) * scaleX
+                y1 = 0
+                y2 = model.scaleY * func (degrees model.angle)
+                l = group [
+                    line (x, y1) (x, y2)
+                        |> outlined (dotted 0.5) fcol,
+                    if model.yLine then 
+                        (line (-90, y2) (90, y2)
+                            |> outlined (dotted 0.5) fcol)
+                    else
+                        group [],
+                    circle 1
+                        |> filled fcol
+                        |> move (x, y2),
+                    text (String.fromFloat <| toN (func (degrees model.angle)) 3)
+                        |> customFont fonts.monospace
+                        |> size 4
+                        |> filled fcol
+                        |> move (x + 2, max -40 <| min 75 y2 / 2)
+                    ]
+                dne = 
+                    text "DNE"
+                        |> customFont fonts.monospace
+                        |> size 4
+                        |> centered
+                        |> filled fcol
+                        |> move (x, y1 + 1)
+                ra = round model.angle
+            in
+                if ((ra == 90 || ra == 270) && func == tan) then dne
+                else l
+    ]
+
+myShapes model = 
+    let
+        col = getTheme model.col
+    in [
+        -- Function
+        if model.showSin then 
+            function model (sin) col.opp
+        else
+            group [],
+        if model.showCos then
+            function model (cos) col.adj
+        else
+            group [],
+        if model.showTan then
+            function model (tan) col.tan
+        else
+            group [],
 
         -- Vertical scale
         List.map (\i -> 
@@ -55,40 +102,6 @@ myShapes model =
         line (-90, -50) (-90, 50)
             |> outlined (solid 0.5) col.grid
             |> makeTransparent 0.3,
-
-        -- Moving line
-        let
-            x = -90 + (degrees model.angle) * scaleX
-            y1 = 0
-            y2 = model.scaleY * func (degrees model.angle)
-            l = group [
-                line (x, y1) (x, y2)
-                    |> outlined (dotted 0.5) fcol,
-                if model.yLine then 
-                    (line (-90, y2) (90, y2)
-                        |> outlined (dotted 0.5) fcol)
-                else
-                    group [],
-                circle 1
-                    |> filled fcol
-                    |> move (x, y2),
-                text (String.fromFloat <| toN (getFunc model.func <| (degrees model.angle)) 3)
-                    |> customFont fonts.monospace
-                    |> size 4
-                    |> filled (getCol model.func col)
-                    |> move (x + 2, max -40 <| min 75 y2 / 2)
-                ]
-            dne = 
-                text "DNE"
-                    |> customFont fonts.monospace
-                    |> size 4
-                    |> centered
-                    |> filled fcol
-                    |> move (x, y1 + 1)
-            ra = round model.angle
-        in
-            if ((ra == 90 || ra == 270) && model.func == Tan) then dne
-            else l,
 
         -- Horizontal Grid
         line (-93, 0) (100, 0)
@@ -122,14 +135,16 @@ myShapes model =
             |> group
     ]
 
-deltaX = 0.005
+deltaX = 0.01
 scaleX = 28
 
 
 type alias Model = { 
     time    : Float,
     quad    : Quadrant,
-    func    : Func,
+    showSin : Bool,
+    showCos : Bool,
+    showTan : Bool,
     angle   : Float,
     scaleY  : Float,
     yLine   : Bool,
@@ -139,8 +154,10 @@ type alias Model = {
 
 init : Model
 init = { 
-    time    = 0, 
-    func    = Sin,
+    time    = 0,
+    showSin = True,
+    showCos = False,
+    showTan = False,
     angle   = 45,
     quad    = One,
     scaleY  = 45, 
@@ -153,8 +170,6 @@ update msg model =
     case msg of
         Tick t _ -> 
             ( { model | time = t }, Cmd.none )
-        SetFunc s f -> 
-            ( { model | func = f, scaleY = toFloat s }, Cmd.none )
         SetCol t -> 
             ( { model | col = t }, Cmd.none )
         UpdateAngle newAngle -> 
@@ -163,10 +178,16 @@ update msg model =
             in
                 ( { model | angle = newNewAngle,
                           quad  = updateQuad newNewAngle }, Cmd.none )
-        ToggleRad r ->
-            ( { model | radians = r }, Cmd.none )
+        ToggleRad ->
+            ( { model | radians = not model.radians }, Cmd.none )
         ToggleYLine ->
             ( { model | yLine = not model.yLine }, Cmd.none )
+        ToggleSin ->
+            ( { model | showSin = not model.showSin }, Cmd.none )
+        ToggleCos ->
+            ( { model | showCos = not model.showCos }, Cmd.none )
+        ToggleTan ->
+            ( { model | showTan = not model.showTan }, Cmd.none )
         _ ->
             ( model, Cmd.none )
 

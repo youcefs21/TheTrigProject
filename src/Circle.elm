@@ -255,8 +255,8 @@ update msg model =
             ( { model | col = t }, Cmd.none )
         ToggleDrag b ->
             ( { model | drag = b }, Cmd.none )
-        ToggleRad r ->
-            ( { model | radians = r }, Cmd.none )
+        ToggleRad ->
+            ( { model | radians = not model.radians }, Cmd.none )
         ToggleCAST ->
             ( { model | showCast = not model.showCast }, Cmd.none )
         ToggleSAngles ->

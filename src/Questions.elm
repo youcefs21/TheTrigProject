@@ -196,8 +196,8 @@ update msg model =
             ( { model | hover = if h then option else "" }, Cmd.none )
         SetCol t ->
             ( { model | col = t }, Cmd.none )
-        ToggleRad r ->
-            ( { model | radians = r }, Cmd.none )
+        ToggleRad ->
+            ( { model | radians = not model.radians }, Cmd.none )
         _ -> (model, Cmd.none)
 
 view : Model -> Collage Consts.Msg

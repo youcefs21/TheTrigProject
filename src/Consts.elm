@@ -13,9 +13,11 @@ type Msg = Tick Float GetKeyState
          | ToggleCAST
          | ToggleSAngles
          | ToggleSLengths
-         | ToggleRad Bool
+         | ToggleRad
          -- Graphing Message
-         | SetFunc Int Func
+         | ToggleSin
+         | ToggleCos 
+         | ToggleTan
          | SetCol Theme
          | ToggleYLine
          -- Questions Message
@@ -32,10 +34,6 @@ type Msg = Tick Float GetKeyState
 type Question = Q String String (List String)
 
 type State = Waiting | Correct | Incorrect
-
-type Func = Sin
-          | Cos
-          | Tan
 
 type Theme = Light
            | Dark
@@ -167,18 +165,6 @@ getTheme t =
     case t of
         Light  -> lightTheme
         Dark   -> darkTheme
-
-getCol f t = 
-    case f of
-        Sin -> t.opp
-        Cos -> t.adj
-        Tan -> t.tan
-
-getFunc f = 
-    case f of
-        Sin -> sin
-        Cos -> cos
-        Tan -> tan
 
 -- Fonts and Themes
 

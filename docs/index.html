@@ -10751,8 +10751,8 @@ var $author$project$Consts$rangeStep = F3(
 				$elm$core$Basics$floor(stop / step)));
 	});
 var $author$project$Graphing$scaleX = 28;
-var $author$project$Graphing$function = F3(
-	function (model, func, fcol) {
+var $author$project$Graphing$function = F4(
+	function (model, func, fcol, dnePossible) {
 		return $MacCASOutreach$graphicsvg$GraphicSVG$group(
 			_List_fromArray(
 				[
@@ -10769,7 +10769,7 @@ var $author$project$Graphing$function = F3(
 								var y1 = model.scaleY * func(i - $author$project$Graphing$deltaX);
 								var x2 = i * $author$project$Graphing$scaleX;
 								var x1 = (i - $author$project$Graphing$deltaX) * $author$project$Graphing$scaleX;
-								return A2(
+								return ($elm$core$Basics$abs(y2) > 60) ? $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil) : A2(
 									$MacCASOutreach$graphicsvg$GraphicSVG$move,
 									_Utils_Tuple2(-90, 0),
 									A3(
@@ -10784,8 +10784,15 @@ var $author$project$Graphing$function = F3(
 						},
 						A3($author$project$Consts$rangeStep, 0, 2 * $elm$core$Basics$pi, $author$project$Graphing$deltaX))),
 					function () {
-					var y2 = model.scaleY * func(
-						$elm$core$Basics$degrees(model.angle));
+					var y2 = function () {
+						var yp = model.scaleY * func(
+							$elm$core$Basics$degrees(model.angle));
+						var ypm = A2(
+							$elm$core$Basics$min,
+							$elm$core$Basics$abs(yp),
+							60);
+						return (yp < 0) ? (-ypm) : ypm;
+					}();
 					var y1 = 0;
 					var x = (-90) + ($elm$core$Basics$degrees(model.angle) * $author$project$Graphing$scaleX);
 					var ra = $elm$core$Basics$round(model.angle);
@@ -10854,7 +10861,7 @@ var $author$project$Graphing$function = F3(
 										$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
 										$author$project$Consts$fonts.monospace,
 										$MacCASOutreach$graphicsvg$GraphicSVG$text('DNE'))))));
-					return (((ra === 90) || (ra === 270)) && _Utils_eq(func, $elm$core$Basics$tan)) ? dne : l;
+					return (((ra === 90) || (ra === 270)) && dnePossible) ? dne : l;
 				}()
 				]));
 	});
@@ -10874,9 +10881,9 @@ var $author$project$Graphing$myShapes = function (model) {
 	var col = $author$project$Consts$getTheme(model.col);
 	return _List_fromArray(
 		[
-			model.showSin ? A3($author$project$Graphing$function, model, $elm$core$Basics$sin, col.opp) : $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil),
-			model.showCos ? A3($author$project$Graphing$function, model, $elm$core$Basics$cos, col.adj) : $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil),
-			model.showTan ? A3($author$project$Graphing$function, model, $elm$core$Basics$tan, col.tan) : $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil),
+			model.showSin ? A4($author$project$Graphing$function, model, $elm$core$Basics$sin, col.opp, false) : $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil),
+			model.showCos ? A4($author$project$Graphing$function, model, $elm$core$Basics$cos, col.adj, false) : $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil),
+			model.showTan ? A4($author$project$Graphing$function, model, $elm$core$Basics$tan, col.tan, true) : $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil),
 			$MacCASOutreach$graphicsvg$GraphicSVG$group(
 			A2(
 				$elm$core$List$map,

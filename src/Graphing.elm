@@ -22,6 +22,7 @@ function model func fcol dnePossible =
                             x2 = i * scaleX
                             y2 = model.scaleY * func i
                         in
+                            if (abs y2) > 60 then group [] else
                             (line (x1, y1) (x2, y2)
                                 |> outlined (solid 0.5) fcol
                                 |> move (-90, 0))) 
@@ -31,7 +32,12 @@ function model func fcol dnePossible =
             let
                 x = -90 + (degrees model.angle) * scaleX
                 y1 = 0
-                y2 = model.scaleY * func (degrees model.angle)
+                y2 = 
+                    let
+                        yp = model.scaleY * func (degrees model.angle)
+                        ypm = min (abs yp) 60
+                    in 
+                        if yp < 0 then -ypm else ypm
                 l = group [
                     line (x, y1) (x, y2)
                         |> outlined (dotted 0.5) fcol,

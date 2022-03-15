@@ -6,10 +6,10 @@ import String
 import Consts exposing (..)
 
 
-function model func fcol = 
+function model func fcol dnePossible = 
     group [
         List.map 
-            (\i -> 
+            (\i ->
                 let
                     slopeTooBig = abs (((func (i - deltaX)) - (func i)) / deltaX) > 1000
                 in 
@@ -58,7 +58,7 @@ function model func fcol =
                         |> move (x, y1 + 1)
                 ra = round model.angle
             in
-                if ((ra == 90 || ra == 270) && func == tan) then dne
+                if ((ra == 90 || ra == 270) && dnePossible) then dne
                 else l
     ]
 
@@ -68,15 +68,15 @@ myShapes model =
     in [
         -- Function
         if model.showSin then 
-            function model (sin) col.opp
+            function model (sin) col.opp False
         else
             group [],
         if model.showCos then
-            function model (cos) col.adj
+            function model (cos) col.adj False
         else
             group [],
         if model.showTan then
-            function model (tan) col.tan
+            function model (tan) col.tan True
         else
             group [],
 

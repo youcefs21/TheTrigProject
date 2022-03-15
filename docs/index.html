@@ -9059,10 +9059,9 @@ var $author$project$Consts$genQ = function (qss) {
 		$author$project$Consts$qGen(qss));
 };
 var $author$project$Consts$Light = {$: 'Light'};
-var $author$project$Consts$Sin = {$: 'Sin'};
 var $author$project$Consts$One = {$: 'One'};
 var $author$project$Circle$init = {angle: 45, col: $author$project$Consts$Light, drag: false, quad: $author$project$Consts$One, radians: true, showCast: true, showSAngles: true, showSLengths: true, time: 0};
-var $author$project$Graphing$init = {angle: 45, col: $author$project$Consts$Light, func: $author$project$Consts$Sin, quad: $author$project$Consts$One, radians: true, scaleY: 45, time: 0, yLine: false};
+var $author$project$Graphing$init = {angle: 45, col: $author$project$Consts$Light, quad: $author$project$Consts$One, radians: true, scaleY: 45, showCos: false, showSin: true, showTan: false, time: 0, yLine: false};
 var $author$project$Consts$Waiting = {$: 'Waiting'};
 var $author$project$Consts$rawQs = _List_fromArray(
 	[
@@ -9120,7 +9119,7 @@ var $author$project$Questions$init = {
 			}),
 		$author$project$Consts$rawQs)
 };
-var $author$project$Main$init = {cast: true, circle: $author$project$Circle$init, col: $author$project$Consts$Light, func: $author$project$Consts$Sin, graph: $author$project$Graphing$init, questions: $author$project$Questions$init, radians: true, sAngles: true, sLengths: true, settings: false, time: 0, yLine: false};
+var $author$project$Main$init = {cast: true, circle: $author$project$Circle$init, col: $author$project$Consts$Light, graph: $author$project$Graphing$init, questions: $author$project$Questions$init, radians: true, sAngles: true, sLengths: true, settings: false, showCos: false, showSin: true, showTan: false, time: 0, yLine: false};
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$Consts$limitAngle = function (angle) {
 	limitAngle:
@@ -9177,11 +9176,10 @@ var $author$project$Circle$update = F2(
 						{drag: b}),
 					$elm$core$Platform$Cmd$none);
 			case 'ToggleRad':
-				var r = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{radians: r}),
+						{radians: !model.radians}),
 					$elm$core$Platform$Cmd$none);
 			case 'ToggleCAST':
 				return _Utils_Tuple2(
@@ -9215,14 +9213,6 @@ var $author$project$Graphing$update = F2(
 						model,
 						{time: t}),
 					$elm$core$Platform$Cmd$none);
-			case 'SetFunc':
-				var s = msg.a;
-				var f = msg.b;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{func: f, scaleY: s}),
-					$elm$core$Platform$Cmd$none);
 			case 'SetCol':
 				var t = msg.a;
 				return _Utils_Tuple2(
@@ -9242,17 +9232,34 @@ var $author$project$Graphing$update = F2(
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 'ToggleRad':
-				var r = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{radians: r}),
+						{radians: !model.radians}),
 					$elm$core$Platform$Cmd$none);
 			case 'ToggleYLine':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
 						{yLine: !model.yLine}),
+					$elm$core$Platform$Cmd$none);
+			case 'ToggleSin':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{showSin: !model.showSin}),
+					$elm$core$Platform$Cmd$none);
+			case 'ToggleCos':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{showCos: !model.showCos}),
+					$elm$core$Platform$Cmd$none);
+			case 'ToggleTan':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{showTan: !model.showTan}),
 					$elm$core$Platform$Cmd$none);
 			default:
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
@@ -9387,11 +9394,10 @@ var $author$project$Questions$update = F2(
 						{col: t}),
 					$elm$core$Platform$Cmd$none);
 			case 'ToggleRad':
-				var r = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{radians: r}),
+						{radians: !model.radians}),
 					$elm$core$Platform$Cmd$none);
 			default:
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
@@ -9501,7 +9507,6 @@ var $author$project$Main$update = F2(
 						_List_fromArray(
 							[circleCmds, graphCmds, qCmds])));
 			case 'ToggleRad':
-				var r = msg.a;
 				var _v13 = A2($author$project$Questions$update, msg, model.questions);
 				var newQs = _v13.a;
 				var qCmds = _v13.b;
@@ -9514,7 +9519,7 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{circle: newCircle, graph: newGraph, questions: newQs, radians: r}),
+						{circle: newCircle, graph: newGraph, questions: newQs, radians: !model.radians}),
 					$elm$core$Platform$Cmd$batch(
 						_List_fromArray(
 							[circleCmds, graphCmds, qCmds])));
@@ -9529,41 +9534,40 @@ var $author$project$Main$update = F2(
 					$elm$core$Platform$Cmd$batch(
 						_List_fromArray(
 							[graphCmds])));
-			case 'SetFunc':
-				var f = msg.b;
+			case 'ToggleSin':
 				var _v17 = A2($author$project$Graphing$update, msg, model.graph);
 				var newGraph = _v17.a;
 				var graphCmds = _v17.b;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{func: f, graph: newGraph}),
+						{graph: newGraph, showSin: !model.showSin}),
+					$elm$core$Platform$Cmd$batch(
+						_List_fromArray(
+							[graphCmds])));
+			case 'ToggleCos':
+				var _v18 = A2($author$project$Graphing$update, msg, model.graph);
+				var newGraph = _v18.a;
+				var graphCmds = _v18.b;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{graph: newGraph, showCos: !model.showCos}),
+					$elm$core$Platform$Cmd$batch(
+						_List_fromArray(
+							[graphCmds])));
+			case 'ToggleTan':
+				var _v19 = A2($author$project$Graphing$update, msg, model.graph);
+				var newGraph = _v19.a;
+				var graphCmds = _v19.b;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{graph: newGraph, showTan: !model.showTan}),
 					$elm$core$Platform$Cmd$batch(
 						_List_fromArray(
 							[graphCmds])));
 			case 'NewSeed':
-				var _v18 = A2($author$project$Questions$update, msg, model.questions);
-				var newQs = _v18.a;
-				var qCmds = _v18.b;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{questions: newQs}),
-					$elm$core$Platform$Cmd$batch(
-						_List_fromArray(
-							[qCmds])));
-			case 'UpdateState':
-				var _v19 = A2($author$project$Questions$update, msg, model.questions);
-				var newQs = _v19.a;
-				var qCmds = _v19.b;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{questions: newQs}),
-					$elm$core$Platform$Cmd$batch(
-						_List_fromArray(
-							[qCmds])));
-			case 'Choice':
 				var _v20 = A2($author$project$Questions$update, msg, model.questions);
 				var newQs = _v20.a;
 				var qCmds = _v20.b;
@@ -9574,7 +9578,7 @@ var $author$project$Main$update = F2(
 					$elm$core$Platform$Cmd$batch(
 						_List_fromArray(
 							[qCmds])));
-			case 'Select':
+			case 'UpdateState':
 				var _v21 = A2($author$project$Questions$update, msg, model.questions);
 				var newQs = _v21.a;
 				var qCmds = _v21.b;
@@ -9585,10 +9589,32 @@ var $author$project$Main$update = F2(
 					$elm$core$Platform$Cmd$batch(
 						_List_fromArray(
 							[qCmds])));
-			default:
+			case 'Choice':
 				var _v22 = A2($author$project$Questions$update, msg, model.questions);
 				var newQs = _v22.a;
 				var qCmds = _v22.b;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{questions: newQs}),
+					$elm$core$Platform$Cmd$batch(
+						_List_fromArray(
+							[qCmds])));
+			case 'Select':
+				var _v23 = A2($author$project$Questions$update, msg, model.questions);
+				var newQs = _v23.a;
+				var qCmds = _v23.b;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{questions: newQs}),
+					$elm$core$Platform$Cmd$batch(
+						_List_fromArray(
+							[qCmds])));
+			default:
+				var _v24 = A2($author$project$Questions$update, msg, model.questions);
+				var newQs = _v24.a;
+				var qCmds = _v24.b;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -9613,93 +9639,11 @@ var $elm$core$List$append = F2(
 var $elm$core$List$concat = function (lists) {
 	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
 };
-var $author$project$Consts$Cos = {$: 'Cos'};
-var $author$project$Consts$Dark = {$: 'Dark'};
-var $author$project$Consts$SetCol = function (a) {
-	return {$: 'SetCol', a: a};
-};
-var $author$project$Consts$SetFunc = F2(
-	function (a, b) {
-		return {$: 'SetFunc', a: a, b: b};
-	});
-var $author$project$Consts$Tan = {$: 'Tan'};
-var $author$project$Consts$ToggleCAST = {$: 'ToggleCAST'};
-var $author$project$Consts$ToggleRad = function (a) {
-	return {$: 'ToggleRad', a: a};
-};
-var $author$project$Consts$ToggleSAngles = {$: 'ToggleSAngles'};
-var $author$project$Consts$ToggleSLengths = {$: 'ToggleSLengths'};
 var $author$project$Consts$ToggleSettings = {$: 'ToggleSettings'};
-var $author$project$Consts$ToggleYLine = {$: 'ToggleYLine'};
-var $MacCASOutreach$graphicsvg$GraphicSVG$AlignCentred = {$: 'AlignCentred'};
-var $MacCASOutreach$graphicsvg$GraphicSVG$Face = F8(
-	function (a, b, c, d, e, f, g, h) {
-		return {$: 'Face', a: a, b: b, c: c, d: d, e: e, f: f, g: g, h: h};
-	});
-var $MacCASOutreach$graphicsvg$GraphicSVG$Text = F2(
-	function (a, b) {
-		return {$: 'Text', a: a, b: b};
-	});
-var $MacCASOutreach$graphicsvg$GraphicSVG$centered = function (stencil) {
-	if (stencil.$ === 'Text') {
-		var _v1 = stencil.a;
-		var si = _v1.a;
-		var bo = _v1.b;
-		var i = _v1.c;
-		var u = _v1.d;
-		var s = _v1.e;
-		var sel = _v1.f;
-		var f = _v1.g;
-		var c = _v1.h;
-		var str = stencil.b;
-		return A2(
-			$MacCASOutreach$graphicsvg$GraphicSVG$Text,
-			A8($MacCASOutreach$graphicsvg$GraphicSVG$Face, si, bo, i, u, s, sel, f, $MacCASOutreach$graphicsvg$GraphicSVG$AlignCentred),
-			str);
-	} else {
-		var a = stencil;
-		return a;
-	}
-};
 var $MacCASOutreach$graphicsvg$GraphicSVG$clip = F2(
 	function (shape1, shape2) {
 		return A2($MacCASOutreach$graphicsvg$GraphicSVG$Clip, shape1, shape2);
 	});
-var $MacCASOutreach$graphicsvg$GraphicSVG$Custom = function (a) {
-	return {$: 'Custom', a: a};
-};
-var $MacCASOutreach$graphicsvg$GraphicSVG$customFont = F2(
-	function (fStr, stencil) {
-		if (stencil.$ === 'Text') {
-			var _v1 = stencil.a;
-			var si = _v1.a;
-			var bo = _v1.b;
-			var i = _v1.c;
-			var u = _v1.d;
-			var s = _v1.e;
-			var sel = _v1.f;
-			var f = _v1.g;
-			var c = _v1.h;
-			var str = stencil.b;
-			return A2(
-				$MacCASOutreach$graphicsvg$GraphicSVG$Text,
-				A8(
-					$MacCASOutreach$graphicsvg$GraphicSVG$Face,
-					si,
-					bo,
-					i,
-					u,
-					s,
-					sel,
-					$MacCASOutreach$graphicsvg$GraphicSVG$Custom(fStr),
-					c),
-				str);
-		} else {
-			var a = stencil;
-			return a;
-		}
-	});
-var $author$project$Consts$fonts = {math: 'Consolas', monospace: 'Consolas', sansserif: 'Helvetica'};
 var $MacCASOutreach$graphicsvg$GraphicSVG$rgb = F3(
 	function (r, g, b) {
 		return A4($MacCASOutreach$graphicsvg$GraphicSVG$rgba, r, g, b, 1);
@@ -10098,6 +10042,70 @@ var $author$project$Consts$adjLengths = _List_fromArray(
 		_Utils_Tuple2(60, '1/2'),
 		_Utils_Tuple2(90, '0')
 	]);
+var $MacCASOutreach$graphicsvg$GraphicSVG$AlignCentred = {$: 'AlignCentred'};
+var $MacCASOutreach$graphicsvg$GraphicSVG$Face = F8(
+	function (a, b, c, d, e, f, g, h) {
+		return {$: 'Face', a: a, b: b, c: c, d: d, e: e, f: f, g: g, h: h};
+	});
+var $MacCASOutreach$graphicsvg$GraphicSVG$Text = F2(
+	function (a, b) {
+		return {$: 'Text', a: a, b: b};
+	});
+var $MacCASOutreach$graphicsvg$GraphicSVG$centered = function (stencil) {
+	if (stencil.$ === 'Text') {
+		var _v1 = stencil.a;
+		var si = _v1.a;
+		var bo = _v1.b;
+		var i = _v1.c;
+		var u = _v1.d;
+		var s = _v1.e;
+		var sel = _v1.f;
+		var f = _v1.g;
+		var c = _v1.h;
+		var str = stencil.b;
+		return A2(
+			$MacCASOutreach$graphicsvg$GraphicSVG$Text,
+			A8($MacCASOutreach$graphicsvg$GraphicSVG$Face, si, bo, i, u, s, sel, f, $MacCASOutreach$graphicsvg$GraphicSVG$AlignCentred),
+			str);
+	} else {
+		var a = stencil;
+		return a;
+	}
+};
+var $MacCASOutreach$graphicsvg$GraphicSVG$Custom = function (a) {
+	return {$: 'Custom', a: a};
+};
+var $MacCASOutreach$graphicsvg$GraphicSVG$customFont = F2(
+	function (fStr, stencil) {
+		if (stencil.$ === 'Text') {
+			var _v1 = stencil.a;
+			var si = _v1.a;
+			var bo = _v1.b;
+			var i = _v1.c;
+			var u = _v1.d;
+			var s = _v1.e;
+			var sel = _v1.f;
+			var f = _v1.g;
+			var c = _v1.h;
+			var str = stencil.b;
+			return A2(
+				$MacCASOutreach$graphicsvg$GraphicSVG$Text,
+				A8(
+					$MacCASOutreach$graphicsvg$GraphicSVG$Face,
+					si,
+					bo,
+					i,
+					u,
+					s,
+					sel,
+					$MacCASOutreach$graphicsvg$GraphicSVG$Custom(fStr),
+					c),
+				str);
+		} else {
+			var a = stencil;
+			return a;
+		}
+	});
 var $author$project$Consts$degToRad = function (d) {
 	return (d / 180) * $elm$core$Basics$pi;
 };
@@ -10117,6 +10125,7 @@ var $MacCASOutreach$graphicsvg$GraphicSVG$dotted = function (th) {
 			]),
 		th);
 };
+var $author$project$Consts$fonts = {math: 'Consolas', monospace: 'Consolas', sansserif: 'Helvetica'};
 var $elm$core$Basics$pow = _Basics_pow;
 var $author$project$Consts$toN = F2(
 	function (f, n) {
@@ -10728,28 +10737,7 @@ var $author$project$Circle$myShapes = function (model) {
 		}()
 		]);
 };
-var $author$project$Graphing$deltaX = 0.005;
-var $author$project$Consts$getCol = F2(
-	function (f, t) {
-		switch (f.$) {
-			case 'Sin':
-				return t.opp;
-			case 'Cos':
-				return t.adj;
-			default:
-				return t.tan;
-		}
-	});
-var $author$project$Consts$getFunc = function (f) {
-	switch (f.$) {
-		case 'Sin':
-			return $elm$core$Basics$sin;
-		case 'Cos':
-			return $elm$core$Basics$cos;
-		default:
-			return $elm$core$Basics$tan;
-	}
-};
+var $author$project$Graphing$deltaX = 0.01;
 var $author$project$Consts$rangeStep = F3(
 	function (start, stop, step) {
 		return A2(
@@ -10763,6 +10751,113 @@ var $author$project$Consts$rangeStep = F3(
 				$elm$core$Basics$floor(stop / step)));
 	});
 var $author$project$Graphing$scaleX = 28;
+var $author$project$Graphing$function = F3(
+	function (model, func, fcol) {
+		return $MacCASOutreach$graphicsvg$GraphicSVG$group(
+			_List_fromArray(
+				[
+					$MacCASOutreach$graphicsvg$GraphicSVG$group(
+					A2(
+						$elm$core$List$map,
+						function (i) {
+							var slopeTooBig = $elm$core$Basics$abs(
+								(func(i - $author$project$Graphing$deltaX) - func(i)) / $author$project$Graphing$deltaX) > 1000;
+							if (slopeTooBig) {
+								return $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil);
+							} else {
+								var y2 = model.scaleY * func(i);
+								var y1 = model.scaleY * func(i - $author$project$Graphing$deltaX);
+								var x2 = i * $author$project$Graphing$scaleX;
+								var x1 = (i - $author$project$Graphing$deltaX) * $author$project$Graphing$scaleX;
+								return A2(
+									$MacCASOutreach$graphicsvg$GraphicSVG$move,
+									_Utils_Tuple2(-90, 0),
+									A3(
+										$MacCASOutreach$graphicsvg$GraphicSVG$outlined,
+										$MacCASOutreach$graphicsvg$GraphicSVG$solid(0.5),
+										fcol,
+										A2(
+											$MacCASOutreach$graphicsvg$GraphicSVG$line,
+											_Utils_Tuple2(x1, y1),
+											_Utils_Tuple2(x2, y2))));
+							}
+						},
+						A3($author$project$Consts$rangeStep, 0, 2 * $elm$core$Basics$pi, $author$project$Graphing$deltaX))),
+					function () {
+					var y2 = model.scaleY * func(
+						$elm$core$Basics$degrees(model.angle));
+					var y1 = 0;
+					var x = (-90) + ($elm$core$Basics$degrees(model.angle) * $author$project$Graphing$scaleX);
+					var ra = $elm$core$Basics$round(model.angle);
+					var l = $MacCASOutreach$graphicsvg$GraphicSVG$group(
+						_List_fromArray(
+							[
+								A3(
+								$MacCASOutreach$graphicsvg$GraphicSVG$outlined,
+								$MacCASOutreach$graphicsvg$GraphicSVG$dotted(0.5),
+								fcol,
+								A2(
+									$MacCASOutreach$graphicsvg$GraphicSVG$line,
+									_Utils_Tuple2(x, y1),
+									_Utils_Tuple2(x, y2))),
+								model.yLine ? A3(
+								$MacCASOutreach$graphicsvg$GraphicSVG$outlined,
+								$MacCASOutreach$graphicsvg$GraphicSVG$dotted(0.5),
+								fcol,
+								A2(
+									$MacCASOutreach$graphicsvg$GraphicSVG$line,
+									_Utils_Tuple2(-90, y2),
+									_Utils_Tuple2(90, y2))) : $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil),
+								A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$move,
+								_Utils_Tuple2(x, y2),
+								A2(
+									$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+									fcol,
+									$MacCASOutreach$graphicsvg$GraphicSVG$circle(1))),
+								A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$move,
+								_Utils_Tuple2(
+									x + 2,
+									A2(
+										$elm$core$Basics$max,
+										-40,
+										A2($elm$core$Basics$min, 75, y2) / 2)),
+								A2(
+									$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+									fcol,
+									A2(
+										$MacCASOutreach$graphicsvg$GraphicSVG$size,
+										4,
+										A2(
+											$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
+											$author$project$Consts$fonts.monospace,
+											$MacCASOutreach$graphicsvg$GraphicSVG$text(
+												$elm$core$String$fromFloat(
+													A2(
+														$author$project$Consts$toN,
+														func(
+															$elm$core$Basics$degrees(model.angle)),
+														3)))))))
+							]));
+					var dne = A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$move,
+						_Utils_Tuple2(x, y1 + 1),
+						A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+							fcol,
+							$MacCASOutreach$graphicsvg$GraphicSVG$centered(
+								A2(
+									$MacCASOutreach$graphicsvg$GraphicSVG$size,
+									4,
+									A2(
+										$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
+										$author$project$Consts$fonts.monospace,
+										$MacCASOutreach$graphicsvg$GraphicSVG$text('DNE'))))));
+					return (((ra === 90) || (ra === 270)) && _Utils_eq(func, $elm$core$Basics$tan)) ? dne : l;
+				}()
+				]));
+	});
 var $author$project$Consts$specialAnglesSimple = _List_fromArray(
 	[
 		_Utils_Tuple2(0, '0'),
@@ -10776,38 +10871,12 @@ var $author$project$Consts$specialAnglesSimple = _List_fromArray(
 		_Utils_Tuple2(360, '2π')
 	]);
 var $author$project$Graphing$myShapes = function (model) {
-	var func = $author$project$Consts$getFunc(model.func);
 	var col = $author$project$Consts$getTheme(model.col);
-	var fcol = A2($author$project$Consts$getCol, model.func, col);
 	return _List_fromArray(
 		[
-			$MacCASOutreach$graphicsvg$GraphicSVG$group(
-			A2(
-				$elm$core$List$map,
-				function (i) {
-					var slopeTooBig = $elm$core$Basics$abs(
-						(func(i - $author$project$Graphing$deltaX) - func(i)) / $author$project$Graphing$deltaX) > 1000;
-					if (slopeTooBig) {
-						return $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil);
-					} else {
-						var y2 = model.scaleY * func(i);
-						var y1 = model.scaleY * func(i - $author$project$Graphing$deltaX);
-						var x2 = i * $author$project$Graphing$scaleX;
-						var x1 = (i - $author$project$Graphing$deltaX) * $author$project$Graphing$scaleX;
-						return A2(
-							$MacCASOutreach$graphicsvg$GraphicSVG$move,
-							_Utils_Tuple2(-90, 0),
-							A3(
-								$MacCASOutreach$graphicsvg$GraphicSVG$outlined,
-								$MacCASOutreach$graphicsvg$GraphicSVG$solid(0.5),
-								fcol,
-								A2(
-									$MacCASOutreach$graphicsvg$GraphicSVG$line,
-									_Utils_Tuple2(x1, y1),
-									_Utils_Tuple2(x2, y2))));
-					}
-				},
-				A3($author$project$Consts$rangeStep, 0, 2 * $elm$core$Basics$pi, $author$project$Graphing$deltaX))),
+			model.showSin ? A3($author$project$Graphing$function, model, $elm$core$Basics$sin, col.opp) : $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil),
+			model.showCos ? A3($author$project$Graphing$function, model, $elm$core$Basics$cos, col.adj) : $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil),
+			model.showTan ? A3($author$project$Graphing$function, model, $elm$core$Basics$tan, col.tan) : $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil),
 			$MacCASOutreach$graphicsvg$GraphicSVG$group(
 			A2(
 				$elm$core$List$map,
@@ -10862,81 +10931,6 @@ var $author$project$Graphing$myShapes = function (model) {
 					$MacCASOutreach$graphicsvg$GraphicSVG$line,
 					_Utils_Tuple2(-90, -50),
 					_Utils_Tuple2(-90, 50)))),
-			function () {
-			var y2 = model.scaleY * func(
-				$elm$core$Basics$degrees(model.angle));
-			var y1 = 0;
-			var x = (-90) + ($elm$core$Basics$degrees(model.angle) * $author$project$Graphing$scaleX);
-			var ra = $elm$core$Basics$round(model.angle);
-			var l = $MacCASOutreach$graphicsvg$GraphicSVG$group(
-				_List_fromArray(
-					[
-						A3(
-						$MacCASOutreach$graphicsvg$GraphicSVG$outlined,
-						$MacCASOutreach$graphicsvg$GraphicSVG$dotted(0.5),
-						fcol,
-						A2(
-							$MacCASOutreach$graphicsvg$GraphicSVG$line,
-							_Utils_Tuple2(x, y1),
-							_Utils_Tuple2(x, y2))),
-						model.yLine ? A3(
-						$MacCASOutreach$graphicsvg$GraphicSVG$outlined,
-						$MacCASOutreach$graphicsvg$GraphicSVG$dotted(0.5),
-						fcol,
-						A2(
-							$MacCASOutreach$graphicsvg$GraphicSVG$line,
-							_Utils_Tuple2(-90, y2),
-							_Utils_Tuple2(90, y2))) : $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil),
-						A2(
-						$MacCASOutreach$graphicsvg$GraphicSVG$move,
-						_Utils_Tuple2(x, y2),
-						A2(
-							$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-							fcol,
-							$MacCASOutreach$graphicsvg$GraphicSVG$circle(1))),
-						A2(
-						$MacCASOutreach$graphicsvg$GraphicSVG$move,
-						_Utils_Tuple2(
-							x + 2,
-							A2(
-								$elm$core$Basics$max,
-								-40,
-								A2($elm$core$Basics$min, 75, y2) / 2)),
-						A2(
-							$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-							A2($author$project$Consts$getCol, model.func, col),
-							A2(
-								$MacCASOutreach$graphicsvg$GraphicSVG$size,
-								4,
-								A2(
-									$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
-									$author$project$Consts$fonts.monospace,
-									$MacCASOutreach$graphicsvg$GraphicSVG$text(
-										$elm$core$String$fromFloat(
-											A2(
-												$author$project$Consts$toN,
-												A2(
-													$author$project$Consts$getFunc,
-													model.func,
-													$elm$core$Basics$degrees(model.angle)),
-												3)))))))
-					]));
-			var dne = A2(
-				$MacCASOutreach$graphicsvg$GraphicSVG$move,
-				_Utils_Tuple2(x, y1 + 1),
-				A2(
-					$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-					fcol,
-					$MacCASOutreach$graphicsvg$GraphicSVG$centered(
-						A2(
-							$MacCASOutreach$graphicsvg$GraphicSVG$size,
-							4,
-							A2(
-								$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
-								$author$project$Consts$fonts.monospace,
-								$MacCASOutreach$graphicsvg$GraphicSVG$text('DNE'))))));
-			return (((ra === 90) || (ra === 270)) && _Utils_eq(model.func, $author$project$Consts$Tan)) ? dne : l;
-		}(),
 			A2(
 			$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
 			0.3,
@@ -11329,8 +11323,644 @@ var $author$project$Questions$myShapes = function (model) {
 				])) : $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil))
 		]);
 };
-var $author$project$Main$off = 0.35;
-var $author$project$Main$on = 0.8;
+var $author$project$Consts$Dark = {$: 'Dark'};
+var $author$project$Consts$SetCol = function (a) {
+	return {$: 'SetCol', a: a};
+};
+var $author$project$Consts$ToggleCAST = {$: 'ToggleCAST'};
+var $author$project$Consts$ToggleCos = {$: 'ToggleCos'};
+var $author$project$Consts$ToggleRad = {$: 'ToggleRad'};
+var $author$project$Consts$ToggleSAngles = {$: 'ToggleSAngles'};
+var $author$project$Consts$ToggleSLengths = {$: 'ToggleSLengths'};
+var $author$project$Consts$ToggleSin = {$: 'ToggleSin'};
+var $author$project$Consts$ToggleTan = {$: 'ToggleTan'};
+var $author$project$Consts$ToggleYLine = {$: 'ToggleYLine'};
+var $author$project$Main$button = F3(
+	function (txt, toggled, col) {
+		return $MacCASOutreach$graphicsvg$GraphicSVG$group(
+			_List_fromArray(
+				[
+					A2(
+					$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
+					toggled ? 1 : 0.7,
+					A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+						col.buttons,
+						A3($MacCASOutreach$graphicsvg$GraphicSVG$roundedRect, 35, 7, 1))),
+					A2(
+					$MacCASOutreach$graphicsvg$GraphicSVG$move,
+					_Utils_Tuple2(0, -1.3),
+					A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+						col.words,
+						A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$size,
+							4.5,
+							$MacCASOutreach$graphicsvg$GraphicSVG$bold(
+								$MacCASOutreach$graphicsvg$GraphicSVG$centered(
+									A2(
+										$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
+										$author$project$Consts$fonts.sansserif,
+										$MacCASOutreach$graphicsvg$GraphicSVG$text(txt)))))))
+				]));
+	});
+var $MacCASOutreach$graphicsvg$GraphicSVG$NoLine = {$: 'NoLine'};
+var $MacCASOutreach$graphicsvg$GraphicSVG$subtract = F2(
+	function (shape1, shape2) {
+		return A2($MacCASOutreach$graphicsvg$GraphicSVG$AlphaMask, shape1, shape2);
+	});
+var $MacCASOutreach$graphicsvg$GraphicSVG$addOutline = F3(
+	function (style, outlineClr, shape) {
+		addOutline:
+		while (true) {
+			var lineStyle = function () {
+				if (style.$ === 'NoLine') {
+					return $elm$core$Maybe$Nothing;
+				} else {
+					return $elm$core$Maybe$Just(
+						_Utils_Tuple2(style, outlineClr));
+				}
+			}();
+			switch (shape.$) {
+				case 'Inked':
+					var clr = shape.a;
+					var st = shape.c;
+					return A3($MacCASOutreach$graphicsvg$GraphicSVG$Inked, clr, lineStyle, st);
+				case 'Move':
+					var s = shape.a;
+					var sh = shape.b;
+					return A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$Move,
+						s,
+						A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, style, outlineClr, sh));
+				case 'Rotate':
+					var r = shape.a;
+					var sh = shape.b;
+					return A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$Rotate,
+						r,
+						A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, style, outlineClr, sh));
+				case 'Scale':
+					var sx = shape.a;
+					var sy = shape.b;
+					var sh = shape.c;
+					return A3(
+						$MacCASOutreach$graphicsvg$GraphicSVG$Scale,
+						sx,
+						sy,
+						A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, style, outlineClr, sh));
+				case 'Skew':
+					var skx = shape.a;
+					var sky = shape.b;
+					var sh = shape.c;
+					return A3(
+						$MacCASOutreach$graphicsvg$GraphicSVG$Skew,
+						skx,
+						sky,
+						A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, style, outlineClr, sh));
+				case 'Transformed':
+					var tm = shape.a;
+					var sh = shape.b;
+					return A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$Transformed,
+						tm,
+						A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, style, outlineClr, sh));
+				case 'Group':
+					var list = shape.a;
+					var innerlist = A2(
+						$elm$core$List$filterMap,
+						function (shp) {
+							if (shp.$ === 'GroupOutline') {
+								return $elm$core$Maybe$Nothing;
+							} else {
+								return $elm$core$Maybe$Just(
+									A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, $MacCASOutreach$graphicsvg$GraphicSVG$NoLine, $MacCASOutreach$graphicsvg$GraphicSVG$black, shp));
+							}
+						},
+						list);
+					if (!innerlist.b) {
+						return $MacCASOutreach$graphicsvg$GraphicSVG$Group(_List_Nil);
+					} else {
+						if (!innerlist.b.b) {
+							var hd = innerlist.a;
+							var $temp$style = style,
+								$temp$outlineClr = outlineClr,
+								$temp$shape = hd;
+							style = $temp$style;
+							outlineClr = $temp$outlineClr;
+							shape = $temp$shape;
+							continue addOutline;
+						} else {
+							if (_Utils_eq(lineStyle, $elm$core$Maybe$Nothing)) {
+								return $MacCASOutreach$graphicsvg$GraphicSVG$Group(innerlist);
+							} else {
+								var outlnshp = $MacCASOutreach$graphicsvg$GraphicSVG$GroupOutline(
+									A2(
+										$MacCASOutreach$graphicsvg$GraphicSVG$subtract,
+										$MacCASOutreach$graphicsvg$GraphicSVG$Group(innerlist),
+										$MacCASOutreach$graphicsvg$GraphicSVG$Group(
+											A2(
+												$elm$core$List$map,
+												A2($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, style, outlineClr),
+												innerlist))));
+								return $MacCASOutreach$graphicsvg$GraphicSVG$Group(
+									_Utils_ap(
+										innerlist,
+										_List_fromArray(
+											[outlnshp])));
+							}
+						}
+					}
+				case 'GroupOutline':
+					var cmbndshp = shape.a;
+					return $MacCASOutreach$graphicsvg$GraphicSVG$GroupOutline(cmbndshp);
+				case 'AlphaMask':
+					var reg = shape.a;
+					var sh = shape.b;
+					var ptrn = A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, $MacCASOutreach$graphicsvg$GraphicSVG$NoLine, $MacCASOutreach$graphicsvg$GraphicSVG$black, reg);
+					var inside = A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, $MacCASOutreach$graphicsvg$GraphicSVG$NoLine, $MacCASOutreach$graphicsvg$GraphicSVG$black, sh);
+					if (_Utils_eq(lineStyle, $elm$core$Maybe$Nothing)) {
+						return A2($MacCASOutreach$graphicsvg$GraphicSVG$AlphaMask, ptrn, inside);
+					} else {
+						var ptrnlnd = A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, style, outlineClr, reg);
+						var ptrnoutln = A2($MacCASOutreach$graphicsvg$GraphicSVG$Clip, inside, ptrnlnd);
+						var newshp = A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, style, outlineClr, sh);
+						var shpoutln = A2($MacCASOutreach$graphicsvg$GraphicSVG$Clip, inside, newshp);
+						return A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$AlphaMask,
+							ptrn,
+							$MacCASOutreach$graphicsvg$GraphicSVG$Group(
+								_List_fromArray(
+									[
+										inside,
+										$MacCASOutreach$graphicsvg$GraphicSVG$GroupOutline(
+										$MacCASOutreach$graphicsvg$GraphicSVG$Group(
+											_List_fromArray(
+												[shpoutln, ptrnoutln])))
+									])));
+					}
+				case 'Clip':
+					var reg = shape.a;
+					var sh = shape.b;
+					var ptrn = A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, $MacCASOutreach$graphicsvg$GraphicSVG$NoLine, $MacCASOutreach$graphicsvg$GraphicSVG$black, reg);
+					var inside = A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, $MacCASOutreach$graphicsvg$GraphicSVG$NoLine, $MacCASOutreach$graphicsvg$GraphicSVG$black, sh);
+					if (_Utils_eq(lineStyle, $elm$core$Maybe$Nothing)) {
+						return A2($MacCASOutreach$graphicsvg$GraphicSVG$Clip, ptrn, inside);
+					} else {
+						var ptrnlnd = A3(
+							$MacCASOutreach$graphicsvg$GraphicSVG$addOutline,
+							style,
+							outlineClr,
+							A2($MacCASOutreach$graphicsvg$GraphicSVG$repaint, $MacCASOutreach$graphicsvg$GraphicSVG$blank, reg));
+						var ptrnoutln = A2($MacCASOutreach$graphicsvg$GraphicSVG$Clip, inside, ptrnlnd);
+						var newshp = A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, style, outlineClr, sh);
+						var shpoutln = A2($MacCASOutreach$graphicsvg$GraphicSVG$Clip, inside, newshp);
+						return A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$Clip,
+							ptrn,
+							$MacCASOutreach$graphicsvg$GraphicSVG$Group(
+								_List_fromArray(
+									[
+										inside,
+										$MacCASOutreach$graphicsvg$GraphicSVG$GroupOutline(
+										$MacCASOutreach$graphicsvg$GraphicSVG$Group(
+											_List_fromArray(
+												[shpoutln, ptrnoutln])))
+									])));
+					}
+				case 'Link':
+					var s = shape.a;
+					var sh = shape.b;
+					return A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$Link,
+						s,
+						A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, style, outlineClr, sh));
+				case 'Tap':
+					var userMsg = shape.a;
+					var sh = shape.b;
+					return A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$Tap,
+						userMsg,
+						A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, style, outlineClr, sh));
+				case 'TapAt':
+					var userMsg = shape.a;
+					var sh = shape.b;
+					return A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$TapAt,
+						userMsg,
+						A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, style, outlineClr, sh));
+				case 'EnterShape':
+					var userMsg = shape.a;
+					var sh = shape.b;
+					return A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$EnterShape,
+						userMsg,
+						A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, style, outlineClr, sh));
+				case 'EnterAt':
+					var userMsg = shape.a;
+					var sh = shape.b;
+					return A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$EnterAt,
+						userMsg,
+						A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, style, outlineClr, sh));
+				case 'Exit':
+					var userMsg = shape.a;
+					var sh = shape.b;
+					return A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$Exit,
+						userMsg,
+						A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, style, outlineClr, sh));
+				case 'ExitAt':
+					var userMsg = shape.a;
+					var sh = shape.b;
+					return A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$ExitAt,
+						userMsg,
+						A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, style, outlineClr, sh));
+				case 'MouseDown':
+					var userMsg = shape.a;
+					var sh = shape.b;
+					return A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$MouseDown,
+						userMsg,
+						A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, style, outlineClr, sh));
+				case 'MouseDownAt':
+					var userMsg = shape.a;
+					var sh = shape.b;
+					return A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$MouseDownAt,
+						userMsg,
+						A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, style, outlineClr, sh));
+				case 'MouseUp':
+					var userMsg = shape.a;
+					var sh = shape.b;
+					return A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$MouseUp,
+						userMsg,
+						A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, style, outlineClr, sh));
+				case 'MouseUpAt':
+					var userMsg = shape.a;
+					var sh = shape.b;
+					return A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$MouseUpAt,
+						userMsg,
+						A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, style, outlineClr, sh));
+				case 'MoveOverAt':
+					var userMsg = shape.a;
+					var sh = shape.b;
+					return A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$MoveOverAt,
+						userMsg,
+						A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, style, outlineClr, sh));
+				case 'TouchStart':
+					var userMsg = shape.a;
+					var sh = shape.b;
+					return A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$TouchStart,
+						userMsg,
+						A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, style, outlineClr, sh));
+				case 'TouchEnd':
+					var userMsg = shape.a;
+					var sh = shape.b;
+					return A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$TouchEnd,
+						userMsg,
+						A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, style, outlineClr, sh));
+				case 'TouchStartAt':
+					var userMsg = shape.a;
+					var sh = shape.b;
+					return A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$TouchStartAt,
+						userMsg,
+						A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, style, outlineClr, sh));
+				case 'TouchEndAt':
+					var userMsg = shape.a;
+					var sh = shape.b;
+					return A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$TouchEndAt,
+						userMsg,
+						A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, style, outlineClr, sh));
+				case 'TouchMoveAt':
+					var userMsg = shape.a;
+					var sh = shape.b;
+					return A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$TouchMoveAt,
+						userMsg,
+						A3($MacCASOutreach$graphicsvg$GraphicSVG$addOutline, style, outlineClr, sh));
+				case 'ForeignObject':
+					var w = shape.a;
+					var h = shape.b;
+					var htm = shape.c;
+					return A3($MacCASOutreach$graphicsvg$GraphicSVG$ForeignObject, w, h, htm);
+				case 'Everything':
+					return $MacCASOutreach$graphicsvg$GraphicSVG$Everything;
+				case 'Notathing':
+					return $MacCASOutreach$graphicsvg$GraphicSVG$Notathing;
+				default:
+					var s = shape.a;
+					var th = shape.b;
+					var clr = shape.c;
+					return A3($MacCASOutreach$graphicsvg$GraphicSVG$GraphPaper, s, th, clr);
+			}
+		}
+	});
+var $author$project$Main$option = F3(
+	function (txt, toggled, col) {
+		return $MacCASOutreach$graphicsvg$GraphicSVG$group(
+			_List_fromArray(
+				[
+					A2(
+					$MacCASOutreach$graphicsvg$GraphicSVG$move,
+					_Utils_Tuple2(-17, 0),
+					A3(
+						$MacCASOutreach$graphicsvg$GraphicSVG$addOutline,
+						$MacCASOutreach$graphicsvg$GraphicSVG$solid(0.25),
+						col.words,
+						A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
+							0.7,
+							A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+								toggled ? col.optionCorrect : col.optionWrong,
+								$MacCASOutreach$graphicsvg$GraphicSVG$square(3))))),
+					A2(
+					$MacCASOutreach$graphicsvg$GraphicSVG$move,
+					_Utils_Tuple2(-13, -1.4),
+					A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+						col.words,
+						A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$size,
+							4,
+							A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
+								$author$project$Consts$fonts.sansserif,
+								$MacCASOutreach$graphicsvg$GraphicSVG$text(txt)))))
+				]));
+	});
+var $author$project$Main$settingsBox = F2(
+	function (model, col) {
+		return $MacCASOutreach$graphicsvg$GraphicSVG$group(
+			_List_fromArray(
+				[
+					$MacCASOutreach$graphicsvg$GraphicSVG$group(
+					_List_fromArray(
+						[
+							A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$move,
+							_Utils_Tuple2(0, -1),
+							A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
+								0.6,
+								A2(
+									$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+									col.buttons,
+									A3($MacCASOutreach$graphicsvg$GraphicSVG$roundedRect, 45, 103, 2)))),
+							A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$move,
+							_Utils_Tuple2(0, 42),
+							A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+								col.words,
+								A2(
+									$MacCASOutreach$graphicsvg$GraphicSVG$size,
+									7,
+									$MacCASOutreach$graphicsvg$GraphicSVG$bold(
+										$MacCASOutreach$graphicsvg$GraphicSVG$centered(
+											A2(
+												$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
+												$author$project$Consts$fonts.sansserif,
+												$MacCASOutreach$graphicsvg$GraphicSVG$text('Settings'))))))),
+							A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$move,
+							_Utils_Tuple2(0, 39),
+							A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+								col.grid,
+								A2($MacCASOutreach$graphicsvg$GraphicSVG$rect, 35, 0.25))),
+							A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
+							$author$project$Consts$ToggleCAST,
+							A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$move,
+								_Utils_Tuple2(0, 35),
+								A3($author$project$Main$option, 'CAST / quadrants', model.cast, col))),
+							A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
+							$author$project$Consts$ToggleSAngles,
+							A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$move,
+								_Utils_Tuple2(0, 29),
+								A3($author$project$Main$option, 'special angles', model.sAngles, col))),
+							A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
+							$author$project$Consts$ToggleSLengths,
+							A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$move,
+								_Utils_Tuple2(0, 23),
+								A3($author$project$Main$option, 'side lengths', model.sLengths, col))),
+							A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
+							$author$project$Consts$ToggleYLine,
+							A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$move,
+								_Utils_Tuple2(0, 17),
+								A3($author$project$Main$option, 'y-line on graph', model.yLine, col))),
+							A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$move,
+							_Utils_Tuple2(0, 12.5),
+							A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+								col.grid,
+								A2($MacCASOutreach$graphicsvg$GraphicSVG$rect, 35, 0.25))),
+							A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
+							$author$project$Consts$ToggleRad,
+							A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$move,
+								_Utils_Tuple2(0.25, 6),
+								A2(
+									$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
+									0.9,
+									$MacCASOutreach$graphicsvg$GraphicSVG$group(
+										_List_fromArray(
+											[
+												A2(
+												$MacCASOutreach$graphicsvg$GraphicSVG$move,
+												_Utils_Tuple2(0, 1.5),
+												$MacCASOutreach$graphicsvg$GraphicSVG$ghost(
+													A2($MacCASOutreach$graphicsvg$GraphicSVG$rect, 42, 8))),
+												A2(
+												$MacCASOutreach$graphicsvg$GraphicSVG$move,
+												_Utils_Tuple2(
+													(-20) - (model.radians ? 0 : 1),
+													0),
+												A2(
+													$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
+													model.radians ? 0.6 : 1,
+													A2(
+														$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+														col.words,
+														(model.radians ? $elm$core$Basics$identity : $MacCASOutreach$graphicsvg$GraphicSVG$bold)(
+															A2(
+																$MacCASOutreach$graphicsvg$GraphicSVG$size,
+																5,
+																A2(
+																	$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
+																	$author$project$Consts$fonts.sansserif,
+																	$MacCASOutreach$graphicsvg$GraphicSVG$text('degrees'))))))),
+												A2(
+												$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+												col.words,
+												A2(
+													$MacCASOutreach$graphicsvg$GraphicSVG$size,
+													5,
+													$MacCASOutreach$graphicsvg$GraphicSVG$centered(
+														A2(
+															$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
+															$author$project$Consts$fonts.sansserif,
+															$MacCASOutreach$graphicsvg$GraphicSVG$text(' / '))))),
+												A2(
+												$MacCASOutreach$graphicsvg$GraphicSVG$move,
+												_Utils_Tuple2(1.5, 0),
+												A2(
+													$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
+													model.radians ? 1 : 0.6,
+													A2(
+														$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+														col.words,
+														(model.radians ? $MacCASOutreach$graphicsvg$GraphicSVG$bold : $elm$core$Basics$identity)(
+															A2(
+																$MacCASOutreach$graphicsvg$GraphicSVG$size,
+																5,
+																A2(
+																	$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
+																	$author$project$Consts$fonts.sansserif,
+																	$MacCASOutreach$graphicsvg$GraphicSVG$text('radians')))))))
+											]))))),
+							A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$move,
+							_Utils_Tuple2(0, 3),
+							A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+								col.grid,
+								A2($MacCASOutreach$graphicsvg$GraphicSVG$rect, 35, 0.25))),
+							A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$move,
+							_Utils_Tuple2(0, -3.5),
+							A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+								col.words,
+								A2(
+									$MacCASOutreach$graphicsvg$GraphicSVG$size,
+									6,
+									$MacCASOutreach$graphicsvg$GraphicSVG$bold(
+										$MacCASOutreach$graphicsvg$GraphicSVG$centered(
+											A2(
+												$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
+												$author$project$Consts$fonts.sansserif,
+												$MacCASOutreach$graphicsvg$GraphicSVG$text('Functions'))))))),
+							A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
+							$author$project$Consts$ToggleSin,
+							A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$move,
+								_Utils_Tuple2(0, -8),
+								A3($author$project$Main$option, 'sin', model.showSin, col))),
+							A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
+							$author$project$Consts$ToggleCos,
+							A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$move,
+								_Utils_Tuple2(0, -14),
+								A3($author$project$Main$option, 'cos', model.showCos, col))),
+							A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
+							$author$project$Consts$ToggleTan,
+							A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$move,
+								_Utils_Tuple2(0, -20),
+								A3($author$project$Main$option, 'tan', model.showTan, col))),
+							A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$move,
+							_Utils_Tuple2(0, -24),
+							A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+								col.grid,
+								A2($MacCASOutreach$graphicsvg$GraphicSVG$rect, 35, 0.25))),
+							A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$move,
+							_Utils_Tuple2(0, -31),
+							A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+								col.words,
+								A2(
+									$MacCASOutreach$graphicsvg$GraphicSVG$size,
+									6,
+									$MacCASOutreach$graphicsvg$GraphicSVG$bold(
+										$MacCASOutreach$graphicsvg$GraphicSVG$centered(
+											A2(
+												$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
+												$author$project$Consts$fonts.sansserif,
+												$MacCASOutreach$graphicsvg$GraphicSVG$text('Themes'))))))),
+							A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
+							$author$project$Consts$SetCol($author$project$Consts$Light),
+							A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$move,
+								_Utils_Tuple2(0, -37),
+								A3(
+									$author$project$Main$button,
+									'Light',
+									_Utils_eq(model.col, $author$project$Consts$Light),
+									col))),
+							A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
+							$author$project$Consts$SetCol($author$project$Consts$Dark),
+							A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$move,
+								_Utils_Tuple2(0, -45),
+								A3(
+									$author$project$Main$button,
+									'Dark',
+									_Utils_eq(model.col, $author$project$Consts$Dark),
+									col)))
+						]))
+				]));
+	});
+var $author$project$Main$settingsButton = function (col) {
+	return A2(
+		$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
+		$author$project$Consts$ToggleSettings,
+		$MacCASOutreach$graphicsvg$GraphicSVG$group(
+			_List_fromArray(
+				[
+					A2(
+					$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
+					0,
+					A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+						col.buttons,
+						$MacCASOutreach$graphicsvg$GraphicSVG$square(10))),
+					A2(
+					$MacCASOutreach$graphicsvg$GraphicSVG$move,
+					_Utils_Tuple2(0, -3),
+					A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
+						0.9,
+						A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+							col.words,
+							A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
+								$author$project$Consts$fonts.sansserif,
+								$MacCASOutreach$graphicsvg$GraphicSVG$centered(
+									A2(
+										$MacCASOutreach$graphicsvg$GraphicSVG$size,
+										8,
+										$MacCASOutreach$graphicsvg$GraphicSVG$text('⚙')))))))
+				])));
+};
 var $author$project$Main$myShapes = function (model) {
 	var col = $author$project$Consts$getTheme(model.col);
 	return _List_fromArray(
@@ -11375,425 +12005,28 @@ var $author$project$Main$myShapes = function (model) {
 			model.settings ? $MacCASOutreach$graphicsvg$GraphicSVG$group(
 			_List_fromArray(
 				[
-					$MacCASOutreach$graphicsvg$GraphicSVG$group(
-					_List_fromArray(
-						[
-							A2(
-							$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
-							$author$project$Consts$ToggleSettings,
-							$MacCASOutreach$graphicsvg$GraphicSVG$ghost(
-								A2($MacCASOutreach$graphicsvg$GraphicSVG$rect, 192, 128)))
-						])),
 					A2(
-					$MacCASOutreach$graphicsvg$GraphicSVG$move,
-					_Utils_Tuple2(15, 12),
+					$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
+					$author$project$Consts$ToggleSettings,
 					$MacCASOutreach$graphicsvg$GraphicSVG$group(
 						_List_fromArray(
 							[
 								A2(
-								$MacCASOutreach$graphicsvg$GraphicSVG$move,
-								_Utils_Tuple2(48, 30),
-								A2(
-									$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
-									0.2,
-									A2(
-										$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-										col.optionFade,
-										A3($MacCASOutreach$graphicsvg$GraphicSVG$roundedRect, 53, 35, 2)))),
-								A2(
-								$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
-								$author$project$Consts$ToggleCAST,
-								A2(
-									$MacCASOutreach$graphicsvg$GraphicSVG$move,
-									_Utils_Tuple2(0, -14),
-									$MacCASOutreach$graphicsvg$GraphicSVG$group(
-										_List_fromArray(
-											[
-												A2(
-												$MacCASOutreach$graphicsvg$GraphicSVG$move,
-												_Utils_Tuple2(35, 37),
-												A2(
-													$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
-													model.cast ? $author$project$Main$on : $author$project$Main$off,
-													A2(
-														$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-														col.buttons,
-														A3($MacCASOutreach$graphicsvg$GraphicSVG$roundedRect, 25, 5, 2)))),
-												A2(
-												$MacCASOutreach$graphicsvg$GraphicSVG$move,
-												_Utils_Tuple2(35, 35.5),
-												A2(
-													$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-													col.words,
-													$MacCASOutreach$graphicsvg$GraphicSVG$centered(
-														A2(
-															$MacCASOutreach$graphicsvg$GraphicSVG$size,
-															4,
-															A2(
-																$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
-																$author$project$Consts$fonts.sansserif,
-																$MacCASOutreach$graphicsvg$GraphicSVG$text('CAST'))))))
-											])))),
-								A2(
-								$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
-								$author$project$Consts$ToggleSLengths,
-								A2(
-									$MacCASOutreach$graphicsvg$GraphicSVG$move,
-									_Utils_Tuple2(0, -14),
-									$MacCASOutreach$graphicsvg$GraphicSVG$group(
-										_List_fromArray(
-											[
-												A2(
-												$MacCASOutreach$graphicsvg$GraphicSVG$move,
-												_Utils_Tuple2(61, 37),
-												A2(
-													$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
-													model.sLengths ? $author$project$Main$on : $author$project$Main$off,
-													A2(
-														$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-														col.buttons,
-														A3($MacCASOutreach$graphicsvg$GraphicSVG$roundedRect, 25, 5, 2)))),
-												A2(
-												$MacCASOutreach$graphicsvg$GraphicSVG$move,
-												_Utils_Tuple2(61, 35.5),
-												A2(
-													$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-													col.words,
-													$MacCASOutreach$graphicsvg$GraphicSVG$centered(
-														A2(
-															$MacCASOutreach$graphicsvg$GraphicSVG$size,
-															4,
-															A2(
-																$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
-																$author$project$Consts$fonts.sansserif,
-																$MacCASOutreach$graphicsvg$GraphicSVG$text('Lengths'))))))
-											])))),
-								A2(
-								$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
-								$author$project$Consts$ToggleSAngles,
-								A2(
-									$MacCASOutreach$graphicsvg$GraphicSVG$move,
-									_Utils_Tuple2(0, -21),
-									$MacCASOutreach$graphicsvg$GraphicSVG$group(
-										_List_fromArray(
-											[
-												A2(
-												$MacCASOutreach$graphicsvg$GraphicSVG$move,
-												_Utils_Tuple2(35, 37),
-												A2(
-													$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
-													model.sAngles ? $author$project$Main$on : $author$project$Main$off,
-													A2(
-														$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-														col.buttons,
-														A3($MacCASOutreach$graphicsvg$GraphicSVG$roundedRect, 25, 5, 2)))),
-												A2(
-												$MacCASOutreach$graphicsvg$GraphicSVG$move,
-												_Utils_Tuple2(35, 35.5),
-												A2(
-													$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-													col.words,
-													$MacCASOutreach$graphicsvg$GraphicSVG$centered(
-														A2(
-															$MacCASOutreach$graphicsvg$GraphicSVG$size,
-															4,
-															A2(
-																$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
-																$author$project$Consts$fonts.sansserif,
-																$MacCASOutreach$graphicsvg$GraphicSVG$text('Angles'))))))
-											])))),
-								A2(
-								$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
-								$author$project$Consts$ToggleYLine,
-								A2(
-									$MacCASOutreach$graphicsvg$GraphicSVG$move,
-									_Utils_Tuple2(0, -21),
-									$MacCASOutreach$graphicsvg$GraphicSVG$group(
-										_List_fromArray(
-											[
-												A2(
-												$MacCASOutreach$graphicsvg$GraphicSVG$move,
-												_Utils_Tuple2(61, 37),
-												A2(
-													$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
-													model.yLine ? $author$project$Main$on : $author$project$Main$off,
-													A2(
-														$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-														col.buttons,
-														A3($MacCASOutreach$graphicsvg$GraphicSVG$roundedRect, 25, 5, 2)))),
-												A2(
-												$MacCASOutreach$graphicsvg$GraphicSVG$move,
-												_Utils_Tuple2(61, 35.5),
-												A2(
-													$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-													col.words,
-													$MacCASOutreach$graphicsvg$GraphicSVG$centered(
-														A2(
-															$MacCASOutreach$graphicsvg$GraphicSVG$size,
-															4,
-															A2(
-																$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
-																$author$project$Consts$fonts.sansserif,
-																$MacCASOutreach$graphicsvg$GraphicSVG$text('Y-axis Line'))))))
-											])))),
-								A2(
-								$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
-								A2($author$project$Consts$SetFunc, 45, $author$project$Consts$Sin),
-								$MacCASOutreach$graphicsvg$GraphicSVG$group(
-									_List_fromArray(
-										[
-											A2(
-											$MacCASOutreach$graphicsvg$GraphicSVG$move,
-											_Utils_Tuple2(30, 30),
-											A2(
-												$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
-												_Utils_eq(model.func, $author$project$Consts$Sin) ? $author$project$Main$on : $author$project$Main$off,
-												A2(
-													$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-													col.buttons,
-													A3($MacCASOutreach$graphicsvg$GraphicSVG$roundedRect, 15, 5, 2)))),
-											A2(
-											$MacCASOutreach$graphicsvg$GraphicSVG$move,
-											_Utils_Tuple2(30, 28.5),
-											A2(
-												$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-												col.words,
-												$MacCASOutreach$graphicsvg$GraphicSVG$centered(
-													A2(
-														$MacCASOutreach$graphicsvg$GraphicSVG$size,
-														4,
-														A2(
-															$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
-															$author$project$Consts$fonts.sansserif,
-															$MacCASOutreach$graphicsvg$GraphicSVG$text('Sin'))))))
-										]))),
-								A2(
-								$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
-								A2($author$project$Consts$SetFunc, 45, $author$project$Consts$Cos),
-								$MacCASOutreach$graphicsvg$GraphicSVG$group(
-									_List_fromArray(
-										[
-											A2(
-											$MacCASOutreach$graphicsvg$GraphicSVG$move,
-											_Utils_Tuple2(48, 30),
-											A2(
-												$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
-												_Utils_eq(model.func, $author$project$Consts$Cos) ? $author$project$Main$on : $author$project$Main$off,
-												A2(
-													$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-													col.buttons,
-													A3($MacCASOutreach$graphicsvg$GraphicSVG$roundedRect, 15, 5, 2)))),
-											A2(
-											$MacCASOutreach$graphicsvg$GraphicSVG$move,
-											_Utils_Tuple2(48, 28.5),
-											A2(
-												$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-												col.words,
-												$MacCASOutreach$graphicsvg$GraphicSVG$centered(
-													A2(
-														$MacCASOutreach$graphicsvg$GraphicSVG$size,
-														4,
-														A2(
-															$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
-															$author$project$Consts$fonts.sansserif,
-															$MacCASOutreach$graphicsvg$GraphicSVG$text('Cos'))))))
-										]))),
-								A2(
-								$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
-								A2($author$project$Consts$SetFunc, 45, $author$project$Consts$Tan),
-								$MacCASOutreach$graphicsvg$GraphicSVG$group(
-									_List_fromArray(
-										[
-											A2(
-											$MacCASOutreach$graphicsvg$GraphicSVG$move,
-											_Utils_Tuple2(66, 30),
-											A2(
-												$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
-												_Utils_eq(model.func, $author$project$Consts$Tan) ? $author$project$Main$on : $author$project$Main$off,
-												A2(
-													$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-													col.buttons,
-													A3($MacCASOutreach$graphicsvg$GraphicSVG$roundedRect, 15, 5, 2)))),
-											A2(
-											$MacCASOutreach$graphicsvg$GraphicSVG$move,
-											_Utils_Tuple2(66, 28.5),
-											A2(
-												$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-												col.words,
-												$MacCASOutreach$graphicsvg$GraphicSVG$centered(
-													A2(
-														$MacCASOutreach$graphicsvg$GraphicSVG$size,
-														4,
-														A2(
-															$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
-															$author$project$Consts$fonts.sansserif,
-															$MacCASOutreach$graphicsvg$GraphicSVG$text('Tan'))))))
-										]))),
-								A2(
-								$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
-								$author$project$Consts$SetCol($author$project$Consts$Light),
-								$MacCASOutreach$graphicsvg$GraphicSVG$group(
-									_List_fromArray(
-										[
-											A2(
-											$MacCASOutreach$graphicsvg$GraphicSVG$move,
-											_Utils_Tuple2(35, 37),
-											A2(
-												$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
-												_Utils_eq(model.col, $author$project$Consts$Light) ? $author$project$Main$on : $author$project$Main$off,
-												A2(
-													$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-													col.buttons,
-													A3($MacCASOutreach$graphicsvg$GraphicSVG$roundedRect, 25, 5, 2)))),
-											A2(
-											$MacCASOutreach$graphicsvg$GraphicSVG$move,
-											_Utils_Tuple2(35, 35.5),
-											A2(
-												$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-												col.words,
-												$MacCASOutreach$graphicsvg$GraphicSVG$centered(
-													A2(
-														$MacCASOutreach$graphicsvg$GraphicSVG$size,
-														4,
-														A2(
-															$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
-															$author$project$Consts$fonts.sansserif,
-															$MacCASOutreach$graphicsvg$GraphicSVG$text('Light Mode'))))))
-										]))),
-								A2(
-								$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
-								$author$project$Consts$SetCol($author$project$Consts$Dark),
-								$MacCASOutreach$graphicsvg$GraphicSVG$group(
-									_List_fromArray(
-										[
-											A2(
-											$MacCASOutreach$graphicsvg$GraphicSVG$move,
-											_Utils_Tuple2(61, 37),
-											A2(
-												$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
-												_Utils_eq(model.col, $author$project$Consts$Dark) ? $author$project$Main$on : $author$project$Main$off,
-												A2(
-													$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-													col.buttons,
-													A3($MacCASOutreach$graphicsvg$GraphicSVG$roundedRect, 25, 5, 2)))),
-											A2(
-											$MacCASOutreach$graphicsvg$GraphicSVG$move,
-											_Utils_Tuple2(61, 35.5),
-											A2(
-												$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-												col.words,
-												$MacCASOutreach$graphicsvg$GraphicSVG$centered(
-													A2(
-														$MacCASOutreach$graphicsvg$GraphicSVG$size,
-														4,
-														A2(
-															$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
-															$author$project$Consts$fonts.sansserif,
-															$MacCASOutreach$graphicsvg$GraphicSVG$text('Dark Mode'))))))
-										]))),
-								A2(
-								$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
-								$author$project$Consts$ToggleRad(false),
-								A2(
-									$MacCASOutreach$graphicsvg$GraphicSVG$move,
-									_Utils_Tuple2(0, 7),
-									$MacCASOutreach$graphicsvg$GraphicSVG$group(
-										_List_fromArray(
-											[
-												A2(
-												$MacCASOutreach$graphicsvg$GraphicSVG$move,
-												_Utils_Tuple2(35, 37),
-												A2(
-													$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
-													model.radians ? $author$project$Main$off : $author$project$Main$on,
-													A2(
-														$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-														col.buttons,
-														A3($MacCASOutreach$graphicsvg$GraphicSVG$roundedRect, 25, 5, 2)))),
-												A2(
-												$MacCASOutreach$graphicsvg$GraphicSVG$move,
-												_Utils_Tuple2(35, 35.5),
-												A2(
-													$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-													col.words,
-													$MacCASOutreach$graphicsvg$GraphicSVG$centered(
-														A2(
-															$MacCASOutreach$graphicsvg$GraphicSVG$size,
-															4,
-															A2(
-																$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
-																$author$project$Consts$fonts.sansserif,
-																$MacCASOutreach$graphicsvg$GraphicSVG$text('Degrees'))))))
-											])))),
-								A2(
-								$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
-								$author$project$Consts$ToggleRad(true),
-								A2(
-									$MacCASOutreach$graphicsvg$GraphicSVG$move,
-									_Utils_Tuple2(0, 7),
-									$MacCASOutreach$graphicsvg$GraphicSVG$group(
-										_List_fromArray(
-											[
-												A2(
-												$MacCASOutreach$graphicsvg$GraphicSVG$move,
-												_Utils_Tuple2(61, 37),
-												A2(
-													$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
-													model.radians ? $author$project$Main$on : $author$project$Main$off,
-													A2(
-														$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-														col.buttons,
-														A3($MacCASOutreach$graphicsvg$GraphicSVG$roundedRect, 25, 5, 2)))),
-												A2(
-												$MacCASOutreach$graphicsvg$GraphicSVG$move,
-												_Utils_Tuple2(61, 35.5),
-												A2(
-													$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-													col.words,
-													$MacCASOutreach$graphicsvg$GraphicSVG$centered(
-														A2(
-															$MacCASOutreach$graphicsvg$GraphicSVG$size,
-															4,
-															A2(
-																$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
-																$author$project$Consts$fonts.sansserif,
-																$MacCASOutreach$graphicsvg$GraphicSVG$text('Radians'))))))
-											]))))
-							])))
-				])) : A2(
-			$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
-			$author$project$Consts$ToggleSettings,
-			A2(
-				$MacCASOutreach$graphicsvg$GraphicSVG$move,
-				_Utils_Tuple2(89, 57),
-				$MacCASOutreach$graphicsvg$GraphicSVG$group(
-					_List_fromArray(
-						[
-							A2(
-							$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
-							0,
-							A2(
-								$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-								col.buttons,
-								$MacCASOutreach$graphicsvg$GraphicSVG$square(10))),
-							A2(
-							$MacCASOutreach$graphicsvg$GraphicSVG$move,
-							_Utils_Tuple2(0, -3),
-							A2(
 								$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
-								0.9,
+								0.4,
 								A2(
 									$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-									col.words,
-									A2(
-										$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
-										$author$project$Consts$fonts.sansserif,
-										$MacCASOutreach$graphicsvg$GraphicSVG$centered(
-											A2(
-												$MacCASOutreach$graphicsvg$GraphicSVG$size,
-												8,
-												$MacCASOutreach$graphicsvg$GraphicSVG$text('⚙')))))))
-						]))))
+									col.buttons,
+									A2($MacCASOutreach$graphicsvg$GraphicSVG$rect, 192, 128)))
+							]))),
+					A2(
+					$MacCASOutreach$graphicsvg$GraphicSVG$move,
+					_Utils_Tuple2(70, 10),
+					A2($author$project$Main$settingsBox, model, col))
+				])) : A2(
+			$MacCASOutreach$graphicsvg$GraphicSVG$move,
+			_Utils_Tuple2(89, 57),
+			$author$project$Main$settingsButton(col))
 		]);
 };
 var $author$project$Main$view = function (model) {

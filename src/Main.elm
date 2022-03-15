@@ -32,7 +32,7 @@ myShapes model =
                     |> scale 0.72
                     |> move (-58, 0)
                 ]
-                |> move (0, 5)
+                |> move (0.5, 5)
                 --|> move (paraX (-0.02 * model.time), 0.5 * paraY (-0.02 * model.time))
             ],
 

@@ -110,7 +110,7 @@ myShapes model =
             |> makeTransparent 0.3,
 
         -- Horizontal Grid
-        line (-93, 0) (100, 0)
+        line (-93, 0) (92, 0)
             |> outlined (solid 0.5) col.grid
             |> makeTransparent 0.3,
 

@@ -17,7 +17,9 @@ myShapes model =
     [
         -- Background
         rect 192 128
-            |> filled col.background,
+            |> filled col.background
+        
+        ,
 
         -- Main app
         group [
@@ -43,7 +45,9 @@ myShapes model =
         else group [
             optionButton "?" col (Tutorial 1 True)
                 |> move (89 - 12, 56.75)
-            ],
+            ]
+            
+        ,
 
         -- Settings
         if model.settings then 
@@ -60,7 +64,9 @@ myShapes model =
             ]
         else 
             optionButton "⚙" col ToggleSettings
-                |> move (89, 57),
+                |> move (89, 57)
+                
+        ,
 
         -- Tutorial
         case model.tutorial of
@@ -164,8 +170,11 @@ myShapes model =
                 ]
                 |> notifyTap (Tutorial 0 True)
             _ ->
-                group [],
-         if model.tutorial /= 0 then 
+                group []
+                
+        ,
+        
+        if model.tutorial /= 0 then
             tutText ["[press anywhere to continue]"] col.tutWords True
                 |> makeTransparent 0.7
                 |> scale 0.5

@@ -13,7 +13,7 @@ myShapes model = [
             unitCircle col model.showCast model.showSAngles model.radians model.angle,
             triangle col model.angle model.quad model.showSLengths model.radians,
             let
-                f = \(x, y) -> UpdateAngle (poiToDeg (x + 60, y - 7))
+                f = \(x, y) -> UpdateAngle (poiToDeg (x + 57.5, y - 5))
             in
                 (circle (ur * 1.1)
                     |> ghost

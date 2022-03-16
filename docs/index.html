@@ -9119,7 +9119,7 @@ var $author$project$Questions$init = {
 			}),
 		$author$project$Consts$rawQs)
 };
-var $author$project$Main$init = {cast: true, circle: $author$project$Circle$init, col: $author$project$Consts$Light, graph: $author$project$Graphing$init, questions: $author$project$Questions$init, radians: true, sAngles: true, sLengths: true, settings: false, showCos: false, showSin: true, showTan: false, time: 0, yLine: false};
+var $author$project$Main$init = {cast: true, circle: $author$project$Circle$init, col: $author$project$Consts$Light, graph: $author$project$Graphing$init, questions: $author$project$Questions$init, radians: true, sAngles: true, sLengths: true, settings: false, showCos: false, showSin: true, showTan: false, time: 0, tutorial: 1, yLine: false};
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$Consts$limitAngle = function (angle) {
 	limitAngle:
@@ -9611,7 +9611,7 @@ var $author$project$Main$update = F2(
 					$elm$core$Platform$Cmd$batch(
 						_List_fromArray(
 							[qCmds])));
-			default:
+			case 'Hover':
 				var _v24 = A2($author$project$Questions$update, msg, model.questions);
 				var newQs = _v24.a;
 				var qCmds = _v24.b;
@@ -9622,6 +9622,17 @@ var $author$project$Main$update = F2(
 					$elm$core$Platform$Cmd$batch(
 						_List_fromArray(
 							[qCmds])));
+			default:
+				var i = msg.a;
+				var b = msg.b;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							settings: ((i === 8) && b) ? true : false,
+							tutorial: b ? i : (model.tutorial + 1)
+						}),
+					$elm$core$Platform$Cmd$none);
 		}
 	});
 var $MacCASOutreach$graphicsvg$GraphicSVG$collage = F3(
@@ -9640,6 +9651,10 @@ var $elm$core$List$concat = function (lists) {
 	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
 };
 var $author$project$Consts$ToggleSettings = {$: 'ToggleSettings'};
+var $author$project$Consts$Tutorial = F2(
+	function (a, b) {
+		return {$: 'Tutorial', a: a, b: b};
+	});
 var $MacCASOutreach$graphicsvg$GraphicSVG$clip = F2(
 	function (shape1, shape2) {
 		return A2($MacCASOutreach$graphicsvg$GraphicSVG$Clip, shape1, shape2);
@@ -9679,8 +9694,8 @@ var $author$project$Consts$cols = {
 	white: A3($MacCASOutreach$graphicsvg$GraphicSVG$rgb, 255, 255, 255),
 	yellow: A3($MacCASOutreach$graphicsvg$GraphicSVG$rgb, 254, 231, 92)
 };
-var $author$project$Consts$darkTheme = {adj: $author$project$Consts$cols.blurple, alpha: $author$project$Consts$cols.lightNitroGrey, angle: $author$project$Consts$cols.white, background: $author$project$Consts$cols.darkmodeGrey, buttons: $author$project$Consts$cols.notQuiteBlack, cir: $author$project$Consts$cols.white, dots: $author$project$Consts$cols.lightNitroGrey, grid: $author$project$Consts$cols.white, hyp: $author$project$Consts$cols.lightNitroGrey, opp: $author$project$Consts$cols.red, optionCorrect: $author$project$Consts$cols.bugHunterGreen, optionFade: $author$project$Consts$cols.darkGrey, optionHover: $author$project$Consts$cols.notQuiteBlack, optionText: $author$project$Consts$cols.white, optionTextH: $author$project$Consts$cols.notSoBurple, optionWait: $author$project$Consts$cols.darkGrey, optionWrong: $author$project$Consts$cols.dndRed, question: $author$project$Consts$cols.white, scoreCorrect: $author$project$Consts$cols.bugHunterGreen, scoreWait: $author$project$Consts$cols.white, scoreWrong: $author$project$Consts$cols.dndRed, tan: $author$project$Consts$cols.braveryPurple, words: $author$project$Consts$cols.white};
-var $author$project$Consts$lightTheme = {adj: $author$project$Consts$cols.blurple, alpha: $author$project$Consts$cols.darkGrey, angle: $author$project$Consts$cols.darkmodeGrey, background: $author$project$Consts$cols.white, buttons: $author$project$Consts$cols.lightNitroGrey, cir: $author$project$Consts$cols.lightNitroGrey, dots: $author$project$Consts$cols.darkGrey, grid: $author$project$Consts$cols.darkmodeGrey, hyp: $author$project$Consts$cols.notQuiteBlack, opp: $author$project$Consts$cols.red, optionCorrect: $author$project$Consts$cols.green, optionFade: $author$project$Consts$cols.lightNitroGrey, optionHover: $author$project$Consts$cols.nitroGrey, optionText: $author$project$Consts$cols.white, optionTextH: $author$project$Consts$cols.blurple, optionWait: $author$project$Consts$cols.lightNitroGrey, optionWrong: $author$project$Consts$cols.dndRed, question: $author$project$Consts$cols.notQuiteBlack, scoreCorrect: $author$project$Consts$cols.green, scoreWait: $author$project$Consts$cols.notQuiteBlack, scoreWrong: $author$project$Consts$cols.dndRed, tan: $author$project$Consts$cols.streamerPurple, words: $author$project$Consts$cols.notQuiteBlack};
+var $author$project$Consts$darkTheme = {adj: $author$project$Consts$cols.blurple, alpha: $author$project$Consts$cols.lightNitroGrey, angle: $author$project$Consts$cols.white, background: $author$project$Consts$cols.darkmodeGrey, buttons: $author$project$Consts$cols.notQuiteBlack, cir: $author$project$Consts$cols.white, dots: $author$project$Consts$cols.lightNitroGrey, grid: $author$project$Consts$cols.white, hyp: $author$project$Consts$cols.lightNitroGrey, opp: $author$project$Consts$cols.red, optionCorrect: $author$project$Consts$cols.bugHunterGreen, optionFade: $author$project$Consts$cols.darkGrey, optionHover: $author$project$Consts$cols.notQuiteBlack, optionText: $author$project$Consts$cols.white, optionTextH: $author$project$Consts$cols.notSoBurple, optionWait: $author$project$Consts$cols.darkGrey, optionWrong: $author$project$Consts$cols.dndRed, question: $author$project$Consts$cols.white, scoreCorrect: $author$project$Consts$cols.bugHunterGreen, scoreWait: $author$project$Consts$cols.white, scoreWrong: $author$project$Consts$cols.dndRed, tan: $author$project$Consts$cols.braveryPurple, tutBack: $author$project$Consts$cols.notQuiteBlack, tutWords: $author$project$Consts$cols.idleYellow, words: $author$project$Consts$cols.white};
+var $author$project$Consts$lightTheme = {adj: $author$project$Consts$cols.blurple, alpha: $author$project$Consts$cols.darkGrey, angle: $author$project$Consts$cols.darkmodeGrey, background: $author$project$Consts$cols.white, buttons: $author$project$Consts$cols.lightNitroGrey, cir: $author$project$Consts$cols.lightNitroGrey, dots: $author$project$Consts$cols.darkGrey, grid: $author$project$Consts$cols.darkmodeGrey, hyp: $author$project$Consts$cols.notQuiteBlack, opp: $author$project$Consts$cols.red, optionCorrect: $author$project$Consts$cols.green, optionFade: $author$project$Consts$cols.lightNitroGrey, optionHover: $author$project$Consts$cols.nitroGrey, optionText: $author$project$Consts$cols.white, optionTextH: $author$project$Consts$cols.blurple, optionWait: $author$project$Consts$cols.lightNitroGrey, optionWrong: $author$project$Consts$cols.dndRed, question: $author$project$Consts$cols.notQuiteBlack, scoreCorrect: $author$project$Consts$cols.green, scoreWait: $author$project$Consts$cols.notQuiteBlack, scoreWrong: $author$project$Consts$cols.dndRed, tan: $author$project$Consts$cols.streamerPurple, tutBack: $author$project$Consts$cols.black, tutWords: $author$project$Consts$cols.hypesquadYellow, words: $author$project$Consts$cols.notQuiteBlack};
 var $author$project$Consts$getTheme = function (t) {
 	if (t.$ === 'Light') {
 		return $author$project$Consts$lightTheme;
@@ -10718,7 +10733,7 @@ var $author$project$Circle$myShapes = function (model) {
 								var y = _v0.b;
 								return $author$project$Consts$UpdateAngle(
 									$author$project$Consts$poiToDeg(
-										_Utils_Tuple2(x + 60, y - 7)));
+										_Utils_Tuple2(x + 57.5, y - 5)));
 							};
 							return (model.drag ? $MacCASOutreach$graphicsvg$GraphicSVG$notifyMouseMoveAt(f) : $elm$core$Basics$identity)(
 								A2(
@@ -11294,8 +11309,8 @@ var $author$project$Questions$showScore = F4(
 						A2(
 							$MacCASOutreach$graphicsvg$GraphicSVG$move,
 							_Utils_Tuple2(
-								$author$project$Consts$paraX(0.1 * time),
-								$author$project$Consts$paraY(0.1 * time)),
+								0.5 * $author$project$Consts$paraX(0.1 * time),
+								0.5 * $author$project$Consts$paraY(0.1 * time)),
 							A2(
 								$MacCASOutreach$graphicsvg$GraphicSVG$move,
 								_Utils_Tuple2(-95, 23),
@@ -11330,6 +11345,40 @@ var $author$project$Questions$myShapes = function (model) {
 				])) : $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil))
 		]);
 };
+var $author$project$Main$optionButton = F3(
+	function (sym, col, msg) {
+		return A2(
+			$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
+			msg,
+			$MacCASOutreach$graphicsvg$GraphicSVG$group(
+				_List_fromArray(
+					[
+						A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
+						0.5,
+						A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+							col.buttons,
+							A3($MacCASOutreach$graphicsvg$GraphicSVG$roundedRect, 10, 10, 1.5))),
+						A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$move,
+						_Utils_Tuple2(0, -3),
+						A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
+							0.9,
+							A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+								col.words,
+								A2(
+									$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
+									$author$project$Consts$fonts.sansserif,
+									$MacCASOutreach$graphicsvg$GraphicSVG$centered(
+										A2(
+											$MacCASOutreach$graphicsvg$GraphicSVG$size,
+											8,
+											$MacCASOutreach$graphicsvg$GraphicSVG$text(sym)))))))
+					])));
+	});
 var $author$project$Consts$Dark = {$: 'Dark'};
 var $author$project$Consts$SetCol = function (a) {
 	return {$: 'SetCol', a: a};
@@ -11935,39 +11984,46 @@ var $author$project$Main$settingsBox = F2(
 						]))
 				]));
 	});
-var $author$project$Main$settingsButton = function (col) {
-	return A2(
-		$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
-		$author$project$Consts$ToggleSettings,
-		$MacCASOutreach$graphicsvg$GraphicSVG$group(
-			_List_fromArray(
-				[
+var $author$project$Main$tutBG = F2(
+	function (shape, c) {
+		return A2(
+			$MacCASOutreach$graphicsvg$GraphicSVG$subtract,
+			shape,
+			A2(
+				$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
+				0.85,
+				A2(
+					$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+					c,
+					A2($MacCASOutreach$graphicsvg$GraphicSVG$rect, 192, 128))));
+	});
+var $author$project$Main$tutText = F3(
+	function (txts, c, center) {
+		var t = function (txt) {
+			return A2(
+				$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+				c,
+				(center ? $MacCASOutreach$graphicsvg$GraphicSVG$centered : $elm$core$Basics$identity)(
 					A2(
-					$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
-					0,
-					A2(
-						$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-						col.buttons,
-						$MacCASOutreach$graphicsvg$GraphicSVG$square(10))),
-					A2(
-					$MacCASOutreach$graphicsvg$GraphicSVG$move,
-					_Utils_Tuple2(0, -3),
-					A2(
-						$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
-						0.9,
+						$MacCASOutreach$graphicsvg$GraphicSVG$size,
+						6,
 						A2(
-							$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-							col.words,
-							A2(
-								$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
-								$author$project$Consts$fonts.sansserif,
-								$MacCASOutreach$graphicsvg$GraphicSVG$centered(
-									A2(
-										$MacCASOutreach$graphicsvg$GraphicSVG$size,
-										8,
-										$MacCASOutreach$graphicsvg$GraphicSVG$text('⚙')))))))
-				])));
-};
+							$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
+							$author$project$Consts$fonts.sansserif,
+							$MacCASOutreach$graphicsvg$GraphicSVG$text(txt)))));
+		};
+		return $MacCASOutreach$graphicsvg$GraphicSVG$group(
+			A2(
+				$elm$core$List$indexedMap,
+				F2(
+					function (idx, txt) {
+						return A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$move,
+							_Utils_Tuple2(0, (-7) * idx),
+							t(txt));
+					}),
+				txts));
+	});
 var $author$project$Main$myShapes = function (model) {
 	var col = $author$project$Consts$getTheme(model.col);
 	return _List_fromArray(
@@ -12009,6 +12065,18 @@ var $author$project$Main$myShapes = function (model) {
 										$author$project$Circle$myShapes(model.circle))))
 							])))
 				])),
+			(!(!model.tutorial)) ? $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil) : $MacCASOutreach$graphicsvg$GraphicSVG$group(
+			_List_fromArray(
+				[
+					A2(
+					$MacCASOutreach$graphicsvg$GraphicSVG$move,
+					_Utils_Tuple2(89 - 12, 56.75),
+					A3(
+						$author$project$Main$optionButton,
+						'?',
+						col,
+						A2($author$project$Consts$Tutorial, 1, true)))
+				])),
 			model.settings ? $MacCASOutreach$graphicsvg$GraphicSVG$group(
 			_List_fromArray(
 				[
@@ -12033,7 +12101,242 @@ var $author$project$Main$myShapes = function (model) {
 				])) : A2(
 			$MacCASOutreach$graphicsvg$GraphicSVG$move,
 			_Utils_Tuple2(89, 57),
-			$author$project$Main$settingsButton(col))
+			A3($author$project$Main$optionButton, '⚙', col, $author$project$Consts$ToggleSettings)),
+			function () {
+			var _v0 = model.tutorial;
+			switch (_v0) {
+				case 0:
+					return $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil);
+				case 1:
+					return A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
+						A2($author$project$Consts$Tutorial, 2, true),
+						$MacCASOutreach$graphicsvg$GraphicSVG$group(
+							_List_fromArray(
+								[
+									A2(
+									$author$project$Main$tutBG,
+									$MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil),
+									col.tutBack),
+									A3(
+									$author$project$Main$tutText,
+									_List_fromArray(
+										['Welcome to our Trig Visualizer!']),
+									col.tutWords,
+									true)
+								])));
+				case 2:
+					return A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
+						A2($author$project$Consts$Tutorial, 3, true),
+						$MacCASOutreach$graphicsvg$GraphicSVG$group(
+							_List_fromArray(
+								[
+									A2(
+									$author$project$Main$tutBG,
+									A2(
+										$MacCASOutreach$graphicsvg$GraphicSVG$move,
+										_Utils_Tuple2(-57.5, 5),
+										$MacCASOutreach$graphicsvg$GraphicSVG$ghost(
+											A3($MacCASOutreach$graphicsvg$GraphicSVG$roundedRect, 73, 68, 2))),
+									col.tutBack),
+									A2(
+									$MacCASOutreach$graphicsvg$GraphicSVG$move,
+									_Utils_Tuple2(-18, 10),
+									A3(
+										$author$project$Main$tutText,
+										_List_fromArray(
+											['This is the unit circle. You can click the', 'buttons on the special angles to move the', 'line to that angle and show that point on', 'the graph.']),
+										col.tutWords,
+										false))
+								])));
+				case 3:
+					return A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
+						A2($author$project$Consts$Tutorial, 4, true),
+						$MacCASOutreach$graphicsvg$GraphicSVG$group(
+							_List_fromArray(
+								[
+									A2(
+									$author$project$Main$tutBG,
+									A2(
+										$MacCASOutreach$graphicsvg$GraphicSVG$move,
+										_Utils_Tuple2(-57.5, 5),
+										$MacCASOutreach$graphicsvg$GraphicSVG$ghost(
+											A3($MacCASOutreach$graphicsvg$GraphicSVG$roundedRect, 73, 68, 2))),
+									col.tutBack),
+									A2(
+									$MacCASOutreach$graphicsvg$GraphicSVG$move,
+									_Utils_Tuple2(-18, 10),
+									A3(
+										$author$project$Main$tutText,
+										_List_fromArray(
+											['Click and drag inside the circle to go to', 'the non-special angles if you want to', 'explore. Non-special angles won\'t be', 'quizzed.']),
+										col.tutWords,
+										false))
+								])));
+				case 4:
+					return A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
+						A2($author$project$Consts$Tutorial, 5, true),
+						$MacCASOutreach$graphicsvg$GraphicSVG$group(
+							_List_fromArray(
+								[
+									A2(
+									$author$project$Main$tutBG,
+									A2(
+										$MacCASOutreach$graphicsvg$GraphicSVG$move,
+										_Utils_Tuple2(36, 5),
+										$MacCASOutreach$graphicsvg$GraphicSVG$ghost(
+											A3($MacCASOutreach$graphicsvg$GraphicSVG$roundedRect, 118, 64, 2))),
+									col.tutBack),
+									A2(
+									$MacCASOutreach$graphicsvg$GraphicSVG$move,
+									_Utils_Tuple2(-4, -35),
+									A3(
+										$author$project$Main$tutText,
+										_List_fromArray(
+											['This is the graph. You can click', 'the buttons for special angles to', 'move the line there and change', 'the angle in the unit circle.']),
+										col.tutWords,
+										false))
+								])));
+				case 5:
+					return A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
+						A2($author$project$Consts$Tutorial, 6, true),
+						$MacCASOutreach$graphicsvg$GraphicSVG$group(
+							_List_fromArray(
+								[
+									A2(
+									$author$project$Main$tutBG,
+									A2(
+										$MacCASOutreach$graphicsvg$GraphicSVG$move,
+										_Utils_Tuple2(0, -55),
+										$MacCASOutreach$graphicsvg$GraphicSVG$ghost(
+											A3($MacCASOutreach$graphicsvg$GraphicSVG$roundedRect, 185, 40, 2))),
+									col.tutBack),
+									A2(
+									$MacCASOutreach$graphicsvg$GraphicSVG$move,
+									_Utils_Tuple2(-80, -23),
+									A3(
+										$author$project$Main$tutText,
+										_List_fromArray(
+											['We have questions for you to test your understanding. Use', 'the visualizer to help you in finding the answer.']),
+										col.tutWords,
+										false))
+								])));
+				case 6:
+					return A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
+						A2($author$project$Consts$Tutorial, 7, true),
+						$MacCASOutreach$graphicsvg$GraphicSVG$group(
+							_List_fromArray(
+								[
+									A2(
+									$author$project$Main$tutBG,
+									A2(
+										$MacCASOutreach$graphicsvg$GraphicSVG$move,
+										_Utils_Tuple2(-72, 54),
+										$MacCASOutreach$graphicsvg$GraphicSVG$ghost(
+											A3($MacCASOutreach$graphicsvg$GraphicSVG$roundedRect, 45, 18, 2))),
+									col.tutBack),
+									A2(
+									$MacCASOutreach$graphicsvg$GraphicSVG$move,
+									_Utils_Tuple2(-90, 37),
+									A3(
+										$author$project$Main$tutText,
+										_List_fromArray(
+											['We also have a score system. Each time you get it right,', 'your score increases. If you get it wrong, your score', 'decreases. Try to get the highest score!']),
+										col.tutWords,
+										false))
+								])));
+				case 7:
+					return A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
+						A2($author$project$Consts$Tutorial, 8, true),
+						$MacCASOutreach$graphicsvg$GraphicSVG$group(
+							_List_fromArray(
+								[
+									A2(
+									$author$project$Main$tutBG,
+									A2(
+										$MacCASOutreach$graphicsvg$GraphicSVG$move,
+										_Utils_Tuple2(89, 57),
+										$MacCASOutreach$graphicsvg$GraphicSVG$ghost(
+											A3($MacCASOutreach$graphicsvg$GraphicSVG$roundedRect, 10, 10, 1))),
+									col.tutBack),
+									A2(
+									$MacCASOutreach$graphicsvg$GraphicSVG$move,
+									_Utils_Tuple2(4, 50),
+									A3(
+										$author$project$Main$tutText,
+										_List_fromArray(
+											['Finally, we have the settings.']),
+										col.tutWords,
+										false))
+								])));
+				case 8:
+					return A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
+						A2($author$project$Consts$Tutorial, 9, true),
+						$MacCASOutreach$graphicsvg$GraphicSVG$group(
+							_List_fromArray(
+								[
+									A2(
+									$author$project$Main$tutBG,
+									A2(
+										$MacCASOutreach$graphicsvg$GraphicSVG$move,
+										_Utils_Tuple2(70, 9),
+										$MacCASOutreach$graphicsvg$GraphicSVG$ghost(
+											A3($MacCASOutreach$graphicsvg$GraphicSVG$roundedRect, 45, 103, 2))),
+									col.tutBack),
+									A2(
+									$MacCASOutreach$graphicsvg$GraphicSVG$move,
+									_Utils_Tuple2(-64, 45),
+									A3(
+										$author$project$Main$tutText,
+										_List_fromArray(
+											['In the settings, you can change how', 'the unit circle and graph looks.', '', '', 'You can also toggle between radians', 'and degrees, although the questions', 'will be in radians.', '', '', 'Next, you can choose which functions to', 'show on the graph. And, you can', 'switch between light and dark modes.']),
+										col.tutWords,
+										false))
+								])));
+				case 9:
+					return A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
+						A2($author$project$Consts$Tutorial, 0, true),
+						$MacCASOutreach$graphicsvg$GraphicSVG$group(
+							_List_fromArray(
+								[
+									A2(
+									$author$project$Main$tutBG,
+									$MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil),
+									col.tutBack),
+									A3(
+									$author$project$Main$tutText,
+									_List_fromArray(
+										['And that concludes the tutorial!', 'If you want to see it again, click', 'the help (?) button.']),
+									col.tutWords,
+									true)
+								])));
+				default:
+					return $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil);
+			}
+		}(),
+			(!(!model.tutorial)) ? A2(
+			$MacCASOutreach$graphicsvg$GraphicSVG$move,
+			_Utils_Tuple2(0, 58),
+			A2(
+				$MacCASOutreach$graphicsvg$GraphicSVG$scale,
+				0.5,
+				A2(
+					$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
+					0.7,
+					A3(
+						$author$project$Main$tutText,
+						_List_fromArray(
+							['[press anywhere to continue]']),
+						col.tutWords,
+						true)))) : $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil)
 		]);
 };
 var $author$project$Main$view = function (model) {

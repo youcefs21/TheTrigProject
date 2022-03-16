@@ -52,7 +52,7 @@ showScore col state time score =
                 |> size 10
                 |> filled (if state == Waiting then col.scoreWait else if state == Incorrect then col.scoreWrong else col.scoreCorrect )
                 |> move (-95, 23)
-                |> move (paraX (0.1 * time), paraY (0.1 * time))
+                |> move (0.5 * paraX (0.1 * time), 0.5 * paraY (0.1 * time))
                 |> move (0 + (if state == Incorrect then (0.25 * sin (time * 20)) else 0), 30 + (if state == Correct then jump 0.5 time else 0))
             ]
             |> move (5, -2)

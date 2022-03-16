@@ -7,6 +7,7 @@ import GraphicSVG.EllieApp exposing (..)
 
 type Msg = Tick Float GetKeyState
          | ToggleSettings
+         | Tutorial Int Bool
          -- Circle Message
          | UpdateAngle Float
          | ToggleDrag Bool
@@ -207,6 +208,7 @@ cols = {
 
 lightTheme = {
     background    = cols.white,
+    tutBack       = cols.black,
     adj           = cols.blurple,
     opp           = cols.red,
     hyp           = cols.notQuiteBlack,
@@ -217,6 +219,7 @@ lightTheme = {
     grid          = cols.darkmodeGrey,
     buttons       = cols.lightNitroGrey,
     words         = cols.notQuiteBlack,
+    tutWords      = cols.hypesquadYellow,
     dots          = cols.darkGrey,
     scoreWait     = cols.notQuiteBlack,
     scoreCorrect  = cols.green,
@@ -232,6 +235,7 @@ lightTheme = {
 
 darkTheme = {
     background    = cols.darkmodeGrey,
+    tutBack       = cols.notQuiteBlack,
     adj           = cols.blurple,
     opp           = cols.red,
     hyp           = cols.lightNitroGrey,
@@ -242,6 +246,7 @@ darkTheme = {
     grid          = cols.white,
     buttons       = cols.notQuiteBlack,
     words         = cols.white,
+    tutWords      = cols.idleYellow,
     dots          = cols.lightNitroGrey,
     scoreWait     = cols.white,
     scoreCorrect  = cols.bugHunterGreen,

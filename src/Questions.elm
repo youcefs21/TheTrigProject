@@ -85,7 +85,7 @@ showQuestion col (Q question correct incorrects) seed state hover time score nex
             rect 192 40
                 |> ghost
                 |> move (-3, -50),
-            if modBy 10 score == 0 then
+            if score /= 0 && modBy 5 score == 0 then
                 claps time col clap
                     |> group
             else

@@ -47,6 +47,7 @@ myShapes model =
                 |> move (89 - 12, 57)
                 |> notifyEnter (HoverMain 2 True)
                 |> notifyLeave (HoverMain 2 False)
+                |> notifyTap (HoverMain 2 False)
             ]
             
         ,
@@ -418,7 +419,8 @@ update msg model =
                             questions  = newQs,
                             time       = t }, Cmd.batch [circleCmds, graphCmds, qCmds] )
         ToggleSettings ->
-            ( { model | settings = not model.settings }, Cmd.none )
+            ( { model | settings = not model.settings,
+                        hoverSet = False }, Cmd.none )
         HoverMain i b ->
             ( if i == 1 then { model | hoverSet = b} else if i == 2 then { model | hoverTut = b} else model, Cmd.none )
         UpdateAngle _ -> 
@@ -535,9 +537,15 @@ update msg model =
                 (newQs, qCmds)      = Questions.update msg model.questions
             in
                 ( { model | questions = newQs }, Cmd.batch [qCmds] )
+        HoverNext _ ->
+            let
+                (newQs, qCmds)      = Questions.update msg model.questions
+            in
+                ( { model | questions = newQs }, Cmd.batch [qCmds] )
         Tutorial i b ->
             ( { model | tutorial = if b then i else model.tutorial + 1,
-                        settings = if i == 8 && b then True else False }, Cmd.none )
+                        settings = if i == 8 && b then True else False,
+                        hoverTut = False }, Cmd.none )
 
 view : Model -> Collage Consts.Msg
 view model = collage 192 128 <|

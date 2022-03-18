@@ -12,7 +12,7 @@ myShapes model =
         col = getTheme model.col
         actualScore (x, y) = x - y
     in [
-        showQuestion col model.currentQ model.seed model.state model.hover (model.time - model.waitTime) (actualScore model.score)
+        showQuestion col model.currentQ model.seed model.state model.hover (model.time - model.waitTime) (actualScore model.score) model.next
             |> move (6, 0),
         showScore col model.state model.time model.score model.maxScore,
         if model.state == Waiting then group []
@@ -69,7 +69,7 @@ showScore col state time score maxScore =
             |> move (5, -2)
     
 -- Draws the question
-showQuestion col (Q question correct incorrects) seed state hover time score = group [
+showQuestion col (Q question correct incorrects) seed state hover time score next = group [
     text question
         |> customFont fonts.math
         |> size 8.5
@@ -95,16 +95,18 @@ showQuestion col (Q question correct incorrects) seed state hover time score = g
                 group [],
             group [
                 roundedRect 40 18 5
-                    |> filled col.buttons
-                    |> makeTransparent 0.7,
+                    |> filled (if next then col.optionHover else col.optionFade)
+                    |> makeTransparent 0.8,
                 text "Next"
                     |> centered
                     |> customFont fonts.sansserif
-                    |> filled col.words
+                    |> filled (if next then col.optionTextH else col.optionText)
                     |> move (0, -4)
                 ]
                 |> scale 0.5
                 |> move (73, -43)
+                |> notifyEnter (HoverNext True)
+                |> notifyLeave (HoverNext False)
                 |> notifyTap (UpdateState state)
         ]
     ]
@@ -188,6 +190,7 @@ type alias Model = {
     score      : (Int, Int), 
     maxScore   : Int,
     seed       : Int, 
+    next       : Bool,
     radians    : Bool,
     col        : Theme
     }
@@ -203,6 +206,7 @@ init = {
     score      = (0, 0), 
     maxScore   = 0,
     seed       = 0, 
+    next       = False,
     radians    = True,
     col        = Light
     }
@@ -231,10 +235,13 @@ update msg model =
             ( { model | state      = Waiting,
                         weightedQs = updateWeights model.weightedQs model.currentQ (currentState == Correct),
                         seed       = Tuple.first <| Random.step anyInt (Random.initialSeed model.seed),
-                        hover      = "" }, 
+                        hover      = "",
+                        next       = False }, 
               genQ model.weightedQs )
         Hover option h ->
             ( { model | hover = if h then option else "" }, Cmd.none )
+        HoverNext h ->
+            ( { model | next = h }, Cmd.none )
         SetCol t ->
             ( { model | col = t }, Cmd.none )
         ToggleRad ->

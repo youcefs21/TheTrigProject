@@ -30,6 +30,7 @@ type Msg = Tick Float GetKeyState
          | Select String
          | UpdateState State
          | Hover String Bool
+         | HoverNext Bool
 
 
 -- Types needed for other files
@@ -255,7 +256,7 @@ darkTheme = {
     scoreCorrect  = cols.bugHunterGreen,
     scoreWrong    = cols.dndRed,
     question      = cols.white,
-    optionWait    = cols.darkGrey,
+    optionWait    = cols.black,
     optionHover   = cols.notQuiteBlack,
     optionFade    = cols.darkGrey,
     optionCorrect = cols.bugHunterGreen,

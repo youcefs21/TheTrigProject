@@ -9106,6 +9106,7 @@ var $author$project$Questions$init = {
 			['', '', '', ''])),
 	hover: '',
 	maxScore: 0,
+	next: false,
 	radians: true,
 	score: _Utils_Tuple2(0, 0),
 	seed: 0,
@@ -9383,6 +9384,7 @@ var $author$project$Questions$update = F2(
 						model,
 						{
 							hover: '',
+							next: false,
 							seed: A2(
 								$elm$random$Random$step,
 								$author$project$Consts$anyInt,
@@ -9404,6 +9406,13 @@ var $author$project$Questions$update = F2(
 						{
 							hover: h ? option : ''
 						}),
+					$elm$core$Platform$Cmd$none);
+			case 'HoverNext':
+				var h = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{next: h}),
 					$elm$core$Platform$Cmd$none);
 			case 'SetCol':
 				var t = msg.a;
@@ -9447,7 +9456,7 @@ var $author$project$Main$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{settings: !model.settings}),
+						{hoverSet: false, settings: !model.settings}),
 					$elm$core$Platform$Cmd$none);
 			case 'HoverMain':
 				var i = msg.a;
@@ -9676,6 +9685,17 @@ var $author$project$Main$update = F2(
 					$elm$core$Platform$Cmd$batch(
 						_List_fromArray(
 							[qCmds])));
+			case 'HoverNext':
+				var _v27 = A2($author$project$Questions$update, msg, model.questions);
+				var newQs = _v27.a;
+				var qCmds = _v27.b;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{questions: newQs}),
+					$elm$core$Platform$Cmd$batch(
+						_List_fromArray(
+							[qCmds])));
 			default:
 				var i = msg.a;
 				var b = msg.b;
@@ -9683,6 +9703,7 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
+							hoverTut: false,
 							settings: ((i === 8) && b) ? true : false,
 							tutorial: b ? i : (model.tutorial + 1)
 						}),
@@ -9752,7 +9773,7 @@ var $author$project$Consts$cols = {
 	white: A3($MacCASOutreach$graphicsvg$GraphicSVG$rgb, 255, 255, 255),
 	yellow: A3($MacCASOutreach$graphicsvg$GraphicSVG$rgb, 254, 231, 92)
 };
-var $author$project$Consts$darkTheme = {adj: $author$project$Consts$cols.blurple, alpha: $author$project$Consts$cols.lightNitroGrey, angle: $author$project$Consts$cols.white, background: $author$project$Consts$cols.darkmodeGrey, buttons: $author$project$Consts$cols.notQuiteBlack, cir: $author$project$Consts$cols.white, dots: $author$project$Consts$cols.lightNitroGrey, grid: $author$project$Consts$cols.white, hyp: $author$project$Consts$cols.lightNitroGrey, opp: $author$project$Consts$cols.red, optionCorrect: $author$project$Consts$cols.bugHunterGreen, optionFade: $author$project$Consts$cols.darkGrey, optionHover: $author$project$Consts$cols.notQuiteBlack, optionText: $author$project$Consts$cols.white, optionTextH: $author$project$Consts$cols.white, optionWait: $author$project$Consts$cols.darkGrey, optionWrong: $author$project$Consts$cols.dndRed, question: $author$project$Consts$cols.white, scoreCorrect: $author$project$Consts$cols.bugHunterGreen, scoreWait: $author$project$Consts$cols.white, scoreWrong: $author$project$Consts$cols.dndRed, tan: $author$project$Consts$cols.braveryPurple, tutBack: $author$project$Consts$cols.notQuiteBlack, tutWords: $author$project$Consts$cols.idleYellow, words: $author$project$Consts$cols.white};
+var $author$project$Consts$darkTheme = {adj: $author$project$Consts$cols.blurple, alpha: $author$project$Consts$cols.lightNitroGrey, angle: $author$project$Consts$cols.white, background: $author$project$Consts$cols.darkmodeGrey, buttons: $author$project$Consts$cols.notQuiteBlack, cir: $author$project$Consts$cols.white, dots: $author$project$Consts$cols.lightNitroGrey, grid: $author$project$Consts$cols.white, hyp: $author$project$Consts$cols.lightNitroGrey, opp: $author$project$Consts$cols.red, optionCorrect: $author$project$Consts$cols.bugHunterGreen, optionFade: $author$project$Consts$cols.darkGrey, optionHover: $author$project$Consts$cols.notQuiteBlack, optionText: $author$project$Consts$cols.white, optionTextH: $author$project$Consts$cols.white, optionWait: $author$project$Consts$cols.black, optionWrong: $author$project$Consts$cols.dndRed, question: $author$project$Consts$cols.white, scoreCorrect: $author$project$Consts$cols.bugHunterGreen, scoreWait: $author$project$Consts$cols.white, scoreWrong: $author$project$Consts$cols.dndRed, tan: $author$project$Consts$cols.braveryPurple, tutBack: $author$project$Consts$cols.notQuiteBlack, tutWords: $author$project$Consts$cols.idleYellow, words: $author$project$Consts$cols.white};
 var $author$project$Consts$lightTheme = {adj: $author$project$Consts$cols.blurple, alpha: $author$project$Consts$cols.darkGrey, angle: $author$project$Consts$cols.darkmodeGrey, background: $author$project$Consts$cols.white, buttons: $author$project$Consts$cols.lightNitroGrey, cir: $author$project$Consts$cols.lightNitroGrey, dots: $author$project$Consts$cols.darkGrey, grid: $author$project$Consts$cols.darkmodeGrey, hyp: $author$project$Consts$cols.notQuiteBlack, opp: $author$project$Consts$cols.red, optionCorrect: $author$project$Consts$cols.green, optionFade: $author$project$Consts$cols.lightNitroGrey, optionHover: $author$project$Consts$cols.nitroGrey, optionText: $author$project$Consts$cols.white, optionTextH: $author$project$Consts$cols.white, optionWait: $author$project$Consts$cols.lightNitroGrey, optionWrong: $author$project$Consts$cols.dndRed, question: $author$project$Consts$cols.notQuiteBlack, scoreCorrect: $author$project$Consts$cols.green, scoreWait: $author$project$Consts$cols.notQuiteBlack, scoreWrong: $author$project$Consts$cols.dndRed, tan: $author$project$Consts$cols.streamerPurple, tutBack: $author$project$Consts$cols.black, tutWords: $author$project$Consts$cols.hypesquadYellow, words: $author$project$Consts$cols.notQuiteBlack};
 var $author$project$Consts$getTheme = function (t) {
 	if (t.$ === 'Light') {
@@ -11132,6 +11153,9 @@ var $author$project$Graphing$myShapes = function (model) {
 var $author$project$Consts$UpdateState = function (a) {
 	return {$: 'UpdateState', a: a};
 };
+var $author$project$Consts$HoverNext = function (a) {
+	return {$: 'HoverNext', a: a};
+};
 var $author$project$Questions$clap = '👏';
 var $author$project$Questions$hi = 75;
 var $author$project$Consts$jump = F2(
@@ -11317,8 +11341,8 @@ var $author$project$Consts$shuffle = function (list) {
 		},
 		$elm$random$Random$independentSeed);
 };
-var $author$project$Questions$showQuestion = F7(
-	function (col, _v0, seed, state, hover, time, score) {
+var $author$project$Questions$showQuestion = F8(
+	function (col, _v0, seed, state, hover, time, score, next) {
 		var question = _v0.a;
 		var correct = _v0.b;
 		var incorrects = _v0.c;
@@ -11377,33 +11401,39 @@ var $author$project$Questions$showQuestion = F7(
 							$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
 							$author$project$Consts$UpdateState(state),
 							A2(
-								$MacCASOutreach$graphicsvg$GraphicSVG$move,
-								_Utils_Tuple2(73, -43),
+								$MacCASOutreach$graphicsvg$GraphicSVG$notifyLeave,
+								$author$project$Consts$HoverNext(false),
 								A2(
-									$MacCASOutreach$graphicsvg$GraphicSVG$scale,
-									0.5,
-									$MacCASOutreach$graphicsvg$GraphicSVG$group(
-										_List_fromArray(
-											[
-												A2(
-												$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
-												0.7,
-												A2(
-													$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-													col.buttons,
-													A3($MacCASOutreach$graphicsvg$GraphicSVG$roundedRect, 40, 18, 5))),
-												A2(
-												$MacCASOutreach$graphicsvg$GraphicSVG$move,
-												_Utils_Tuple2(0, -4),
-												A2(
-													$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-													col.words,
-													A2(
-														$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
-														$author$project$Consts$fonts.sansserif,
-														$MacCASOutreach$graphicsvg$GraphicSVG$centered(
-															$MacCASOutreach$graphicsvg$GraphicSVG$text('Next')))))
-											])))))
+									$MacCASOutreach$graphicsvg$GraphicSVG$notifyEnter,
+									$author$project$Consts$HoverNext(true),
+									A2(
+										$MacCASOutreach$graphicsvg$GraphicSVG$move,
+										_Utils_Tuple2(73, -43),
+										A2(
+											$MacCASOutreach$graphicsvg$GraphicSVG$scale,
+											0.5,
+											$MacCASOutreach$graphicsvg$GraphicSVG$group(
+												_List_fromArray(
+													[
+														A2(
+														$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
+														0.8,
+														A2(
+															$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+															next ? col.optionHover : col.optionFade,
+															A3($MacCASOutreach$graphicsvg$GraphicSVG$roundedRect, 40, 18, 5))),
+														A2(
+														$MacCASOutreach$graphicsvg$GraphicSVG$move,
+														_Utils_Tuple2(0, -4),
+														A2(
+															$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+															next ? col.optionTextH : col.optionText,
+															A2(
+																$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
+																$author$project$Consts$fonts.sansserif,
+																$MacCASOutreach$graphicsvg$GraphicSVG$centered(
+																	$MacCASOutreach$graphicsvg$GraphicSVG$text('Next')))))
+													])))))))
 						]))
 				]));
 	});
@@ -11486,7 +11516,7 @@ var $author$project$Questions$myShapes = function (model) {
 			A2(
 			$MacCASOutreach$graphicsvg$GraphicSVG$move,
 			_Utils_Tuple2(6, 0),
-			A7(
+			A8(
 				$author$project$Questions$showQuestion,
 				col,
 				model.currentQ,
@@ -11494,7 +11524,8 @@ var $author$project$Questions$myShapes = function (model) {
 				model.state,
 				model.hover,
 				model.time - model.waitTime,
-				actualScore(model.score))),
+				actualScore(model.score),
+				model.next)),
 			A5($author$project$Questions$showScore, col, model.state, model.time, model.score, model.maxScore),
 			_Utils_eq(model.state, $author$project$Consts$Waiting) ? $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil) : (((model.time - model.waitTime) > 10) ? $MacCASOutreach$graphicsvg$GraphicSVG$group(
 			_List_fromArray(
@@ -12234,20 +12265,23 @@ var $author$project$Main$myShapes = function (model) {
 			_List_fromArray(
 				[
 					A2(
-					$MacCASOutreach$graphicsvg$GraphicSVG$notifyLeave,
+					$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
 					A2($author$project$Consts$HoverMain, 2, false),
 					A2(
-						$MacCASOutreach$graphicsvg$GraphicSVG$notifyEnter,
-						A2($author$project$Consts$HoverMain, 2, true),
+						$MacCASOutreach$graphicsvg$GraphicSVG$notifyLeave,
+						A2($author$project$Consts$HoverMain, 2, false),
 						A2(
-							$MacCASOutreach$graphicsvg$GraphicSVG$move,
-							_Utils_Tuple2(89 - 12, 57),
-							A4(
-								$author$project$Main$optionButton,
-								'❓',
-								col,
-								A2($author$project$Consts$Tutorial, 1, true),
-								model.hoverTut))))
+							$MacCASOutreach$graphicsvg$GraphicSVG$notifyEnter,
+							A2($author$project$Consts$HoverMain, 2, true),
+							A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$move,
+								_Utils_Tuple2(89 - 12, 57),
+								A4(
+									$author$project$Main$optionButton,
+									'❓',
+									col,
+									A2($author$project$Consts$Tutorial, 1, true),
+									model.hoverTut)))))
 				])),
 			model.settings ? $MacCASOutreach$graphicsvg$GraphicSVG$group(
 			_List_fromArray(

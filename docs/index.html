@@ -11249,6 +11249,7 @@ var $author$project$Questions$drawBubbles = F6(
 					]));
 		}
 	});
+var $elm$core$Basics$modBy = _Basics_modBy;
 var $elm$random$Random$map3 = F4(
 	function (func, _v0, _v1, _v2) {
 		var genA = _v0.a;
@@ -11316,8 +11317,8 @@ var $author$project$Consts$shuffle = function (list) {
 		},
 		$elm$random$Random$independentSeed);
 };
-var $author$project$Questions$showQuestion = F6(
-	function (col, _v0, seed, state, hover, time) {
+var $author$project$Questions$showQuestion = F7(
+	function (col, _v0, seed, state, hover, time, score) {
 		var question = _v0.a;
 		var correct = _v0.b;
 		var incorrects = _v0.c;
@@ -11370,7 +11371,7 @@ var $author$project$Questions$showQuestion = F6(
 							_Utils_Tuple2(-3, -50),
 							$MacCASOutreach$graphicsvg$GraphicSVG$ghost(
 								A2($MacCASOutreach$graphicsvg$GraphicSVG$rect, 192, 40))),
-							_Utils_eq(state, $author$project$Consts$Correct) ? $MacCASOutreach$graphicsvg$GraphicSVG$group(
+							(_Utils_eq(state, $author$project$Consts$Correct) && (!A2($elm$core$Basics$modBy, 10, score))) ? $MacCASOutreach$graphicsvg$GraphicSVG$group(
 							A2($author$project$Questions$claps, time, col)) : $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil),
 							A2(
 							$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
@@ -11475,12 +11476,25 @@ var $author$project$Questions$showScore = F5(
 	});
 var $author$project$Questions$myShapes = function (model) {
 	var col = $author$project$Consts$getTheme(model.col);
+	var actualScore = function (_v0) {
+		var x = _v0.a;
+		var y = _v0.b;
+		return x - y;
+	};
 	return _List_fromArray(
 		[
 			A2(
 			$MacCASOutreach$graphicsvg$GraphicSVG$move,
 			_Utils_Tuple2(6, 0),
-			A6($author$project$Questions$showQuestion, col, model.currentQ, model.seed, model.state, model.hover, model.time - model.waitTime)),
+			A7(
+				$author$project$Questions$showQuestion,
+				col,
+				model.currentQ,
+				model.seed,
+				model.state,
+				model.hover,
+				model.time - model.waitTime,
+				actualScore(model.score))),
 			A5($author$project$Questions$showScore, col, model.state, model.time, model.score, model.maxScore),
 			_Utils_eq(model.state, $author$project$Consts$Waiting) ? $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil) : (((model.time - model.waitTime) > 10) ? $MacCASOutreach$graphicsvg$GraphicSVG$group(
 			_List_fromArray(

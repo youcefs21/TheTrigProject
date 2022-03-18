@@ -4,13 +4,14 @@ import Random
 import GraphicSVG exposing (..)
 import GraphicSVG.EllieApp exposing (..)
 import Consts exposing (..)
+import Html exposing (i)
 
 
 myShapes model = 
     let 
         col = getTheme model.col
     in [
-        showQuestion col model.currentQ model.seed model.state model.hover
+        showQuestion col model.currentQ model.seed model.state model.hover (model.time - model.waitTime)
             |> move (6, 0),
         showScore col model.state model.time model.score model.maxScore,
         if model.state == Waiting then group []
@@ -67,7 +68,7 @@ showScore col state time score maxScore =
             |> move (5, -2)
     
 -- Draws the question
-showQuestion col (Q question correct incorrects) seed state hover = group [
+showQuestion col (Q question correct incorrects) seed state hover time = group [
     text question
         |> customFont fonts.math
         |> size 8.5
@@ -86,6 +87,11 @@ showQuestion col (Q question correct incorrects) seed state hover = group [
             rect 192 40
                 |> ghost
                 |> move (-3, -50),
+            if state == Correct then
+                claps time col
+                    |> group
+            else
+                group [],
             group [
                 roundedRect 40 18 5
                     |> filled col.buttons
@@ -101,6 +107,26 @@ showQuestion col (Q question correct incorrects) seed state hover = group [
                 |> notifyTap (UpdateState state)
         ]
     ]
+
+-- Claps
+clap = "👏"
+hi = 75
+claps time col =
+    List.range 1 hi |> List.map (
+        \i ->
+            let
+                x = toFloat <| Tuple.first <| Random.step (Random.int 20 50) (Random.initialSeed i)
+                y = toFloat <| Tuple.first <| Random.step (Random.int 50 100) (Random.initialSeed (round x))
+                y2 = toFloat <| Tuple.first <| Random.step (Random.int 190 220) (Random.initialSeed (round x))
+            in
+                text clap
+                    |> centered
+                    |> filled col.words
+                    |> rotate (degrees 15)
+                    |> mirrorX
+                    |> scale (max 1 (jump 1.15 (y2 * time)))
+                    |> move (-120 + 2 * x * time, -y * time^2 + y2 * time - 70 - y)
+        )
 
 -- Draws the options
 drawBubbles col state correct answers c hover =

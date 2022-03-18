@@ -27,16 +27,16 @@ type Msg = Tick Float GetKeyState
          -- Questions Message
          | Choice Question 
          | NewSeed Int
-         | Select String
+         | Select Rad
          | UpdateState State
-         | Hover String Bool
+         | Hover Rad Bool
          | HoverNext Bool
 
 
 -- Types needed for other files
 
 -- Q (Question) (Right Answer) ([Incorrect Answers])
-type Question = Q String String (List String)
+type Question = Q Rad Rad (List Rad)
 
 type State = Waiting | Correct | Incorrect
 
@@ -47,15 +47,148 @@ type Quadrant = One
               | Three 
               | Four
 
+type Rad = C String          -- Constant constant
+         | R String          -- Root constant
+         | F (Rad, Rad) Bool -- Fraction (numerator, denominator) negative
+         | O String Rad      -- Operator operator rad
+
+-- StringToRad = str
+str s = 
+    case s of
+        "0" ->
+            C "0"
+        "π/6" -> 
+            F (C "π", C "6") False
+        "π/4" -> 
+            F (C "π", C "4") False
+        "π/3" -> 
+            F (C "π", C "3") False
+        "π/2" -> 
+            F (C "π", C "2") False
+        "2π/3" -> 
+            F (C "2π", C "3") False
+        "3π/4" -> 
+            F (C "3π", C "4") False
+        "5π/6" -> 
+            F (C "5π", C "6") False
+        "π" -> 
+            C "π"
+        "7π/6" -> 
+            F (C "7π", C "6") False
+        "5π/4" -> 
+            F (C "5π", C "4") False
+        "4π/3" -> 
+            F (C "4π", C "3") False
+        "3π/2" -> 
+            F (C "3π", C "2") False
+        "5π/3" -> 
+            F (C "5π", C "3") False
+        "7π/4" -> 
+            F (C "7π", C "4") False
+        "11π/6" -> 
+            F (C "11π", C "6") False
+        "2π" -> 
+            C "2π"
+        "1" ->
+            C "1"
+        "-1" ->
+            C "-1"
+        "(√3)/2" ->
+            F (R "3", C "2") False
+        "-(√3)/2" ->
+            F (R "3", C "2") True
+        "1/(√2)" ->
+            F (C "1", R "2") False
+        "-1/(√2)" ->
+            F (C "1", R "2") True
+        "1/2" ->
+            F (C "1", C "2") False
+        "-1/2" ->
+            F (C "1", C "2") True
+        _ -> 
+            C s
 
 -- Questions
 rawQs = [ 
-    Q "sin(π/4)" "1/(√2)" ["-1/(√2)", "1/2", "-(√3)/2", "1"],
-    Q "sin(11π/6)" "-1/2" ["1/2", "-(√3)/2", "0", "(√3)/2"],
-    Q "cos(π)" "-1" ["0", "1", "1/2", "-1/2"],
-    Q "sin(2π)" "0" ["-1", "1", "-(√3)/2", "(√3)/2"],
-    Q "sin(4π/3)" "-(√3)/2" ["-1/2", "-1/(√2)", "1/(√2)", "-1"]
+    Q (O "sin" <| str "π/4") (str "1/(√2)") [str "-1/(√2)", str "1/2", str "-(√3)/2", str "1"],
+    Q (O "sin" <| str "11π/6") (str "-1/2") [str "1/2", str "-(√3)/2", str "0", str "(√3)/2"],
+    Q (O "cos" <| str "π") (str "-1") [str "0", str "1", str "1/2", str "-1/2"],
+    Q (O "sin" <| str "2π") (str "0") [str "-1", str "1", str "-(√3)/2", str "(√3)/2"],
+    Q (O "sin" <| str "4π/3") (str "-(√3)/2") [str "-1/2", str "-1/(√2)", str "1/(√2)", str "-1"]
     ]
+
+root width = 
+    polygon [
+        (0, 60), 
+        (-37, -35.12), 
+        (-56, 5.2896), 
+        (-73.35, -6.338), 
+        (-71.54, -9.769), 
+        (-60.49, -3.192), 
+        (-40.571, -50), 
+        (-39.3, -50), 
+        (2.603, 57), 
+        (width - 1, 57), 
+        (width, 60), 
+        (0, 60)]
+
+-- RadToShape = rts
+rts rad c b = 
+    case rad of
+        C s -> 
+            group [
+                text s
+                    |> centered
+                    |> (if b then bold else identity)
+                    |> customFont fonts.math
+                    |> size 6
+                    |> filled c
+                ]
+        R s ->
+            group [
+                root ((*) 90 <| toFloat <| String.length s)
+                    |> filled c
+                    |> (if b then addOutline (solid 5) c else identity)
+                    |> scaleX 0.8
+                    |> scale 0.045
+                    |> move (-1.5, 1.8),
+                text s
+                    |> centered
+                    |> (if b then bold else identity)
+                    |> customFont fonts.math
+                    |> size 6
+                    |> filled c
+                ]
+        O o r ->
+            group [
+                text o
+                    |> customFont fonts.math
+                    |> (if b then bold else identity)
+                    |> size 6
+                    |> filled c,  
+                rts r c b
+                    |> move (13, 0)
+                ]
+        F (n, d) neg ->
+            group [
+                if neg then
+                    text "-"
+                        |> customFont fonts.math
+                        |> (if b then bold else identity)
+                        |> size 6
+                        |> filled c
+                        |> move (-6, 0.25)
+                else
+                    group [],
+                rts n c b
+                    |> move (0, 2.75),
+                rect 5 0.25
+                    |> filled c
+                    |> (if b then addOutline (solid 0.2) c else identity)
+                    |> move (0, 2),
+                rts d c b
+                    |> move (0, -3)
+                ]
 
 -- easy and hard for updating weights for spaced repetition
 easy = 0.9
@@ -72,7 +205,7 @@ correctAnswer (Q _ correct _) answer =
 -- Generates questions
 qGen qss = 
     case qss of
-        [] -> Random.constant <| Q "ERROR" "ERROR" ["ERROR"]
+        [] -> Random.constant <| Q (C "ERROR") (C "ERROR") []
         (q::qs) -> Random.weighted q qs
 genQ qss = Random.generate Choice <| qGen qss
 

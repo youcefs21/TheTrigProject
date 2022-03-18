@@ -38,7 +38,7 @@ updateWeights weightedQs (Q q _ _) correct =
                     -- The probability is at least 100% and at most 140%
                     newWeights = if correct then easy else hard |> (*) weight |> max 1 |> min 1.4
                 in (newWeights, Q question c incs)::qs
-            else (weight, Q question c incs)::(updateWeights qs (Q q "" []) correct)
+            else (weight, Q question c incs)::(updateWeights qs (Q q (str "0") []) correct)
 
 -- Draws the score and controls clickability
 showScore col state time score maxScore = 
@@ -70,11 +70,8 @@ showScore col state time score maxScore =
     
 -- Draws the question
 showQuestion col (Q question correct incorrects) seed state hover time score next clap = group [
-    text question
-        |> customFont fonts.math
-        |> size 8.5
-        |> filled col.question
-        |> move (-84,-45),
+    rts question col.question False
+        |> move (-84,-44),
     text "Q."
         |> customFont fonts.sansserif
         |> size 8.5
@@ -140,7 +137,7 @@ drawBubbles col state correct answers c hover =
                 hovered = state == Waiting && x == hover
             in
                 group [ 
-                    roundedRect 30 10 3
+                    roundedRect 30 13 3
                         |> filled (
                             if state == Waiting then
                                 if x == hover then
@@ -159,16 +156,7 @@ drawBubbles col state correct answers c hover =
                                     col.optionFade)
                         |> move (-40, 0)
                         |> makeTransparent 0.8,
-                    text x
-                        |> customFont fonts.math
-                        |> (if waitingOrIncorrect then centered else bold)
-                        |> centered
-                        |> size 5
-                        |> filled (
-                            if hovered then
-                                col.optionTextH
-                            else
-                                col.optionText)
+                    rts x (if hovered then col.optionTextH else col.optionText) hovered
                         |> move (-40, -2) 
                     ]
                     |> move(-40 + 37 * c, -55)
@@ -185,7 +173,7 @@ type alias Model = {
     currentQ   : Question, 
     weightedQs : List (Float, Question),
     state      : State, 
-    hover      : String,
+    hover      : Rad,
     score      : (Int, Int), 
     maxScore   : Int,
     seed       : Int, 
@@ -199,10 +187,10 @@ init : Model
 init = { 
     time       = 0, 
     waitTime   = 0,
-    currentQ   = Q "" "" ["", "", "", ""], 
+    currentQ   = Q (str "0") (str "0") [], 
     weightedQs = List.indexedMap (\_ q -> (1.0, q) ) rawQs, 
     state      = Waiting, 
-    hover      = "",
+    hover      = C "",
     score      = (0, 0), 
     maxScore   = 0,
     seed       = 0, 
@@ -238,11 +226,11 @@ update msg model =
             ( { model | state      = Waiting,
                         weightedQs = updateWeights model.weightedQs model.currentQ (currentState == Correct),
                         seed       = Tuple.first <| Random.step anyInt (Random.initialSeed model.seed),
-                        hover      = "",
+                        hover      = C "",
                         next       = False }, 
               genQ model.weightedQs )
         Hover option h ->
-            ( { model | hover = if h then option else "" }, Cmd.none )
+            ( { model | hover = if h then option else (C "") }, Cmd.none )
         HoverNext h ->
             ( { model | next = h }, Cmd.none )
         SetCol t ->

@@ -49,11 +49,12 @@ function model func fcol dnePossible =
                     circle 1
                         |> filled fcol
                         |> move (x, y2),
-                    text (String.fromFloat <| toN (func (degrees model.angle)) 3)
-                        |> customFont fonts.monospace
-                        |> size 4
-                        |> filled fcol
-                        |> move (x + 2, max -40 <| min 75 y2 / 2)
+                    rts (str (String.fromFloat <| toN (func (degrees model.angle)) 3)) fcol False --text (String.fromFloat <| toN (func (degrees model.angle)) 3)
+                        -- |> customFont fonts.monospace
+                        -- |> size 4
+                        -- |> filled fcol
+                        |> scale 0.65
+                        |> move (x + 7, max -40 <| min 75 y2 / 2)
                     ]
                 dne = 
                     text "DNE"
@@ -118,22 +119,25 @@ myShapes model =
         List.map 
             (\(deg, rad) -> 
                 group [
-                    roundedRect 12 5 1
+                    roundedRect 12 10 1
                         |> filled (if model.hovering && model.hoverDeg == (round deg) then col.optionHover else col.optionFade)
                         |> makeTransparent
                             (if deg == model.angle then 0.7 else 0.5)
-                        |> move (if deg == 0 then 2 else 0, -0.75),
+                        |> move (if deg == 0 then 2 else 0, -3.8),
                     circle 0.5
                         |> filled col.dots
                         |> move (0, 3),
-                    text (if model.radians then rad else String.fromFloat deg ++ "°")
-                        |> size 4
-                        |> customFont fonts.monospace
-                        |> (if (deg == model.angle) then bold else identity)
-                        |> centered
-                        |> filled col.words
+                    -- text (if model.radians then rad else String.fromFloat deg ++ "°")
+                    --     |> size 4
+                    --     |> customFont fonts.monospace
+                    --     |> (if (deg == model.angle) then bold else identity)
+                    --     |> centered
+                    --     |> filled col.words
+                    --     |> makeTransparent 0.9
+                    rts (str (if model.radians then rad else String.fromFloat deg ++ "°")) col.words (deg == model.angle)
                         |> makeTransparent 0.9
-                        |> move (if deg == 0 then 2 else 0, -2)
+                        |> scale 0.75
+                        |> move (if deg == 0 then 2 else 0, -5)
                 ]
                     |> move (-90 + (degrees deg) * scaleX, -3)
                     |> notifyTap (UpdateAngle deg)

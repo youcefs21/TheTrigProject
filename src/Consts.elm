@@ -8,14 +8,17 @@ import GraphicSVG.EllieApp exposing (..)
 type Msg = Tick Float GetKeyState
          | ToggleSettings
          | Tutorial Int Bool
+         | HoverMain Int Bool
          -- Circle Message
          | UpdateAngle Float
+         | HoverCircle Int Bool
          | ToggleDrag Bool
          | ToggleCAST
          | ToggleSAngles
          | ToggleSLengths
          | ToggleRad
          -- Graphing Message
+         | HoverGraph Int Bool
          | ToggleSin
          | ToggleCos 
          | ToggleTan
@@ -54,8 +57,8 @@ rawQs = [
     ]
 
 -- easy and hard for updating weights for spaced repetition
-easy = 1.25
-hard = 0.25
+easy = 0.9
+hard = 1.1
 
 -- Parametric functions for "natural" movement
 paraX t = sin (7 * pi * t)
@@ -170,9 +173,9 @@ getTheme t =
 -- Fonts and Themes
 
 fonts = {
-    monospace = "Consolas",
+    monospace = "Source Code Pro",
     sansserif = "Helvetica",
-    math      = "Consolas"--"Cambria Math"
+    math      = "Cambria Math"
     }
 
 cols = {
@@ -230,7 +233,7 @@ lightTheme = {
     optionFade    = cols.lightNitroGrey,
     optionCorrect = cols.green,
     optionWrong   = cols.dndRed,
-    optionTextH   = cols.blurple,
+    optionTextH   = cols.white,
     optionText    = cols.white }
 
 darkTheme = {
@@ -257,5 +260,5 @@ darkTheme = {
     optionFade    = cols.darkGrey,
     optionCorrect = cols.bugHunterGreen,
     optionWrong   = cols.dndRed,
-    optionTextH   = cols.notSoBurple,
+    optionTextH   = cols.white,
     optionText    = cols.white }

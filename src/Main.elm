@@ -43,8 +43,10 @@ myShapes model =
 
         if model.tutorial /= 0 then group []
         else group [
-            optionButton "?" col (Tutorial 1 True)
-                |> move (89 - 12, 56.75)
+            optionButton "❓" col (Tutorial 1 True) model.hoverTut
+                |> move (89 - 12, 57)
+                |> notifyEnter (HoverMain 2 True)
+                |> notifyLeave (HoverMain 2 False)
             ]
             
         ,
@@ -63,8 +65,11 @@ myShapes model =
                     |> move (70, 10)
             ]
         else 
-            optionButton "⚙" col ToggleSettings
+            optionButton "⚙️" col ToggleSettings model.hoverSet
                 |> move (89, 57)
+                |> notifyEnter (HoverMain 1 True)
+                |> notifyTap (HoverMain 1 False)
+                |> notifyLeave (HoverMain 1 False)
                 
         ,
 
@@ -126,7 +131,7 @@ myShapes model =
             6 -> 
                 group [
                     tutBG
-                        (roundedRect 45 18 2 |> ghost |> move (-72, 54))
+                        (roundedRect 45 18 2 |> ghost |> move (-71, 54))
                         col.tutBack,
                     tutText ["We also have a score system. Each time you get it right,",
                              "your score increases. If you get it wrong, your score",
@@ -150,14 +155,16 @@ myShapes model =
                         col.tutBack,
                     tutText ["In the settings, you can change how",
                              "the unit circle and graph looks.",
-                             "","",
+                             "",
                              "You can also toggle between radians",
                              "and degrees, although the questions",
                              "will be in radians.",
-                             "", "",
+                             "",
                              "Next, you can choose which functions to",
-                             "show on the graph. And, you can",
-                             "switch between light and dark modes."] col.tutWords False
+                             "show on the graph.", "", 
+                             "And, you can switch between light and", "dark modes.",
+                             "",
+                             "To exit the settings, tap anywhere outside."] col.tutWords False
                         |> move (-64, 45)
                 ]
                 |> notifyTap (Tutorial 9 True)
@@ -166,7 +173,7 @@ myShapes model =
                     tutBG (group []) col.tutBack,
                     tutText ["And that concludes the tutorial!",
                              "If you want to see it again, click",
-                             "the help (?) button."] col.tutWords True
+                             "the help (❓) button."] col.tutWords True
                 ]
                 |> notifyTap (Tutorial 0 True)
             _ ->
@@ -203,18 +210,19 @@ tutText txts c center =
     
     
 
-optionButton sym col msg = 
+optionButton sym col msg hov = 
     group [
         roundedRect 10 10 1.5
-            |> filled col.buttons
-            |> makeTransparent 0.5,
+            |> filled (if hov then col.optionHover else col.optionFade)
+            |> makeTransparent 0.8,
         text sym
             |> size 8
             |> centered
             |> customFont fonts.sansserif
             |> filled col.words
             |> makeTransparent 0.9
-            |> move (0, -3)
+            |> scale 0.8
+            |> move (0, -2)
     ]
         |> notifyTap msg
 
@@ -222,8 +230,8 @@ option txt toggled col =
     group [
         square 3
             |> filled (if toggled then col.optionCorrect else col.optionWrong)
-            |> makeTransparent 0.7
             |> addOutline (solid 0.25) col.words
+            |> makeTransparent 0.8
             |> move (-17, 0),
         text txt
             |> customFont fonts.sansserif
@@ -235,14 +243,14 @@ option txt toggled col =
 button txt toggled col =
     group [
         roundedRect 35 7 1
-            |> filled col.buttons
-            |> makeTransparent (if toggled then 1 else 0.7),
+            |> filled (if toggled then col.optionHover else col.optionFade)
+            |> makeTransparent 0.7,
         text txt
             |> customFont fonts.sansserif
             |> centered
             |> bold
             |> size 4.5
-            |> filled col.words
+            |> filled (if toggled then col.optionTextH else col.words)
             |> move (0, -1.3)
     ]
 
@@ -370,6 +378,8 @@ type alias Model = {
     showSin   : Bool,
     showCos   : Bool,
     showTan   : Bool,
+    hoverSet  : Bool,
+    hoverTut  : Bool,
     tutorial  : Int,
     time      : Float
     }
@@ -388,6 +398,8 @@ init = {
     showSin   = True,
     showCos   = False,
     showTan   = False,
+    hoverSet  = False,
+    hoverTut  = False,
     tutorial  = 1,
     time      = 0
     }
@@ -407,6 +419,8 @@ update msg model =
                             time       = t }, Cmd.batch [circleCmds, graphCmds, qCmds] )
         ToggleSettings ->
             ( { model | settings = not model.settings }, Cmd.none )
+        HoverMain i b ->
+            ( if i == 1 then { model | hoverSet = b} else if i == 2 then { model | hoverTut = b} else model, Cmd.none )
         UpdateAngle _ -> 
             let
                 (newCircle, circleCmds) = Circle.update msg model.circle
@@ -414,6 +428,11 @@ update msg model =
             in
                 ( { model | circle = newCircle,
                             graph  = newGraph}, Cmd.batch [circleCmds, graphCmds] )
+        HoverCircle _ _ -> 
+            let
+                (newCircle, circleCmds) = Circle.update msg model.circle
+            in
+                ( { model | circle = newCircle}, Cmd.batch [circleCmds] )
         ToggleDrag _ -> 
             let
                 (newCircle, circleCmds) = Circle.update msg model.circle
@@ -454,6 +473,11 @@ update msg model =
                             graph      = newGraph,
                             questions  = newQs,
                             radians    = not model.radians }, Cmd.batch [circleCmds, graphCmds, qCmds] )
+        HoverGraph _ _ -> 
+            let
+                (newGraph, graphCmds)  = Graphing.update msg model.graph 
+            in 
+                ( { model | graph = newGraph }, Cmd.batch [graphCmds] )
         ToggleYLine -> 
             let
                 (newGraph, graphCmds)  = Graphing.update msg model.graph 
@@ -461,19 +485,31 @@ update msg model =
                 ( { model | graph = newGraph, yLine = not model.yLine }, Cmd.batch [graphCmds] )
         ToggleSin -> 
             let
-                (newGraph, graphCmds)  = Graphing.update msg model.graph 
+                (newGraph, graphCmds) = Graphing.update msg model.graph 
+                atLeastOne = model.showCos || model.showTan
             in 
-                ( { model | graph = newGraph, showSin = not model.showSin }, Cmd.batch [graphCmds] )
+                if atLeastOne then
+                    ( { model | graph = newGraph, showSin = not model.showSin }, Cmd.batch [graphCmds] )
+                else
+                    ( model, Cmd.none )
         ToggleCos -> 
             let
                 (newGraph, graphCmds)  = Graphing.update msg model.graph 
+                atLeastOne = model.showSin || model.showTan
             in 
-                ( { model | graph = newGraph, showCos = not model.showCos }, Cmd.batch [graphCmds] )
+                if atLeastOne then
+                    ( { model | graph = newGraph, showCos = not model.showCos }, Cmd.batch [graphCmds] )
+                else
+                    ( model, Cmd.none )
         ToggleTan -> 
             let
                 (newGraph, graphCmds)  = Graphing.update msg model.graph 
+                atLeastOne = model.showSin || model.showCos
             in 
-                ( { model | graph = newGraph, showTan = not model.showTan }, Cmd.batch [graphCmds] )
+                if atLeastOne then
+                    ( { model | graph = newGraph, showTan = not model.showTan }, Cmd.batch [graphCmds] )
+                else   
+                    ( model, Cmd.none )
         NewSeed _ ->
             let
                 (newQs, qCmds)      = Questions.update msg model.questions

@@ -10,7 +10,7 @@ myShapes model = [
         col = getTheme model.col
     in
         group [
-            unitCircle col model.showCast model.showSAngles model.radians model.angle,
+            unitCircle col model.showCast model.showSAngles model.radians model.angle model.hoverDeg model.hovering,
             triangle col model.angle model.quad model.showSLengths model.radians,
             let
                 f = \(x, y) -> UpdateAngle (poiToDeg (x + 57.5, y - 5))
@@ -31,7 +31,7 @@ myShapes model = [
 type Drag = Wait
           | Hold
   
-unitCircle col showCast showSAngles radians angle = group [
+unitCircle col showCast showSAngles radians angle hoverDeg hovering = group [
     -- Grid
     group [
         rect 0.5 110
@@ -50,7 +50,7 @@ unitCircle col showCast showSAngles radians angle = group [
     if showCast then cast col else group [],
 
     -- Special Angles
-    if showSAngles then angles col radians angle else group []
+    if showSAngles then angles col radians angle hoverDeg hovering else group []
     ]
 
 -- Draws CAST at the corners of the unit circle
@@ -71,7 +71,7 @@ cast col =
     ]
 
 -- Draws the special angles around the unit circle
-angles col radians angle = group <| 
+angles col radians angle hoverDeg hovering = group <| 
     List.map 
         (\(d, r) -> 
             if d == 360 then group [] else
@@ -81,13 +81,14 @@ angles col radians angle = group <|
                 quad     = updateQuad d
                 x = xpos (ur + 7.5) d + if quad == One || quad == Four then strlen 1.5 else -(strlen 1.5)
                 y = ypos (ur + 7.5) d + if quad == One || quad == Two  then -3 else 0
+                hovered = hovering && (round d) == hoverDeg
             in
                 group [ 
                     rect (strlen 3) 8
                         |> ghost
                         |> move (x, y + 1),
                     roundedRect 13 5 1
-                        |> filled col.buttons
+                        |> filled (if hovered then col.optionHover else col.optionFade)
                         |> move (x, y + 1)
                         |> makeTransparent 
                             (if angle == d then 0.7 else 0.5),
@@ -103,7 +104,9 @@ angles col radians angle = group <|
                         |> filled col.dots
                         |> move (pos ur d) 
                 ]
-                |> notifyTap (UpdateAngle d)) 
+                |> notifyTap (UpdateAngle d) 
+                |> notifyEnter (HoverCircle (round d) True)
+                |> notifyLeave (HoverCircle (round d) False))
         specialAngles
 
 -- Draws the triangle inside the unit circle
@@ -147,7 +150,7 @@ triangle col angle quad showSLengths radians =
             |> centered
             |> customFont fonts.monospace
             |> filled col.angle
-            |> move ((if radians then 26 else 13) * cos (degrees angle), (if radians then 10 else 5) * sin (degrees angle) - 1),
+            |> move ((if radians then 26 else 13) * cos (degrees angle), (if radians then 8 else 3) * sin (degrees angle) - 1),
 
         -- Full angle text
         if quad == One then group [] else
@@ -180,7 +183,7 @@ triangle col angle quad showSLengths radians =
                 opp = (if quad == Three || quad == Four  && rawOpp /= "0" then "-" else "") ++ rawOpp
                 tText str c = 
                     text str
-                        |> customFont "Consolas"
+                        |> customFont fonts.monospace
                         |> centered
                         |> size 4
                         |> filled c
@@ -226,6 +229,8 @@ type alias Model = {
     showSAngles  : Bool,
     showSLengths : Bool,
     radians      : Bool,
+    hoverDeg     : Int, 
+    hovering     : Bool,
     drag         : Bool,
     col          : Theme }
 
@@ -237,6 +242,8 @@ init = {
     showSAngles  = True,
     showSLengths = True,
     radians      = True,
+    hoverDeg     = 45,
+    hovering     = False,
     drag         = False,
     col          = Light }
 
@@ -251,6 +258,8 @@ update msg model =
             in
                 ( { model | angle = newNewAngle,
                             quad  = updateQuad newNewAngle }, Cmd.none )
+        HoverCircle deg hov ->
+            ( { model | hoverDeg = deg, hovering = hov }, Cmd.none )
         SetCol t -> 
             ( { model | col = t }, Cmd.none )
         ToggleDrag b ->

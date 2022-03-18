@@ -119,7 +119,7 @@ myShapes model =
             (\(deg, rad) -> 
                 group [
                     roundedRect 12 5 1
-                        |> filled col.buttons
+                        |> filled (if model.hovering && model.hoverDeg == (round deg) then col.optionHover else col.optionFade)
                         |> makeTransparent
                             (if deg == model.angle then 0.7 else 0.5)
                         |> move (if deg == 0 then 2 else 0, -0.75),
@@ -136,7 +136,9 @@ myShapes model =
                         |> move (if deg == 0 then 2 else 0, -2)
                 ]
                     |> move (-90 + (degrees deg) * scaleX, -3)
-                    |> notifyTap (UpdateAngle deg))                     
+                    |> notifyTap (UpdateAngle deg)
+                    |> notifyEnter (HoverGraph (round deg) True)
+                    |> notifyLeave (HoverGraph (round deg) False))                     
             specialAnglesSimple
             |> group
     ]
@@ -146,30 +148,34 @@ scaleX = 28
 
 
 type alias Model = { 
-    time    : Float,
-    quad    : Quadrant,
-    showSin : Bool,
-    showCos : Bool,
-    showTan : Bool,
-    angle   : Float,
-    scaleY  : Float,
-    yLine   : Bool,
-    radians : Bool,
-    col     : Theme
+    time     : Float,
+    quad     : Quadrant,
+    showSin  : Bool,
+    showCos  : Bool,
+    showTan  : Bool,
+    angle    : Float,
+    scaleY   : Float,
+    yLine    : Bool,
+    radians  : Bool,
+    hoverDeg : Int,
+    hovering : Bool,
+    col      : Theme
     }
 
 init : Model
 init = { 
-    time    = 0,
-    showSin = True,
-    showCos = False,
-    showTan = False,
-    angle   = 45,
-    quad    = One,
-    scaleY  = 45, 
-    yLine   = False,
-    radians = True,
-    col     = Light }
+    time     = 0,
+    showSin  = True,
+    showCos  = False,
+    showTan  = False,
+    angle    = 45,
+    quad     = One,
+    scaleY   = 45, 
+    yLine    = False,
+    radians  = True,
+    hoverDeg = 45,
+    hovering = False,
+    col      = Light }
 
 update : Consts.Msg -> Model -> ( Model, Cmd Consts.Msg )
 update msg model = 
@@ -184,6 +190,8 @@ update msg model =
             in
                 ( { model | angle = newNewAngle,
                           quad  = updateQuad newNewAngle }, Cmd.none )
+        HoverGraph deg b ->
+            ( { model | hoverDeg = deg, hovering = b }, Cmd.none )
         ToggleRad ->
             ( { model | radians = not model.radians }, Cmd.none )
         ToggleYLine ->

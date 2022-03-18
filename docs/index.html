@@ -11132,6 +11132,58 @@ var $author$project$Graphing$myShapes = function (model) {
 var $author$project$Consts$UpdateState = function (a) {
 	return {$: 'UpdateState', a: a};
 };
+var $author$project$Questions$clap = '👏';
+var $author$project$Questions$hi = 75;
+var $author$project$Consts$jump = F2(
+	function (amt, time) {
+		return amt * $elm$core$Basics$abs(
+			$elm$core$Basics$sin(time * 10));
+	});
+var $MacCASOutreach$graphicsvg$GraphicSVG$mirrorX = function (shape) {
+	return A3($MacCASOutreach$graphicsvg$GraphicSVG$Scale, -1, 1, shape);
+};
+var $author$project$Questions$claps = F2(
+	function (time, col) {
+		return A2(
+			$elm$core$List$map,
+			function (i) {
+				var x = A2(
+					$elm$random$Random$step,
+					A2($elm$random$Random$int, 20, 50),
+					$elm$random$Random$initialSeed(i)).a;
+				var y = A2(
+					$elm$random$Random$step,
+					A2($elm$random$Random$int, 50, 100),
+					$elm$random$Random$initialSeed(
+						$elm$core$Basics$round(x))).a;
+				var y2 = A2(
+					$elm$random$Random$step,
+					A2($elm$random$Random$int, 190, 220),
+					$elm$random$Random$initialSeed(
+						$elm$core$Basics$round(x))).a;
+				return A2(
+					$MacCASOutreach$graphicsvg$GraphicSVG$move,
+					_Utils_Tuple2(
+						(-120) + ((2 * x) * time),
+						((((-y) * A2($elm$core$Basics$pow, time, 2)) + (y2 * time)) - 70) - y),
+					A2(
+						$MacCASOutreach$graphicsvg$GraphicSVG$scale,
+						A2(
+							$elm$core$Basics$max,
+							1,
+							A2($author$project$Consts$jump, 1.15, y2 * time)),
+						$MacCASOutreach$graphicsvg$GraphicSVG$mirrorX(
+							A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$rotate,
+								$elm$core$Basics$degrees(15),
+								A2(
+									$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+									col.words,
+									$MacCASOutreach$graphicsvg$GraphicSVG$centered(
+										$MacCASOutreach$graphicsvg$GraphicSVG$text($author$project$Questions$clap)))))));
+			},
+			A2($elm$core$List$range, 1, $author$project$Questions$hi));
+	});
 var $author$project$Consts$Hover = F2(
 	function (a, b) {
 		return {$: 'Hover', a: a, b: b};
@@ -11264,8 +11316,8 @@ var $author$project$Consts$shuffle = function (list) {
 		},
 		$elm$random$Random$independentSeed);
 };
-var $author$project$Questions$showQuestion = F5(
-	function (col, _v0, seed, state, hover) {
+var $author$project$Questions$showQuestion = F6(
+	function (col, _v0, seed, state, hover, time) {
 		var question = _v0.a;
 		var correct = _v0.b;
 		var incorrects = _v0.c;
@@ -11318,6 +11370,8 @@ var $author$project$Questions$showQuestion = F5(
 							_Utils_Tuple2(-3, -50),
 							$MacCASOutreach$graphicsvg$GraphicSVG$ghost(
 								A2($MacCASOutreach$graphicsvg$GraphicSVG$rect, 192, 40))),
+							_Utils_eq(state, $author$project$Consts$Correct) ? $MacCASOutreach$graphicsvg$GraphicSVG$group(
+							A2($author$project$Questions$claps, time, col)) : $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil),
 							A2(
 							$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
 							$author$project$Consts$UpdateState(state),
@@ -11351,11 +11405,6 @@ var $author$project$Questions$showQuestion = F5(
 											])))))
 						]))
 				]));
-	});
-var $author$project$Consts$jump = F2(
-	function (amt, time) {
-		return amt * $elm$core$Basics$abs(
-			$elm$core$Basics$sin(time * 10));
 	});
 var $MacCASOutreach$graphicsvg$GraphicSVG$Sansserif = {$: 'Sansserif'};
 var $MacCASOutreach$graphicsvg$GraphicSVG$sansserif = function (stencil) {
@@ -11431,7 +11480,7 @@ var $author$project$Questions$myShapes = function (model) {
 			A2(
 			$MacCASOutreach$graphicsvg$GraphicSVG$move,
 			_Utils_Tuple2(6, 0),
-			A5($author$project$Questions$showQuestion, col, model.currentQ, model.seed, model.state, model.hover)),
+			A6($author$project$Questions$showQuestion, col, model.currentQ, model.seed, model.state, model.hover, model.time - model.waitTime)),
 			A5($author$project$Questions$showScore, col, model.state, model.time, model.score, model.maxScore),
 			_Utils_eq(model.state, $author$project$Consts$Waiting) ? $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil) : (((model.time - model.waitTime) > 10) ? $MacCASOutreach$graphicsvg$GraphicSVG$group(
 			_List_fromArray(

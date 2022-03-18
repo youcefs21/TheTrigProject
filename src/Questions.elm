@@ -10,8 +10,9 @@ import Html exposing (i)
 myShapes model = 
     let 
         col = getTheme model.col
+        actualScore (x, y) = x - y
     in [
-        showQuestion col model.currentQ model.seed model.state model.hover (model.time - model.waitTime)
+        showQuestion col model.currentQ model.seed model.state model.hover (model.time - model.waitTime) (actualScore model.score)
             |> move (6, 0),
         showScore col model.state model.time model.score model.maxScore,
         if model.state == Waiting then group []
@@ -68,7 +69,7 @@ showScore col state time score maxScore =
             |> move (5, -2)
     
 -- Draws the question
-showQuestion col (Q question correct incorrects) seed state hover time = group [
+showQuestion col (Q question correct incorrects) seed state hover time score = group [
     text question
         |> customFont fonts.math
         |> size 8.5
@@ -87,7 +88,7 @@ showQuestion col (Q question correct incorrects) seed state hover time = group [
             rect 192 40
                 |> ghost
                 |> move (-3, -50),
-            if state == Correct then
+            if state == Correct && modBy 10 score == 0 then
                 claps time col
                     |> group
             else

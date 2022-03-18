@@ -9097,6 +9097,7 @@ var $author$project$Consts$rawQs = _List_fromArray(
 			['-1/2', '-1/(√2)', '1/(√2)', '-1']))
 	]);
 var $author$project$Questions$init = {
+	clap: '👏',
 	col: $author$project$Consts$Light,
 	currentQ: A3(
 		$author$project$Consts$Q,
@@ -9364,6 +9365,7 @@ var $author$project$Questions$update = F2(
 					A2($author$project$Consts$correctAnswer, model.currentQ, answer) ? _Utils_update(
 						model,
 						{
+							clap: (((model.score.a - model.score.b) + 1) < 0) ? '🤨' : '👏',
 							maxScore: (_Utils_cmp((model.score.a - model.score.b) + 1, model.maxScore) > 0) ? ((model.score.a - model.score.b) + 1) : model.maxScore,
 							score: _Utils_Tuple2(model.score.a + 1, model.score.b),
 							state: $author$project$Consts$Correct,
@@ -9371,6 +9373,7 @@ var $author$project$Questions$update = F2(
 						}) : _Utils_update(
 						model,
 						{
+							clap: (((model.score.a - model.score.b) - 1) < 0) ? '🤨' : '👏',
 							maxScore: (_Utils_cmp((model.score.a - model.score.b) - 1, model.maxScore) > 0) ? ((model.score.a - model.score.b) - 1) : model.maxScore,
 							score: _Utils_Tuple2(model.score.a, model.score.b + 1),
 							state: $author$project$Consts$Incorrect,
@@ -11156,7 +11159,6 @@ var $author$project$Consts$UpdateState = function (a) {
 var $author$project$Consts$HoverNext = function (a) {
 	return {$: 'HoverNext', a: a};
 };
-var $author$project$Questions$clap = '👏';
 var $author$project$Questions$hi = 75;
 var $author$project$Consts$jump = F2(
 	function (amt, time) {
@@ -11166,8 +11168,8 @@ var $author$project$Consts$jump = F2(
 var $MacCASOutreach$graphicsvg$GraphicSVG$mirrorX = function (shape) {
 	return A3($MacCASOutreach$graphicsvg$GraphicSVG$Scale, -1, 1, shape);
 };
-var $author$project$Questions$claps = F2(
-	function (time, col) {
+var $author$project$Questions$claps = F3(
+	function (time, col, clap) {
 		return A2(
 			$elm$core$List$map,
 			function (i) {
@@ -11195,7 +11197,7 @@ var $author$project$Questions$claps = F2(
 						A2(
 							$elm$core$Basics$max,
 							1,
-							A2($author$project$Consts$jump, 1.15, y2 * time)),
+							A2($author$project$Consts$jump, 1.05, y2 * time)),
 						$MacCASOutreach$graphicsvg$GraphicSVG$mirrorX(
 							A2(
 								$MacCASOutreach$graphicsvg$GraphicSVG$rotate,
@@ -11204,7 +11206,7 @@ var $author$project$Questions$claps = F2(
 									$MacCASOutreach$graphicsvg$GraphicSVG$filled,
 									col.words,
 									$MacCASOutreach$graphicsvg$GraphicSVG$centered(
-										$MacCASOutreach$graphicsvg$GraphicSVG$text($author$project$Questions$clap)))))));
+										$MacCASOutreach$graphicsvg$GraphicSVG$text(clap)))))));
 			},
 			A2($elm$core$List$range, 1, $author$project$Questions$hi));
 	});
@@ -11341,8 +11343,8 @@ var $author$project$Consts$shuffle = function (list) {
 		},
 		$elm$random$Random$independentSeed);
 };
-var $author$project$Questions$showQuestion = F8(
-	function (col, _v0, seed, state, hover, time, score, next) {
+var $author$project$Questions$showQuestion = F9(
+	function (col, _v0, seed, state, hover, time, score, next, clap) {
 		var question = _v0.a;
 		var correct = _v0.b;
 		var incorrects = _v0.c;
@@ -11395,8 +11397,8 @@ var $author$project$Questions$showQuestion = F8(
 							_Utils_Tuple2(-3, -50),
 							$MacCASOutreach$graphicsvg$GraphicSVG$ghost(
 								A2($MacCASOutreach$graphicsvg$GraphicSVG$rect, 192, 40))),
-							(_Utils_eq(state, $author$project$Consts$Correct) && (!A2($elm$core$Basics$modBy, 10, score))) ? $MacCASOutreach$graphicsvg$GraphicSVG$group(
-							A2($author$project$Questions$claps, time, col)) : $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil),
+							(!A2($elm$core$Basics$modBy, 10, score)) ? $MacCASOutreach$graphicsvg$GraphicSVG$group(
+							A3($author$project$Questions$claps, time, col, clap)) : $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil),
 							A2(
 							$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
 							$author$project$Consts$UpdateState(state),
@@ -11516,7 +11518,7 @@ var $author$project$Questions$myShapes = function (model) {
 			A2(
 			$MacCASOutreach$graphicsvg$GraphicSVG$move,
 			_Utils_Tuple2(6, 0),
-			A8(
+			A9(
 				$author$project$Questions$showQuestion,
 				col,
 				model.currentQ,
@@ -11525,7 +11527,8 @@ var $author$project$Questions$myShapes = function (model) {
 				model.hover,
 				model.time - model.waitTime,
 				actualScore(model.score),
-				model.next)),
+				model.next,
+				model.clap)),
 			A5($author$project$Questions$showScore, col, model.state, model.time, model.score, model.maxScore),
 			_Utils_eq(model.state, $author$project$Consts$Waiting) ? $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil) : (((model.time - model.waitTime) > 10) ? $MacCASOutreach$graphicsvg$GraphicSVG$group(
 			_List_fromArray(

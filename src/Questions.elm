@@ -12,7 +12,7 @@ myShapes model =
         col = getTheme model.col
         actualScore (x, y) = x - y
     in [
-        showQuestion col model.currentQ model.seed model.state model.hover (model.time - model.waitTime) (actualScore model.score) model.next
+        showQuestion col model.currentQ model.seed model.state model.hover (model.time - model.waitTime) (actualScore model.score) model.next model.clap
             |> move (6, 0),
         showScore col model.state model.time model.score model.maxScore,
         if model.state == Waiting then group []
@@ -69,7 +69,7 @@ showScore col state time score maxScore =
             |> move (5, -2)
     
 -- Draws the question
-showQuestion col (Q question correct incorrects) seed state hover time score next = group [
+showQuestion col (Q question correct incorrects) seed state hover time score next clap = group [
     text question
         |> customFont fonts.math
         |> size 8.5
@@ -88,8 +88,8 @@ showQuestion col (Q question correct incorrects) seed state hover time score nex
             rect 192 40
                 |> ghost
                 |> move (-3, -50),
-            if state == Correct && modBy 10 score == 0 then
-                claps time col
+            if modBy 10 score == 0 then
+                claps time col clap
                     |> group
             else
                 group [],
@@ -112,9 +112,8 @@ showQuestion col (Q question correct incorrects) seed state hover time score nex
     ]
 
 -- Claps
-clap = "👏"
 hi = 75
-claps time col =
+claps time col clap =
     List.range 1 hi |> List.map (
         \i ->
             let
@@ -127,7 +126,7 @@ claps time col =
                     |> filled col.words
                     |> rotate (degrees 15)
                     |> mirrorX
-                    |> scale (max 1 (jump 1.15 (y2 * time)))
+                    |> scale (max 1 (jump 1.05 (y2 * time)))
                     |> move (-120 + 2 * x * time, -y * time^2 + y2 * time - 70 - y)
         )
 
@@ -191,6 +190,7 @@ type alias Model = {
     maxScore   : Int,
     seed       : Int, 
     next       : Bool,
+    clap       : String,
     radians    : Bool,
     col        : Theme
     }
@@ -207,6 +207,7 @@ init = {
     maxScore   = 0,
     seed       = 0, 
     next       = False,
+    clap       = "👏",
     radians    = True,
     col        = Light
     }
@@ -225,11 +226,13 @@ update msg model =
               then { model | score    = (Tuple.first model.score + 1, Tuple.second model.score),
                              state    = Correct,
                              waitTime = model.time,
-                             maxScore = if (Tuple.first model.score - Tuple.second model.score + 1) > model.maxScore then (Tuple.first model.score - Tuple.second model.score + 1) else model.maxScore }
+                             maxScore = if (Tuple.first model.score - Tuple.second model.score + 1) > model.maxScore then (Tuple.first model.score - Tuple.second model.score + 1) else model.maxScore,
+                             clap     = if (Tuple.first model.score - Tuple.second model.score + 1) < 0 then "🤨" else "👏" }
               else { model | score    = (Tuple.first model.score, Tuple.second model.score + 1),
                              state    = Incorrect,
                              waitTime = model.time,
-                             maxScore = if (Tuple.first model.score - Tuple.second model.score - 1) > model.maxScore then (Tuple.first model.score - Tuple.second model.score - 1) else model.maxScore },
+                             maxScore = if (Tuple.first model.score - Tuple.second model.score - 1) > model.maxScore then (Tuple.first model.score - Tuple.second model.score - 1) else model.maxScore,
+                             clap     = if (Tuple.first model.score - Tuple.second model.score - 1) < 0 then "🤨" else "👏"  },
               Cmd.none )
         UpdateState currentState ->
             ( { model | state      = Waiting,

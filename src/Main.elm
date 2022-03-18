@@ -401,7 +401,7 @@ init = {
     showTan   = False,
     hoverSet  = False,
     hoverTut  = False,
-    tutorial  = 1,
+    tutorial  = 0,
     time      = 0
     }
 

@@ -8967,9 +8967,9 @@ var $elm$random$Random$generate = F2(
 var $author$project$Consts$C = function (a) {
 	return {$: 'C', a: a};
 };
-var $author$project$Consts$Q = F3(
-	function (a, b, c) {
-		return {$: 'Q', a: a, b: b, c: c};
+var $author$project$Consts$Q = F2(
+	function (a, b) {
+		return {$: 'Q', a: a, b: b};
 	});
 var $elm$random$Random$constant = function (value) {
 	return $elm$random$Random$Generator(
@@ -9043,11 +9043,10 @@ var $elm$random$Random$weighted = F2(
 var $author$project$Consts$qGen = function (qss) {
 	if (!qss.b) {
 		return $elm$random$Random$constant(
-			A3(
+			A2(
 				$author$project$Consts$Q,
 				$author$project$Consts$C('ERROR'),
-				$author$project$Consts$C('ERROR'),
-				_List_Nil));
+				$author$project$Consts$C('ERROR')));
 	} else {
 		var q = qss.a;
 		var qs = qss.b;
@@ -9073,9 +9072,10 @@ var $author$project$Consts$F = F2(
 	function (a, b) {
 		return {$: 'F', a: a, b: b};
 	});
-var $author$project$Consts$R = function (a) {
-	return {$: 'R', a: a};
-};
+var $author$project$Consts$R = F2(
+	function (a, b) {
+		return {$: 'R', a: a, b: b};
+	});
 var $author$project$Consts$str = function (s) {
 	switch (s) {
 		case '0':
@@ -9190,14 +9190,14 @@ var $author$project$Consts$str = function (s) {
 			return A2(
 				$author$project$Consts$F,
 				_Utils_Tuple2(
-					$author$project$Consts$R('3'),
+					A2($author$project$Consts$R, '3', false),
 					$author$project$Consts$C('2')),
 				false);
 		case '-(√3)/2':
 			return A2(
 				$author$project$Consts$F,
 				_Utils_Tuple2(
-					$author$project$Consts$R('3'),
+					A2($author$project$Consts$R, '3', false),
 					$author$project$Consts$C('2')),
 				true);
 		case '1/(√2)':
@@ -9205,14 +9205,14 @@ var $author$project$Consts$str = function (s) {
 				$author$project$Consts$F,
 				_Utils_Tuple2(
 					$author$project$Consts$C('1'),
-					$author$project$Consts$R('2')),
+					A2($author$project$Consts$R, '2', false)),
 				false);
 		case '-1/(√2)':
 			return A2(
 				$author$project$Consts$F,
 				_Utils_Tuple2(
 					$author$project$Consts$C('1'),
-					$author$project$Consts$R('2')),
+					A2($author$project$Consts$R, '2', false)),
 				true);
 		case '1/2':
 			return A2(
@@ -9228,91 +9228,395 @@ var $author$project$Consts$str = function (s) {
 					$author$project$Consts$C('1'),
 					$author$project$Consts$C('2')),
 				true);
+		case '1/(√3)':
+			return A2(
+				$author$project$Consts$F,
+				_Utils_Tuple2(
+					$author$project$Consts$C('1'),
+					A2($author$project$Consts$R, '3', false)),
+				false);
+		case '-1/(√3)':
+			return A2(
+				$author$project$Consts$F,
+				_Utils_Tuple2(
+					$author$project$Consts$C('1'),
+					A2($author$project$Consts$R, '3', false)),
+				true);
+		case '(√3)':
+			return A2($author$project$Consts$R, '3', false);
+		case '-(√3)':
+			return A2($author$project$Consts$R, '3', true);
 		default:
 			return $author$project$Consts$C(s);
 	}
 };
 var $author$project$Consts$rawQs = _List_fromArray(
 	[
-		A3(
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'sin',
+			$author$project$Consts$str('π/6')),
+		$author$project$Consts$str('1/2')),
+		A2(
 		$author$project$Consts$Q,
 		A2(
 			$author$project$Consts$O,
 			'sin',
 			$author$project$Consts$str('π/4')),
-		$author$project$Consts$str('1/(√2)'),
-		_List_fromArray(
-			[
-				$author$project$Consts$str('-1/(√2)'),
-				$author$project$Consts$str('1/2'),
-				$author$project$Consts$str('-(√3)/2'),
-				$author$project$Consts$str('1')
-			])),
-		A3(
+		$author$project$Consts$str('1/(√2)')),
+		A2(
 		$author$project$Consts$Q,
 		A2(
 			$author$project$Consts$O,
 			'sin',
-			$author$project$Consts$str('11π/6')),
-		$author$project$Consts$str('-1/2'),
-		_List_fromArray(
-			[
-				$author$project$Consts$str('1/2'),
-				$author$project$Consts$str('-(√3)/2'),
-				$author$project$Consts$str('0'),
-				$author$project$Consts$str('(√3)/2')
-			])),
-		A3(
+			$author$project$Consts$str('π/3')),
+		$author$project$Consts$str('(√3)/2')),
+		A2(
 		$author$project$Consts$Q,
 		A2(
 			$author$project$Consts$O,
-			'cos',
+			'sin',
+			$author$project$Consts$str('π/2')),
+		$author$project$Consts$str('1')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'sin',
+			$author$project$Consts$str('2π/3')),
+		$author$project$Consts$str('(√3)/2')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'sin',
+			$author$project$Consts$str('3π/4')),
+		$author$project$Consts$str('1/(√2)')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'sin',
+			$author$project$Consts$str('5π/6')),
+		$author$project$Consts$str('1/2')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'sin',
 			$author$project$Consts$str('π')),
-		$author$project$Consts$str('-1'),
-		_List_fromArray(
-			[
-				$author$project$Consts$str('0'),
-				$author$project$Consts$str('1'),
-				$author$project$Consts$str('1/2'),
-				$author$project$Consts$str('-1/2')
-			])),
-		A3(
+		$author$project$Consts$str('0')),
+		A2(
 		$author$project$Consts$Q,
 		A2(
 			$author$project$Consts$O,
 			'sin',
-			$author$project$Consts$str('2π')),
-		$author$project$Consts$str('0'),
-		_List_fromArray(
-			[
-				$author$project$Consts$str('-1'),
-				$author$project$Consts$str('1'),
-				$author$project$Consts$str('-(√3)/2'),
-				$author$project$Consts$str('(√3)/2')
-			])),
-		A3(
+			$author$project$Consts$str('7π/6')),
+		$author$project$Consts$str('-1/2')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'sin',
+			$author$project$Consts$str('5π/4')),
+		$author$project$Consts$str('-1/(√2)')),
+		A2(
 		$author$project$Consts$Q,
 		A2(
 			$author$project$Consts$O,
 			'sin',
 			$author$project$Consts$str('4π/3')),
-		$author$project$Consts$str('-(√3)/2'),
-		_List_fromArray(
-			[
-				$author$project$Consts$str('-1/2'),
-				$author$project$Consts$str('-1/(√2)'),
-				$author$project$Consts$str('1/(√2)'),
-				$author$project$Consts$str('-1')
-			]))
+		$author$project$Consts$str('-(√3)/2')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'sin',
+			$author$project$Consts$str('3π/2')),
+		$author$project$Consts$str('-1')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'sin',
+			$author$project$Consts$str('5π/3')),
+		$author$project$Consts$str('-(√3)/2')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'sin',
+			$author$project$Consts$str('7π/4')),
+		$author$project$Consts$str('-1/(√2)')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'sin',
+			$author$project$Consts$str('11π/6')),
+		$author$project$Consts$str('-1/2')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'sin',
+			$author$project$Consts$str('0')),
+		$author$project$Consts$str('0')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'sin',
+			$author$project$Consts$str('2π')),
+		$author$project$Consts$str('0')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'cos',
+			$author$project$Consts$str('π/6')),
+		$author$project$Consts$str('(√3)/2')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'cos',
+			$author$project$Consts$str('π/4')),
+		$author$project$Consts$str('1/(√2)')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'cos',
+			$author$project$Consts$str('π/3')),
+		$author$project$Consts$str('1/2')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'cos',
+			$author$project$Consts$str('π/2')),
+		$author$project$Consts$str('0')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'cos',
+			$author$project$Consts$str('2π/3')),
+		$author$project$Consts$str('-1/2')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'cos',
+			$author$project$Consts$str('3π/4')),
+		$author$project$Consts$str('-1/(√2)')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'cos',
+			$author$project$Consts$str('5π/6')),
+		$author$project$Consts$str('-(√3)/2')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'cos',
+			$author$project$Consts$str('π')),
+		$author$project$Consts$str('-1')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'cos',
+			$author$project$Consts$str('7π/6')),
+		$author$project$Consts$str('-(√3)/2')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'cos',
+			$author$project$Consts$str('5π/4')),
+		$author$project$Consts$str('-1/(√2)')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'cos',
+			$author$project$Consts$str('4π/3')),
+		$author$project$Consts$str('-1/2')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'cos',
+			$author$project$Consts$str('3π/2')),
+		$author$project$Consts$str('0')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'cos',
+			$author$project$Consts$str('5π/3')),
+		$author$project$Consts$str('1/2')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'cos',
+			$author$project$Consts$str('7π/4')),
+		$author$project$Consts$str('1/(√2)')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'cos',
+			$author$project$Consts$str('11π/6')),
+		$author$project$Consts$str('(√3)/2')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'cos',
+			$author$project$Consts$str('0')),
+		$author$project$Consts$str('1')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'cos',
+			$author$project$Consts$str('2π')),
+		$author$project$Consts$str('1')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'tan',
+			$author$project$Consts$str('π/6')),
+		$author$project$Consts$str('1/(√3)')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'tan',
+			$author$project$Consts$str('π/4')),
+		$author$project$Consts$str('1')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'tan',
+			$author$project$Consts$str('π/3')),
+		$author$project$Consts$str('(√3)')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'tan',
+			$author$project$Consts$str('π/2')),
+		$author$project$Consts$str('DNE')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'tan',
+			$author$project$Consts$str('2π/3')),
+		$author$project$Consts$str('-(√3)')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'tan',
+			$author$project$Consts$str('3π/4')),
+		$author$project$Consts$str('-1')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'tan',
+			$author$project$Consts$str('5π/6')),
+		$author$project$Consts$str('-1/(√3)')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'tan',
+			$author$project$Consts$str('π')),
+		$author$project$Consts$str('0')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'tan',
+			$author$project$Consts$str('7π/6')),
+		$author$project$Consts$str('1/(√3)')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'tan',
+			$author$project$Consts$str('5π/4')),
+		$author$project$Consts$str('1')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'tan',
+			$author$project$Consts$str('4π/3')),
+		$author$project$Consts$str('(√3)')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'tan',
+			$author$project$Consts$str('3π/2')),
+		$author$project$Consts$str('DNE')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'tan',
+			$author$project$Consts$str('5π/3')),
+		$author$project$Consts$str('-(√3)')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'tan',
+			$author$project$Consts$str('7π/4')),
+		$author$project$Consts$str('-1')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'tan',
+			$author$project$Consts$str('11π/6')),
+		$author$project$Consts$str('-1/(√3)')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'tan',
+			$author$project$Consts$str('0')),
+		$author$project$Consts$str('0')),
+		A2(
+		$author$project$Consts$Q,
+		A2(
+			$author$project$Consts$O,
+			'tan',
+			$author$project$Consts$str('2π')),
+		$author$project$Consts$str('0'))
 	]);
 var $author$project$Questions$init = {
 	clap: '👏',
 	col: $author$project$Consts$Light,
-	currentQ: A3(
+	currentQ: A2(
 		$author$project$Consts$Q,
 		$author$project$Consts$str('0'),
-		$author$project$Consts$str('0'),
-		_List_Nil),
+		$author$project$Consts$str('0')),
 	hover: $author$project$Consts$C(''),
 	maxScore: 0,
 	next: false,
@@ -9499,8 +9803,8 @@ var $author$project$Consts$correctAnswer = F2(
 		var correct = _v0.b;
 		return _Utils_eq(answer, correct) ? true : false;
 	});
-var $author$project$Consts$easy = 0.9;
-var $author$project$Consts$hard = 1.1;
+var $author$project$Consts$easy = 0.75;
+var $author$project$Consts$hard = 1.2;
 var $elm$core$Basics$min = F2(
 	function (x, y) {
 		return (_Utils_cmp(x, y) < 0) ? x : y;
@@ -9516,33 +9820,31 @@ var $author$project$Questions$updateWeights = F3(
 			var _v3 = _v2.b;
 			var question = _v3.a;
 			var c = _v3.b;
-			var incs = _v3.c;
 			var qs = weightedQs.b;
 			if (_Utils_eq(question, q)) {
 				var newWeights = correct ? $author$project$Consts$easy : A2(
 					$elm$core$Basics$min,
-					1.4,
+					2,
 					A2($elm$core$Basics$max, 1, weight * $author$project$Consts$hard));
 				return A2(
 					$elm$core$List$cons,
 					_Utils_Tuple2(
 						newWeights,
-						A3($author$project$Consts$Q, question, c, incs)),
+						A2($author$project$Consts$Q, question, c)),
 					qs);
 			} else {
 				return A2(
 					$elm$core$List$cons,
 					_Utils_Tuple2(
 						weight,
-						A3($author$project$Consts$Q, question, c, incs)),
+						A2($author$project$Consts$Q, question, c)),
 					A3(
 						$author$project$Questions$updateWeights,
 						qs,
-						A3(
+						A2(
 							$author$project$Consts$Q,
 							q,
-							$author$project$Consts$str('0'),
-							_List_Nil),
+							$author$project$Consts$str('0')),
 						correct));
 			}
 		}
@@ -10931,9 +11233,24 @@ var $author$project$Consts$rts = F3(
 						]));
 			case 'R':
 				var s = rad.a;
+				var neg = rad.b;
 				return $MacCASOutreach$graphicsvg$GraphicSVG$group(
 					_List_fromArray(
 						[
+							neg ? A2(
+							$MacCASOutreach$graphicsvg$GraphicSVG$move,
+							_Utils_Tuple2(-6.5, 0.25),
+							A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+								c,
+								A2(
+									$MacCASOutreach$graphicsvg$GraphicSVG$size,
+									6,
+									(b ? $MacCASOutreach$graphicsvg$GraphicSVG$bold : $elm$core$Basics$identity)(
+										A2(
+											$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
+											$author$project$Consts$fonts.math,
+											$MacCASOutreach$graphicsvg$GraphicSVG$text('-')))))) : $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil),
 							A2(
 							$MacCASOutreach$graphicsvg$GraphicSVG$move,
 							_Utils_Tuple2(-1.5, 1.8),
@@ -11817,6 +12134,123 @@ var $author$project$Graphing$myShapes = function (model) {
 var $author$project$Consts$UpdateState = function (a) {
 	return {$: 'UpdateState', a: a};
 };
+var $author$project$Consts$lengthBank = function (i) {
+	switch (i) {
+		case 1:
+			return $author$project$Consts$str('DNE');
+		case 2:
+			return $author$project$Consts$str('0');
+		case 3:
+			return $author$project$Consts$str('1');
+		case 4:
+			return $author$project$Consts$str('-1');
+		case 5:
+			return $author$project$Consts$str('1/(√3)');
+		case 6:
+			return $author$project$Consts$str('-1/(√3)');
+		case 7:
+			return $author$project$Consts$str('(√3)');
+		case 8:
+			return $author$project$Consts$str('-(√3)');
+		case 9:
+			return $author$project$Consts$str('(√3)/2');
+		case 10:
+			return $author$project$Consts$str('-(√3)/2');
+		case 11:
+			return $author$project$Consts$str('1/(√2)');
+		case 12:
+			return $author$project$Consts$str('-1/(√2)');
+		case 13:
+			return $author$project$Consts$str('1/2');
+		case 14:
+			return $author$project$Consts$str('-1/2');
+		default:
+			return $author$project$Consts$str('ERROR');
+	}
+};
+var $author$project$Consts$getOne = F2(
+	function (qs, seed) {
+		getOne:
+		while (true) {
+			var identical = F2(
+				function (q, xss) {
+					identical:
+					while (true) {
+						if (xss.b) {
+							var x = xss.a;
+							var xs = xss.b;
+							if (_Utils_eq(q, x)) {
+								return true;
+							} else {
+								var $temp$q = q,
+									$temp$xss = xs;
+								q = $temp$q;
+								xss = $temp$xss;
+								continue identical;
+							}
+						} else {
+							return false;
+						}
+					}
+				});
+			var _v1 = A2(
+				$elm$random$Random$step,
+				A2($elm$random$Random$int, 1, 14),
+				seed);
+			var idx = _v1.a;
+			var anotherSeed = _v1.b;
+			var seed2 = A2($elm$random$Random$step, $author$project$Consts$anyInt, anotherSeed).a;
+			var opt = $author$project$Consts$lengthBank(idx);
+			if (A2(identical, opt, qs)) {
+				var $temp$qs = qs,
+					$temp$seed = anotherSeed;
+				qs = $temp$qs;
+				seed = $temp$seed;
+				continue getOne;
+			} else {
+				return _Utils_Tuple2(
+					opt,
+					$elm$random$Random$initialSeed(seed2));
+			}
+		}
+	});
+var $author$project$Consts$getFour = F2(
+	function (question, seed) {
+		var getCorrect = function (_v4) {
+			var c = _v4.b;
+			return c;
+		};
+		var q = getCorrect(question);
+		var _v0 = A2(
+			$author$project$Consts$getOne,
+			_List_fromArray(
+				[q]),
+			seed);
+		var one = _v0.a;
+		var seed2 = _v0.b;
+		var _v1 = A2(
+			$author$project$Consts$getOne,
+			_List_fromArray(
+				[q, one]),
+			seed2);
+		var two = _v1.a;
+		var seed3 = _v1.b;
+		var _v2 = A2(
+			$author$project$Consts$getOne,
+			_List_fromArray(
+				[q, one, two]),
+			seed3);
+		var three = _v2.a;
+		var seed4 = _v2.b;
+		var _v3 = A2(
+			$author$project$Consts$getOne,
+			_List_fromArray(
+				[q, one, two, three]),
+			seed4);
+		var four = _v3.a;
+		return _List_fromArray(
+			[one, two, three, four]);
+	});
 var $author$project$Consts$HoverNext = function (a) {
 	return {$: 'HoverNext', a: a};
 };
@@ -11997,93 +12431,116 @@ var $author$project$Consts$shuffle = function (list) {
 		},
 		$elm$random$Random$independentSeed);
 };
-var $author$project$Questions$showQuestion = F9(
-	function (col, _v0, seed, state, hover, time, score, next, clap) {
-		var question = _v0.a;
-		var correct = _v0.b;
-		var incorrects = _v0.c;
-		return $MacCASOutreach$graphicsvg$GraphicSVG$group(
-			_List_fromArray(
-				[
-					A2(
-					$MacCASOutreach$graphicsvg$GraphicSVG$move,
-					_Utils_Tuple2(-84, -44),
-					A3($author$project$Consts$rts, question, col.question, false)),
-					A2(
-					$MacCASOutreach$graphicsvg$GraphicSVG$move,
-					_Utils_Tuple2(-95, -45),
-					A2(
-						$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-						col.question,
-						A2(
-							$MacCASOutreach$graphicsvg$GraphicSVG$size,
-							8.5,
-							A2(
-								$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
-								$author$project$Consts$fonts.sansserif,
-								$MacCASOutreach$graphicsvg$GraphicSVG$text('Q.'))))),
-					A6(
-					$author$project$Questions$drawBubbles,
-					col,
-					state,
-					correct,
-					A2(
-						$elm$random$Random$step,
-						$author$project$Consts$shuffle(
-							A2($elm$core$List$cons, correct, incorrects)),
-						$elm$random$Random$initialSeed(seed)).a,
-					0,
-					hover),
-					_Utils_eq(state, $author$project$Consts$Waiting) ? $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil) : $MacCASOutreach$graphicsvg$GraphicSVG$group(
-					_List_fromArray(
-						[
-							A2(
-							$MacCASOutreach$graphicsvg$GraphicSVG$move,
-							_Utils_Tuple2(-3, -50),
-							$MacCASOutreach$graphicsvg$GraphicSVG$ghost(
-								A2($MacCASOutreach$graphicsvg$GraphicSVG$rect, 192, 40))),
-							((!(!score)) && (!A2($elm$core$Basics$modBy, 5, score))) ? $MacCASOutreach$graphicsvg$GraphicSVG$group(
-							A3($author$project$Questions$claps, time, col, clap)) : $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil),
-							A2(
-							$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
-							$author$project$Consts$UpdateState(state),
-							A2(
-								$MacCASOutreach$graphicsvg$GraphicSVG$notifyLeave,
-								$author$project$Consts$HoverNext(false),
-								A2(
-									$MacCASOutreach$graphicsvg$GraphicSVG$notifyEnter,
-									$author$project$Consts$HoverNext(true),
-									A2(
-										$MacCASOutreach$graphicsvg$GraphicSVG$move,
-										_Utils_Tuple2(73, -43),
-										A2(
-											$MacCASOutreach$graphicsvg$GraphicSVG$scale,
-											0.5,
-											$MacCASOutreach$graphicsvg$GraphicSVG$group(
-												_List_fromArray(
-													[
+var $author$project$Questions$showQuestion = function (col) {
+	return function (_v0) {
+		return function (incorrects) {
+			return function (seed) {
+				return function (state) {
+					return function (hover) {
+						return function (time) {
+							return function (score) {
+								return function (next) {
+									return function (clap) {
+										var question = _v0.a;
+										var correct = _v0.b;
+										return $MacCASOutreach$graphicsvg$GraphicSVG$group(
+											_List_fromArray(
+												[
+													A2(
+													$MacCASOutreach$graphicsvg$GraphicSVG$move,
+													_Utils_Tuple2(-84, -44),
+													A3($author$project$Consts$rts, question, col.question, false)),
+													A2(
+													$MacCASOutreach$graphicsvg$GraphicSVG$move,
+													_Utils_Tuple2(-95, -45),
+													A2(
+														$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+														col.question,
 														A2(
-														$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
-														0.8,
-														A2(
-															$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-															next ? col.optionHover : col.optionFade,
-															A3($MacCASOutreach$graphicsvg$GraphicSVG$roundedRect, 40, 18, 5))),
-														A2(
-														$MacCASOutreach$graphicsvg$GraphicSVG$move,
-														_Utils_Tuple2(0, -4),
-														A2(
-															$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-															next ? col.optionTextH : col.optionText,
+															$MacCASOutreach$graphicsvg$GraphicSVG$size,
+															8.5,
 															A2(
 																$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
 																$author$project$Consts$fonts.sansserif,
-																$MacCASOutreach$graphicsvg$GraphicSVG$centered(
-																	$MacCASOutreach$graphicsvg$GraphicSVG$text('Next')))))
-													])))))))
-						]))
-				]));
-	});
+																$MacCASOutreach$graphicsvg$GraphicSVG$text('Q.'))))),
+													A6(
+													$author$project$Questions$drawBubbles,
+													col,
+													state,
+													correct,
+													A2(
+														$elm$random$Random$step,
+														$author$project$Consts$shuffle(
+															A2($elm$core$List$cons, correct, incorrects)),
+														$elm$random$Random$initialSeed(seed)).a,
+													0,
+													hover),
+													_Utils_eq(state, $author$project$Consts$Waiting) ? $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil) : $MacCASOutreach$graphicsvg$GraphicSVG$group(
+													_List_fromArray(
+														[
+															A2(
+															$MacCASOutreach$graphicsvg$GraphicSVG$move,
+															_Utils_Tuple2(-3, -50),
+															$MacCASOutreach$graphicsvg$GraphicSVG$ghost(
+																A2($MacCASOutreach$graphicsvg$GraphicSVG$rect, 192, 40))),
+															((!(!score)) && (((_Utils_eq(state, $author$project$Consts$Correct) && (score > 0)) || (_Utils_eq(state, $author$project$Consts$Incorrect) && (score < 0))) && (!A2($elm$core$Basics$modBy, 5, score)))) ? $MacCASOutreach$graphicsvg$GraphicSVG$group(
+															_List_fromArray(
+																[
+																	$MacCASOutreach$graphicsvg$GraphicSVG$group(
+																	A3($author$project$Questions$claps, time, col, clap)),
+																	$MacCASOutreach$graphicsvg$GraphicSVG$mirrorX(
+																	$MacCASOutreach$graphicsvg$GraphicSVG$group(
+																		A3($author$project$Questions$claps, time, col, clap)))
+																])) : $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil),
+															A2(
+															$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,
+															$author$project$Consts$UpdateState(state),
+															A2(
+																$MacCASOutreach$graphicsvg$GraphicSVG$notifyLeave,
+																$author$project$Consts$HoverNext(false),
+																A2(
+																	$MacCASOutreach$graphicsvg$GraphicSVG$notifyEnter,
+																	$author$project$Consts$HoverNext(true),
+																	A2(
+																		$MacCASOutreach$graphicsvg$GraphicSVG$move,
+																		_Utils_Tuple2(73, -43),
+																		A2(
+																			$MacCASOutreach$graphicsvg$GraphicSVG$scale,
+																			0.5,
+																			$MacCASOutreach$graphicsvg$GraphicSVG$group(
+																				_List_fromArray(
+																					[
+																						A2(
+																						$MacCASOutreach$graphicsvg$GraphicSVG$makeTransparent,
+																						0.8,
+																						A2(
+																							$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+																							next ? col.optionHover : col.optionFade,
+																							A3($MacCASOutreach$graphicsvg$GraphicSVG$roundedRect, 40, 18, 5))),
+																						A2(
+																						$MacCASOutreach$graphicsvg$GraphicSVG$move,
+																						_Utils_Tuple2(0, -4),
+																						A2(
+																							$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+																							next ? col.optionTextH : col.optionText,
+																							A2(
+																								$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
+																								$author$project$Consts$fonts.sansserif,
+																								$MacCASOutreach$graphicsvg$GraphicSVG$centered(
+																									$MacCASOutreach$graphicsvg$GraphicSVG$text('Next')))))
+																					])))))))
+														]))
+												]));
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
 var $MacCASOutreach$graphicsvg$GraphicSVG$Sansserif = {$: 'Sansserif'};
 var $MacCASOutreach$graphicsvg$GraphicSVG$sansserif = function (stencil) {
 	if (stencil.$ === 'Text') {
@@ -12163,17 +12620,12 @@ var $author$project$Questions$myShapes = function (model) {
 			A2(
 			$MacCASOutreach$graphicsvg$GraphicSVG$move,
 			_Utils_Tuple2(6, 0),
-			A9(
-				$author$project$Questions$showQuestion,
-				col,
-				model.currentQ,
-				model.seed,
-				model.state,
-				model.hover,
-				model.time - model.waitTime,
-				actualScore(model.score),
-				model.next,
-				model.clap)),
+			$author$project$Questions$showQuestion(col)(model.currentQ)(
+				A2(
+					$author$project$Consts$getFour,
+					model.currentQ,
+					$elm$random$Random$initialSeed(model.seed)))(model.seed)(model.state)(model.hover)(model.time - model.waitTime)(
+				actualScore(model.score))(model.next)(model.clap)),
 			A5($author$project$Questions$showScore, col, model.state, model.time, model.score, model.maxScore),
 			_Utils_eq(model.state, $author$project$Consts$Waiting) ? $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil) : (((model.time - model.waitTime) > 10) ? $MacCASOutreach$graphicsvg$GraphicSVG$group(
 			_List_fromArray(

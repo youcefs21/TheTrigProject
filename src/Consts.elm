@@ -35,8 +35,8 @@ type Msg = Tick Float GetKeyState
 
 -- Types needed for other files
 
--- Q (Question) (Right Answer) ([Incorrect Answers])
-type Question = Q Rad Rad (List Rad)
+-- Q (Question) (Right Answer)
+type Question = Q Rad Rad
 
 type State = Waiting | Correct | Incorrect
 
@@ -48,7 +48,7 @@ type Quadrant = One
               | Four
 
 type Rad = C String          -- Constant constant
-         | R String          -- Root constant
+         | R String Bool     -- Root constant negative
          | F (Rad, Rad) Bool -- Fraction (numerator, denominator) negative
          | O String Rad      -- Operator operator rad
 
@@ -94,28 +94,116 @@ str s =
         "-1" ->
             C "-1"
         "(√3)/2" ->
-            F (R "3", C "2") False
+            F (R "3" False, C "2") False
         "-(√3)/2" ->
-            F (R "3", C "2") True
+            F (R "3" False, C "2") True
         "1/(√2)" ->
-            F (C "1", R "2") False
+            F (C "1", R "2" False) False
         "-1/(√2)" ->
-            F (C "1", R "2") True
+            F (C "1", R "2" False) True
         "1/2" ->
             F (C "1", C "2") False
         "-1/2" ->
             F (C "1", C "2") True
-        _ -> 
+        "1/(√3)" ->
+            F (C "1", R "3" False) False
+        "-1/(√3)" ->
+            F (C "1", R "3" False) True
+        "(√3)" ->
+            R "3" False
+        "-(√3)" ->
+            R "3" True
+        _ ->  
             C s
 
 -- Questions
 rawQs = [ 
-    Q (O "sin" <| str "π/4") (str "1/(√2)") [str "-1/(√2)", str "1/2", str "-(√3)/2", str "1"],
-    Q (O "sin" <| str "11π/6") (str "-1/2") [str "1/2", str "-(√3)/2", str "0", str "(√3)/2"],
-    Q (O "cos" <| str "π") (str "-1") [str "0", str "1", str "1/2", str "-1/2"],
-    Q (O "sin" <| str "2π") (str "0") [str "-1", str "1", str "-(√3)/2", str "(√3)/2"],
-    Q (O "sin" <| str "4π/3") (str "-(√3)/2") [str "-1/2", str "-1/(√2)", str "1/(√2)", str "-1"]
+    Q (O "sin" <| str "π/6") (str "1/2"),
+    Q (O "sin" <| str "π/4") (str "1/(√2)"),
+    Q (O "sin" <| str "π/3") (str "(√3)/2"),
+    Q (O "sin" <| str "π/2") (str "1"),
+    Q (O "sin" <| str "2π/3") (str "(√3)/2"),
+    Q (O "sin" <| str "3π/4") (str "1/(√2)"),
+    Q (O "sin" <| str "5π/6") (str "1/2"),
+    Q (O "sin" <| str "π") (str "0"),
+    Q (O "sin" <| str "7π/6") (str "-1/2"),
+    Q (O "sin" <| str "5π/4") (str "-1/(√2)"),
+    Q (O "sin" <| str "4π/3") (str "-(√3)/2"),
+    Q (O "sin" <| str "3π/2") (str "-1"),
+    Q (O "sin" <| str "5π/3") (str "-(√3)/2"),
+    Q (O "sin" <| str "7π/4") (str "-1/(√2)"),
+    Q (O "sin" <| str "11π/6") (str "-1/2"),
+    Q (O "sin" <| str "0") (str "0"),
+    Q (O "sin" <| str "2π") (str "0"),
+    Q (O "cos" <| str "π/6") (str "(√3)/2"),
+    Q (O "cos" <| str "π/4") (str "1/(√2)"),
+    Q (O "cos" <| str "π/3") (str "1/2"),
+    Q (O "cos" <| str "π/2") (str "0"),
+    Q (O "cos" <| str "2π/3") (str "-1/2"),
+    Q (O "cos" <| str "3π/4") (str "-1/(√2)"),
+    Q (O "cos" <| str "5π/6") (str "-(√3)/2"),
+    Q (O "cos" <| str "π") (str "-1"),
+    Q (O "cos" <| str "7π/6") (str "-(√3)/2"),
+    Q (O "cos" <| str "5π/4") (str "-1/(√2)"),
+    Q (O "cos" <| str "4π/3") (str "-1/2"),
+    Q (O "cos" <| str "3π/2") (str "0"),
+    Q (O "cos" <| str "5π/3") (str "1/2"),
+    Q (O "cos" <| str "7π/4") (str "1/(√2)"),
+    Q (O "cos" <| str "11π/6") (str "(√3)/2"),
+    Q (O "cos" <| str "0") (str "1"),
+    Q (O "cos" <| str "2π") (str "1"),
+    Q (O "tan" <| str "π/6") (str "1/(√3)"),
+    Q (O "tan" <| str "π/4") (str "1"),
+    Q (O "tan" <| str "π/3") (str "(√3)"),
+    Q (O "tan" <| str "π/2") (str "DNE"),
+    Q (O "tan" <| str "2π/3") (str "-(√3)"),
+    Q (O "tan" <| str "3π/4") (str "-1"),
+    Q (O "tan" <| str "5π/6") (str "-1/(√3)"),
+    Q (O "tan" <| str "π") (str "0"),
+    Q (O "tan" <| str "7π/6") (str "1/(√3)"),
+    Q (O "tan" <| str "5π/4") (str "1"),
+    Q (O "tan" <| str "4π/3") (str "(√3)"),
+    Q (O "tan" <| str "3π/2") (str "DNE"),
+    Q (O "tan" <| str "5π/3") (str "-(√3)"),
+    Q (O "tan" <| str "7π/4") (str "-1"),
+    Q (O "tan" <| str "11π/6") (str "-1/(√3)"),
+    Q (O "tan" <| str "0") (str "0"),
+    Q (O "tan" <| str "2π") (str "0")
     ]
+
+-- 14 possible lengths for special angle triangles
+lengthBank i =
+    case i of
+        1 ->
+            str "DNE"
+        2 ->
+            str "0"
+        3 ->
+            str "1"
+        4 ->
+            str "-1"
+        5 ->
+            str "1/(√3)"
+        6 ->
+            str "-1/(√3)"
+        7 ->
+            str "(√3)"
+        8 ->
+            str "-(√3)"
+        9 ->
+            str "(√3)/2"
+        10 ->
+            str "-(√3)/2"
+        11 ->
+            str "1/(√2)"
+        12 ->
+            str "-1/(√2)"
+        13 ->
+            str "1/2"
+        14 ->
+            str "-1/2"
+        _ ->
+            str "ERROR"
 
 root width = 
     polygon [
@@ -144,8 +232,17 @@ rts rad c b =
                     |> size 6
                     |> filled c
                 ]
-        R s ->
+        R s neg ->
             group [
+                if neg then
+                    text "-"
+                        |> customFont fonts.math
+                        |> (if b then bold else identity)
+                        |> size 6
+                        |> filled c
+                        |> move (-6.5, 0.25)
+                else
+                    group [],
                 root ((*) 90 <| toFloat <| String.length s)
                     |> filled c
                     |> (if b then addOutline (solid 5) c else identity)
@@ -191,21 +288,21 @@ rts rad c b =
                 ]
 
 -- easy and hard for updating weights for spaced repetition
-easy = 0.9
-hard = 1.1
+easy = 0.75
+hard = 1.2
 
 -- Parametric functions for "natural" movement
 paraX t = sin (7 * pi * t)
 paraY t = cos (5 * pi * t)
 
 -- Determines if chosen answer is correct
-correctAnswer (Q _ correct _) answer = 
+correctAnswer (Q _ correct) answer = 
     if answer == correct then True else False
     
 -- Generates questions
 qGen qss = 
     case qss of
-        [] -> Random.constant <| Q (C "ERROR") (C "ERROR") []
+        [] -> Random.constant <| Q (C "ERROR") (C "ERROR")
         (q::qs) -> Random.weighted q qs
 genQ qss = Random.generate Choice <| qGen qss
 
@@ -303,6 +400,40 @@ getTheme t =
     case t of
         Light  -> lightTheme
         Dark   -> darkTheme
+
+-- Returns 4 other options for the questions
+getFour question seed =
+    let
+        getCorrect (Q _ c) = c
+        q = getCorrect question
+        (one, seed2) = getOne [q] seed 
+        (two, seed3) = getOne [q, one] seed2
+        (three, seed4) = getOne [q, one, two] seed3
+        (four, _) = getOne [q, one, two, three] seed4
+    in
+        [one, two, three, four]
+
+getOne qs seed = 
+    let 
+        (idx, anotherSeed) = Random.step (Random.int 1 14) seed
+        seed2 = Tuple.first <| Random.step anyInt anotherSeed
+        opt = lengthBank idx
+        identical q xss =
+            case xss of
+                (x::xs) -> 
+                    if q == x then
+                        True
+                    else
+                        identical q xs
+                _ ->
+                    False
+    in
+        if identical opt qs then
+            getOne qs anotherSeed
+        else
+            (opt, Random.initialSeed seed2)
+
+
 
 -- Fonts and Themes
 

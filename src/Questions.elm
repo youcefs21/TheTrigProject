@@ -12,7 +12,7 @@ myShapes model =
         col = getTheme model.col
         actualScore (x, y) = x - y
     in [
-        showQuestion col model.currentQ model.seed model.state model.hover (model.time - model.waitTime) (actualScore model.score) model.next model.clap
+        showQuestion col model.currentQ (getFour model.currentQ (Random.initialSeed model.seed)) model.seed model.state model.hover (model.time - model.waitTime) (actualScore model.score) model.next model.clap
             |> move (6, 0),
         showScore col model.state model.time model.score model.maxScore,
         if model.state == Waiting then group []
@@ -29,16 +29,16 @@ myShapes model =
  -     If the answer is correct, the probability the question shows up again decrease by easy%.
  -     Otherwise, the probability increase by hard%.
  -}
-updateWeights weightedQs (Q q _ _) correct =
+updateWeights weightedQs (Q q _) correct =
     case weightedQs of
         [] -> []
-        ((weight, Q question c incs)::qs) -> 
+        ((weight, Q question c)::qs) -> 
             if question == q then 
                 let 
-                    -- The probability is at least 100% and at most 140%
-                    newWeights = if correct then easy else hard |> (*) weight |> max 1 |> min 1.4
-                in (newWeights, Q question c incs)::qs
-            else (weight, Q question c incs)::(updateWeights qs (Q q (str "0") []) correct)
+                    -- The weight is at least 100% and at most 200%
+                    newWeights = if correct then easy else hard |> (*) weight |> max 1 |> min 2
+                in (newWeights, Q question c)::qs
+            else (weight, Q question c)::(updateWeights qs (Q q (str "0")) correct)
 
 -- Draws the score and controls clickability
 showScore col state time score maxScore = 
@@ -69,7 +69,7 @@ showScore col state time score maxScore =
             |> move (5, -2)
     
 -- Draws the question
-showQuestion col (Q question correct incorrects) seed state hover time score next clap = group [
+showQuestion col (Q question correct) incorrects seed state hover time score next clap = group [
     rts question col.question False
         |> move (-84,-44),
     text "Q."
@@ -85,9 +85,14 @@ showQuestion col (Q question correct incorrects) seed state hover time score nex
             rect 192 40
                 |> ghost
                 |> move (-3, -50),
-            if score /= 0 && modBy 5 score == 0 then
-                claps time col clap
-                    |> group
+            if score /= 0 && ((state == Correct && score > 0) || (state == Incorrect && score < 0)) && modBy 5 score == 0 then
+                group [
+                    claps time col clap
+                        |> group,
+                    claps time col clap
+                        |> group
+                        |> mirrorX
+                ]
             else
                 group [],
             group [
@@ -187,7 +192,7 @@ init : Model
 init = { 
     time       = 0, 
     waitTime   = 0,
-    currentQ   = Q (str "0") (str "0") [], 
+    currentQ   = Q (str "0") (str "0"), 
     weightedQs = List.indexedMap (\_ q -> (1.0, q) ) rawQs, 
     state      = Waiting, 
     hover      = C "",

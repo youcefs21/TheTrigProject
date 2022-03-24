@@ -17,9 +17,7 @@ myShapes model =
     [
         -- Background
         rect 192 128
-            |> filled col.background
-        
-        ,
+            |> filled col.background,
 
         -- Main app
         group [
@@ -48,9 +46,7 @@ myShapes model =
                 |> notifyEnter (HoverMain 2 True)
                 |> notifyLeave (HoverMain 2 False)
                 |> notifyTap (HoverMain 2 False)
-            ]
-            
-        ,
+            ],
 
         -- Settings
         if model.settings then 
@@ -70,9 +66,7 @@ myShapes model =
                 |> move (89, 57)
                 |> notifyEnter (HoverMain 1 True)
                 |> notifyTap (HoverMain 1 False)
-                |> notifyLeave (HoverMain 1 False)
-                
-        ,
+                |> notifyLeave (HoverMain 1 False),
 
         -- Tutorial
         case model.tutorial of
@@ -178,9 +172,7 @@ myShapes model =
                 ]
                 |> notifyTap (Tutorial 0 True)
             _ ->
-                group []
-                
-        ,
+                group [],
         
         if model.tutorial /= 0 || model.settings then group [
             tutText ["[press anywhere to " ++ (

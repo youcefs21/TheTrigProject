@@ -182,8 +182,11 @@ myShapes model =
                 
         ,
         
-        if model.tutorial /= 0 then
-            tutText ["[press anywhere to continue]"] col.tutWords True
+        if model.tutorial /= 0 || model.settings then
+            tutText ["[press anywhere to " ++ (
+                if model.settings then "exit"
+                else "continue"
+            ) ++ "]"] col.tutWords True
                 |> makeTransparent 0.7
                 |> scale 0.5
                 |> move (0, 58)

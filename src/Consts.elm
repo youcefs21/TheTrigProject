@@ -157,7 +157,9 @@ str s =
             C s
 
 -- Questions
-rawQs = 
+rawQs = sinQs ++ cosQs ++ tanQs
+
+sinQs =
     [ 
     Q (O ("sin", "π/6")) (str "1/2"),
     Q (O ("sin", "π/4")) (str "1/(√2)"),
@@ -175,7 +177,11 @@ rawQs =
     Q (O ("sin", "7π/4")) (str "-1/(√2)"),
     Q (O ("sin", "11π/6")) (str "-1/2"),
     Q (O ("sin", "0")) (str "0"),
-    Q (O ("sin", "2π")) (str "0"),
+    Q (O ("sin", "2π")) (str "0")
+    ]
+
+cosQs =
+    [
     Q (O ("cos", "π/6")) (str "(√3)/2"),
     Q (O ("cos", "π/4")) (str "1/(√2)"),
     Q (O ("cos", "π/3")) (str "1/2"),
@@ -192,7 +198,11 @@ rawQs =
     Q (O ("cos", "7π/4")) (str "1/(√2)"),
     Q (O ("cos", "11π/6")) (str "(√3)/2"),
     Q (O ("cos", "0")) (str "1"),
-    Q (O ("cos", "2π")) (str "1"),
+    Q (O ("cos", "2π")) (str "1")
+    ]
+
+tanQs = 
+    [
     Q (O ("tan", "π/6")) (str "1/(√3)"),
     Q (O ("tan", "π/4")) (str "1"),
     Q (O ("tan", "π/3")) (str "(√3)"),

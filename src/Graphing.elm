@@ -6,7 +6,7 @@ import String
 import Consts exposing (..)
 
 
-function model func fcol dnePossible = 
+function model func fcol dnePossible grid = 
     group [
         List.map 
             (\i ->
@@ -29,44 +29,60 @@ function model func fcol dnePossible =
             (rangeStep 0 (2 * pi) deltaX)
             |> group,
         -- Moving line
-            let
-                x = -90 + (degrees model.angle) * scaleX
-                y1 = 0
-                y2 = 
-                    let
-                        yp = model.scaleY * func (degrees model.angle)
-                        ypm = min (abs yp) 60
-                    in 
-                        if yp < 0 then -ypm else ypm
-                l = group [
-                    line (x, y1) (x, y2)
-                        |> outlined (dotted 0.5) fcol,
-                    if model.yLine then 
-                        (line (-90, y2) (90, y2)
-                            |> outlined (dotted 0.5) fcol)
-                    else
-                        group [],
-                    circle 1
-                        |> filled fcol
-                        |> move (x, y2),
-                    rts (str (String.fromFloat <| toN (func (degrees model.angle)) 3)) fcol False --text (String.fromFloat <| toN (func (degrees model.angle)) 3)
-                        -- |> customFont fonts.monospace
-                        -- |> size 4
-                        -- |> filled fcol
-                        |> scale 0.65
-                        |> move (x + 7, max -40 <| min 75 y2 / 2)
-                    ]
-                dne = 
-                    text "DNE"
-                        |> customFont fonts.monospace
-                        |> size 4
-                        |> centered
-                        |> filled fcol
-                        |> move (x, y1 + 1)
-                ra = round model.angle
-            in
-                if ((ra == 90 || ra == 270) && dnePossible) then dne
-                else l
+        let
+            x = -90 + (degrees model.angle) * scaleX
+            y1 = 0
+            y2 = 
+                let
+                    yp = model.scaleY * func (degrees model.angle)
+                    ypm = min (abs yp) 60
+                in 
+                    if yp < 0 then -ypm else ypm
+            l = group [
+                line (x, y1) (x, y2)
+                    |> outlined (dotted 0.5) fcol,
+                if model.yLine then 
+                    (line (-90, y2) (90, y2)
+                        |> outlined (dotted 0.5) fcol)
+                else
+                    group [],
+                circle 1
+                    |> filled fcol
+                    |> move (x, y2),
+                rts (str (String.fromFloat <| toN (func (degrees model.angle)) 3)) fcol False model.radians --text (String.fromFloat <| toN (func (degrees model.angle)) 3)
+                    -- |> customFont fonts.monospace
+                    -- |> size 4
+                    -- |> filled fcol
+                    |> scale 0.65
+                    |> move (x + 7, max -40 <| min 75 y2 / 2)
+                ]
+            dne = 
+                text "DNE"
+                    |> customFont fonts.math
+                    |> size 4
+                    |> centered
+                    |> filled fcol
+                    |> move (x, y1 + 1)
+            ra = round model.angle
+        in
+            if ((ra == 90 || ra == 270) && dnePossible) then dne
+            else l,
+
+        -- Moving angle
+        let
+            x = -90 + (degrees model.angle) * scaleX
+            s = if model.radians then ((String.fromFloat <| (\d -> toN d 3) <| degToRad model.angle) ++ " rad") else ((String.fromFloat model.angle) ++ "°")
+        in
+            group [
+                line (-90, 0) (x, 0)
+                    |> outlined (dotted 0.5) grid,
+                text s
+                    |> customFont fonts.math
+                    |> size 4
+                    |> filled grid
+                    |> scale 0.95
+                    |> move (x + 2, 2)
+            ]
     ]
 
 myShapes model = 
@@ -75,15 +91,15 @@ myShapes model =
     in [
         -- Function
         if model.showSin then 
-            function model (sin) col.opp False
+            function model (sin) col.opp False col.grid
         else
             group [],
         if model.showCos then
-            function model (cos) col.adj False
+            function model (cos) col.adj False col.grid
         else
             group [],
         if model.showTan then
-            function model (tan) col.tan True
+            function model (tan) col.tan True col.grid
         else
             group [],
 
@@ -134,7 +150,7 @@ myShapes model =
                     --     |> centered
                     --     |> filled col.words
                     --     |> makeTransparent 0.9
-                    rts (str (if model.radians then rad else String.fromFloat deg ++ "°")) col.words (deg == model.angle)
+                    rts (str (if model.radians then rad else String.fromFloat deg ++ "°")) col.words (deg == model.angle) model.radians
                         |> makeTransparent 0.9
                         |> scale 0.75
                         |> move (if deg == 0 then 2 else 0, -5)

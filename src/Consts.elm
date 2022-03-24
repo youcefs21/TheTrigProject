@@ -8,7 +8,7 @@ import GraphicSVG.EllieApp exposing (..)
 type Msg = Tick Float GetKeyState
          | ToggleSettings
          | Tutorial Int Bool
-         | HoverMain Int Bool
+         | HoverMain Int Bool 
          -- Circle Message
          | UpdateAngle Float
          | HoverCircle Int Bool
@@ -47,10 +47,50 @@ type Quadrant = One
               | Three 
               | Four
 
-type Rad = C String          -- Constant constant
-         | R String Bool     -- Root constant negative
-         | F (Rad, Rad) Bool -- Fraction (numerator, denominator) negative
-         | O String Rad      -- Operator operator rad
+type Rad = C String           -- Constant constant
+         | R String Bool      -- Root constant negative
+         | F (Rad, Rad) Bool  -- Fraction (numerator, denominator) negative
+         | O (String, String) -- Operator (operator, radians)
+
+-- RadToDegRad = rtdr
+rtdr s = 
+    case s of
+        "0" ->
+            C "0°"
+        "π/6" -> 
+            C "30°"
+        "π/4" -> 
+            C "45°"
+        "π/3" -> 
+            C "60°"
+        "π/2" -> 
+            C "90°"
+        "2π/3" -> 
+            C "120°"
+        "3π/4" -> 
+            C "135°"
+        "5π/6" -> 
+            C "150°"
+        "π" -> 
+            C "180°"
+        "7π/6" -> 
+            C "210°"
+        "5π/4" -> 
+            C "225°"
+        "4π/3" -> 
+            C "240°"
+        "3π/2" -> 
+            C "270°"
+        "5π/3" -> 
+            C "300°"
+        "7π/4" -> 
+            C "315°"
+        "11π/6" -> 
+            C "330°"
+        "2π" -> 
+            C "360°"
+        _ ->
+            C "0°"
 
 -- StringToRad = str
 str s = 
@@ -117,58 +157,59 @@ str s =
             C s
 
 -- Questions
-rawQs = [ 
-    Q (O "sin" <| str "π/6") (str "1/2"),
-    Q (O "sin" <| str "π/4") (str "1/(√2)"),
-    Q (O "sin" <| str "π/3") (str "(√3)/2"),
-    Q (O "sin" <| str "π/2") (str "1"),
-    Q (O "sin" <| str "2π/3") (str "(√3)/2"),
-    Q (O "sin" <| str "3π/4") (str "1/(√2)"),
-    Q (O "sin" <| str "5π/6") (str "1/2"),
-    Q (O "sin" <| str "π") (str "0"),
-    Q (O "sin" <| str "7π/6") (str "-1/2"),
-    Q (O "sin" <| str "5π/4") (str "-1/(√2)"),
-    Q (O "sin" <| str "4π/3") (str "-(√3)/2"),
-    Q (O "sin" <| str "3π/2") (str "-1"),
-    Q (O "sin" <| str "5π/3") (str "-(√3)/2"),
-    Q (O "sin" <| str "7π/4") (str "-1/(√2)"),
-    Q (O "sin" <| str "11π/6") (str "-1/2"),
-    Q (O "sin" <| str "0") (str "0"),
-    Q (O "sin" <| str "2π") (str "0"),
-    Q (O "cos" <| str "π/6") (str "(√3)/2"),
-    Q (O "cos" <| str "π/4") (str "1/(√2)"),
-    Q (O "cos" <| str "π/3") (str "1/2"),
-    Q (O "cos" <| str "π/2") (str "0"),
-    Q (O "cos" <| str "2π/3") (str "-1/2"),
-    Q (O "cos" <| str "3π/4") (str "-1/(√2)"),
-    Q (O "cos" <| str "5π/6") (str "-(√3)/2"),
-    Q (O "cos" <| str "π") (str "-1"),
-    Q (O "cos" <| str "7π/6") (str "-(√3)/2"),
-    Q (O "cos" <| str "5π/4") (str "-1/(√2)"),
-    Q (O "cos" <| str "4π/3") (str "-1/2"),
-    Q (O "cos" <| str "3π/2") (str "0"),
-    Q (O "cos" <| str "5π/3") (str "1/2"),
-    Q (O "cos" <| str "7π/4") (str "1/(√2)"),
-    Q (O "cos" <| str "11π/6") (str "(√3)/2"),
-    Q (O "cos" <| str "0") (str "1"),
-    Q (O "cos" <| str "2π") (str "1"),
-    Q (O "tan" <| str "π/6") (str "1/(√3)"),
-    Q (O "tan" <| str "π/4") (str "1"),
-    Q (O "tan" <| str "π/3") (str "(√3)"),
-    Q (O "tan" <| str "π/2") (str "DNE"),
-    Q (O "tan" <| str "2π/3") (str "-(√3)"),
-    Q (O "tan" <| str "3π/4") (str "-1"),
-    Q (O "tan" <| str "5π/6") (str "-1/(√3)"),
-    Q (O "tan" <| str "π") (str "0"),
-    Q (O "tan" <| str "7π/6") (str "1/(√3)"),
-    Q (O "tan" <| str "5π/4") (str "1"),
-    Q (O "tan" <| str "4π/3") (str "(√3)"),
-    Q (O "tan" <| str "3π/2") (str "DNE"),
-    Q (O "tan" <| str "5π/3") (str "-(√3)"),
-    Q (O "tan" <| str "7π/4") (str "-1"),
-    Q (O "tan" <| str "11π/6") (str "-1/(√3)"),
-    Q (O "tan" <| str "0") (str "0"),
-    Q (O "tan" <| str "2π") (str "0")
+rawQs = 
+    [ 
+    Q (O ("sin", "π/6")) (str "1/2"),
+    Q (O ("sin", "π/4")) (str "1/(√2)"),
+    Q (O ("sin", "π/3")) (str "(√3)/2"),
+    Q (O ("sin", "π/2")) (str "1"),
+    Q (O ("sin", "2π/3")) (str "(√3)/2"),
+    Q (O ("sin", "3π/4")) (str "1/(√2)"),
+    Q (O ("sin", "5π/6")) (str "1/2"),
+    Q (O ("sin", "π")) (str "0"),
+    Q (O ("sin", "7π/6")) (str "-1/2"),
+    Q (O ("sin", "5π/4")) (str "-1/(√2)"),
+    Q (O ("sin", "4π/3")) (str "-(√3)/2"),
+    Q (O ("sin", "3π/2")) (str "-1"),
+    Q (O ("sin", "5π/3")) (str "-(√3)/2"),
+    Q (O ("sin", "7π/4")) (str "-1/(√2)"),
+    Q (O ("sin", "11π/6")) (str "-1/2"),
+    Q (O ("sin", "0")) (str "0"),
+    Q (O ("sin", "2π")) (str "0"),
+    Q (O ("cos", "π/6")) (str "(√3)/2"),
+    Q (O ("cos", "π/4")) (str "1/(√2)"),
+    Q (O ("cos", "π/3")) (str "1/2"),
+    Q (O ("cos", "π/2")) (str "0"),
+    Q (O ("cos", "2π/3")) (str "-1/2"),
+    Q (O ("cos", "3π/4")) (str "-1/(√2)"),
+    Q (O ("cos", "5π/6")) (str "-(√3)/2"),
+    Q (O ("cos", "π")) (str "-1"),
+    Q (O ("cos", "7π/6")) (str "-(√3)/2"),
+    Q (O ("cos", "5π/4")) (str "-1/(√2)"),
+    Q (O ("cos", "4π/3")) (str "-1/2"),
+    Q (O ("cos", "3π/2")) (str "0"),
+    Q (O ("cos", "5π/3")) (str "1/2"),
+    Q (O ("cos", "7π/4")) (str "1/(√2)"),
+    Q (O ("cos", "11π/6")) (str "(√3)/2"),
+    Q (O ("cos", "0")) (str "1"),
+    Q (O ("cos", "2π")) (str "1"),
+    Q (O ("tan", "π/6")) (str "1/(√3)"),
+    Q (O ("tan", "π/4")) (str "1"),
+    Q (O ("tan", "π/3")) (str "(√3)"),
+    Q (O ("tan", "π/2")) (str "DNE"),
+    Q (O ("tan", "2π/3")) (str "-(√3)"),
+    Q (O ("tan", "3π/4")) (str "-1"),
+    Q (O ("tan", "5π/6")) (str "-1/(√3)"),
+    Q (O ("tan", "π")) (str "0"),
+    Q (O ("tan", "7π/6")) (str "1/(√3)"),
+    Q (O ("tan", "5π/4")) (str "1"),
+    Q (O ("tan", "4π/3")) (str "(√3)"),
+    Q (O ("tan", "3π/2")) (str "DNE"),
+    Q (O ("tan", "5π/3")) (str "-(√3)"),
+    Q (O ("tan", "7π/4")) (str "-1"),
+    Q (O ("tan", "11π/6")) (str "-1/(√3)"),
+    Q (O ("tan", "0")) (str "0"),
+    Q (O ("tan", "2π")) (str "0")
     ]
 
 -- 14 possible lengths for special angle triangles
@@ -221,7 +262,7 @@ root width =
         (0, 60)]
 
 -- RadToShape = rts
-rts rad c b = 
+rts rad c b radians = 
     case rad of
         C s -> 
             group [
@@ -256,15 +297,15 @@ rts rad c b =
                     |> size 6
                     |> filled c
                 ]
-        O o r ->
+        O (o, r) ->
             group [
                 text o
                     |> customFont fonts.math
                     |> (if b then bold else identity)
                     |> size 6
                     |> filled c,  
-                rts r c b
-                    |> move (13, 0)
+                rts ((if radians then str else rtdr) r) c b radians
+                    |> move (15, 0)
                 ]
         F (n, d) neg ->
             group [
@@ -277,13 +318,13 @@ rts rad c b =
                         |> move (-6, 0.25)
                 else
                     group [],
-                rts n c b
+                rts n c b radians
                     |> move (0, 2.75),
                 rect 5 0.25
                     |> filled c
                     |> (if b then addOutline (solid 0.2) c else identity)
                     |> move (0, 2),
-                rts d c b
+                rts d c b radians
                     |> move (0, -3)
                 ]
 

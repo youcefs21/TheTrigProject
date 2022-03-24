@@ -100,7 +100,7 @@ angles col radians angle hoverDeg hovering = group <|
                     --     |> filled col.words 
                     --     |> makeTransparent 0.9
                     --     |> move (x, y),
-                    rts (Consts.str str) col.words (angle == d)
+                    rts (Consts.str str) col.words (angle == d) radians
                         |> makeTransparent 0.9
                         |> scale 0.75
                         |> move (x, y),
@@ -154,7 +154,7 @@ triangle col angle quad showSLengths radians =
         --     |> centered
         --     |> customFont fonts.monospace
         --     |> filled col.angle
-        rts (str (if radians then (String.fromFloat <| toN (degToRad alpha) 2) ++ " rad" else (String.fromFloat alpha) ++ "°"))  col.angle False
+        rts (str (if radians then (String.fromFloat <| toN (degToRad alpha) 2) ++ " rad" else (String.fromFloat alpha) ++ "°"))  col.angle False radians
             |> scale 0.6
             |> move ((if radians then 20 else 10) * cos (degrees angle), (if radians then 5 else 1) * sin (degrees angle) - 1),
 
@@ -165,7 +165,7 @@ triangle col angle quad showSLengths radians =
         --     |> centered
         --     |> customFont fonts.monospace
         --     |> filled col.angle
-        rts (str (if radians then (String.fromFloat <| toN (degToRad angle) 2) ++ " rad" else (String.fromFloat angle) ++ "°")) col.angle False
+        rts (str (if radians then (String.fromFloat <| toN (degToRad angle) 2) ++ " rad" else (String.fromFloat angle) ++ "°")) col.angle False radians
             |> scale 0.6
             |> move (-13 * cos (degrees angle), 
                      -5 * sin (degrees angle) - 1),
@@ -198,19 +198,19 @@ triangle col angle quad showSLengths radians =
             in
                 group [
                     -- Adj
-                    rts (str adj) col.adj False --tText adj col.adj
+                    rts (str adj) col.adj False radians --tText adj col.adj
                         |> scale 0.7
                         |> move (xpos (ur / 2) angle, 
                                  if quad == One || quad == Two then -7
                                  else 4),
                     -- Opp
-                    rts (str opp) col.opp False --tText opp col.opp
+                    rts (str opp) col.opp False radians --tText opp col.opp
                         |> scale 0.7
                         |> move (xpos ur angle +
                                  if quad == One || quad == Four then (toFloat (String.length opp) + 2)
                                  else -(toFloat (String.length opp) + 2), ypos (ur / 2) angle),
                     -- Hyp
-                    rts (str "1") col.hyp False --tText "1" col.hyp
+                    rts (str "1") col.hyp False radians --tText "1" col.hyp
                         |> scale 0.7
                         |> move (xpos (ur / 2) angle +
                                  if quad == One || quad == Four then -3 else 3, 

@@ -12,7 +12,7 @@ myShapes model =
         col = getTheme model.col
         actualScore (x, y) = x - y
     in [
-        showQuestion col model.currentQ (getFour model.currentQ (Random.initialSeed model.seed)) model.seed model.state model.hover (model.time - model.waitTime) (actualScore model.score) model.next model.clap
+        showQuestion col model.currentQ (getFour model.currentQ (Random.initialSeed model.seed)) model.seed model.state model.hover (model.time - model.waitTime) (actualScore model.score) model.next model.clap model.radians
             |> move (6, 0),
         showScore col model.state model.time model.score model.maxScore,
         if model.state == Waiting then group []
@@ -69,15 +69,15 @@ showScore col state time score maxScore =
             |> move (5, -2)
     
 -- Draws the question
-showQuestion col (Q question correct) incorrects seed state hover time score next clap = group [
-    rts question col.question False
+showQuestion col (Q question correct) incorrects seed state hover time score next clap radians = group [
+    rts question col.question False radians
         |> move (-84,-44),
     text "Q."
         |> customFont fonts.sansserif
         |> size 8.5
         |> filled col.question
         |> move (-95,-45),
-    drawBubbles col state correct (Tuple.first <| Random.step (shuffle (correct::incorrects)) <| Random.initialSeed seed) 0 hover,
+    drawBubbles col state correct (Tuple.first <| Random.step (shuffle (correct::incorrects)) <| Random.initialSeed seed) 0 hover radians,
     if state == Waiting then group []
     else 
         group [
@@ -133,7 +133,7 @@ claps time col clap =
         )
 
 -- Draws the options
-drawBubbles col state correct answers c hover =
+drawBubbles col state correct answers c hover radians =
     case answers of 
         [] -> group []
         (x::xs) -> group [
@@ -161,14 +161,14 @@ drawBubbles col state correct answers c hover =
                                     col.optionFade)
                         |> move (-40, 0)
                         |> makeTransparent 0.8,
-                    rts x (if hovered then col.optionTextH else col.optionText) hovered
+                    rts x (if hovered then col.optionTextH else col.optionText) hovered radians
                         |> move (-40, -2) 
                     ]
                     |> move(-40 + 37 * c, -55)
                     |> notifyEnter (Hover x True)
                     |> (if state == Waiting then notifyLeave (Hover x False) else identity)
                     |> notifyTap (Select x),
-            drawBubbles col state correct xs (c + 1) hover
+            drawBubbles col state correct xs (c + 1) hover radians
             ]
 
 
@@ -193,7 +193,7 @@ init = {
     time       = 0, 
     waitTime   = 0,
     currentQ   = Q (str "0") (str "0"), 
-    weightedQs = List.indexedMap (\_ q -> (1.0, q) ) rawQs, 
+    weightedQs = List.indexedMap (\_ q -> (1.0, q)) rawQs, 
     state      = Waiting, 
     hover      = C "",
     score      = (0, 0), 

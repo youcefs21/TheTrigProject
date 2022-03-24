@@ -143,10 +143,10 @@ myShapes model =
             7 ->
                 group [
                     tutBG   
-                        (roundedRect 10 10 1 |> ghost |> move (89, 57))
+                        (roundedRect 10 10 1.5 |> ghost |> move (89, 57))
                         col.tutBack,
                     tutText ["Finally, we have the settings."] col.tutWords False
-                        |> move (4, 50)
+                        |> move (13, 45)
                 ]
                 |> notifyTap (Tutorial 8 True)
             8 -> 
@@ -166,7 +166,7 @@ myShapes model =
                              "And, you can switch between light and", "dark modes.",
                              "",
                              "To exit the settings, tap anywhere outside."] col.tutWords False
-                        |> move (-64, 45)
+                        |> move (-64, 40)
                 ]
                 |> notifyTap (Tutorial 9 True)
             9 ->
@@ -182,14 +182,33 @@ myShapes model =
                 
         ,
         
-        if model.tutorial /= 0 || model.settings then
+        if model.tutorial /= 0 || model.settings then group [
             tutText ["[press anywhere to " ++ (
-                if model.settings then "exit"
+                if model.settings && model.tutorial == 0 then "exit"
                 else "continue"
             ) ++ "]"] col.tutWords True
                 |> makeTransparent 0.7
                 |> scale 0.5
-                |> move (0, 58)
+                |> move (0, 58),
+            if not model.settings || model.tutorial == 8 then 
+                group [
+                    roundedRect 40 18 5
+                        |> filled (if model.skip then col.optionHover else col.optionFade)
+                        |> makeTransparent 0.8,
+                    text "Skip"
+                        |> centered
+                        |> customFont fonts.sansserif
+                        |> filled (if model.skip then col.optionTextH else col.optionText)
+                        |> move (0, -4)
+                    ]
+                    |> scale 0.5
+                    |> move (0, 51)
+                    |> notifyEnter (HoverMain 3 True)
+                    |> notifyLeave (HoverMain 3 False)
+                    |> notifyTap (Tutorial 0 True)
+            else
+                group []
+            ]
         else
             group []
     ]
@@ -375,6 +394,7 @@ type alias Model = {
     col       : Theme,
     radians   : Bool,
     settings  : Bool,
+    skip      : Bool,
     cast      : Bool,
     sLengths  : Bool,
     sAngles   : Bool,
@@ -395,6 +415,7 @@ init = {
     col       = Light,
     radians   = True,
     settings  = False,
+    skip      = False,
     cast      = True,
     sLengths  = True,
     sAngles   = True,
@@ -425,7 +446,16 @@ update msg model =
             ( { model | settings = not model.settings,
                         hoverSet = False }, Cmd.none )
         HoverMain i b ->
-            ( if i == 1 then { model | hoverSet = b} else if i == 2 then { model | hoverTut = b} else model, Cmd.none )
+            (case i of
+                1 ->
+                    { model | hoverSet = b }
+                2 ->
+                    { model | hoverTut = b }
+                3 ->
+                    { model | skip = b }
+                _ ->
+                    model,
+            Cmd.none )
         UpdateAngle _ -> 
             let
                 (newCircle, circleCmds) = Circle.update msg model.circle
@@ -548,7 +578,8 @@ update msg model =
         Tutorial i b ->
             ( { model | tutorial = if b then i else model.tutorial + 1,
                         settings = if i == 8 && b then True else False,
-                        hoverTut = False }, Cmd.none )
+                        hoverTut = False,
+                        skip     = False }, Cmd.none )
 
 view : Model -> Collage Consts.Msg
 view model = collage 192 128 <|

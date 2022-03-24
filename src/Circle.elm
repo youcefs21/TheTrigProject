@@ -189,28 +189,22 @@ triangle col angle quad showSLengths radians =
                 rawOpp = getString sin alpha oppLengths
                 adj = (if quad == Two   || quad == Three && rawAdj /= "0" then "-" else "") ++ rawAdj
                 opp = (if quad == Three || quad == Four  && rawOpp /= "0" then "-" else "") ++ rawOpp
-                tText str c = 
-                    text str
-                        |> customFont fonts.monospace
-                        |> centered
-                        |> size 4
-                        |> filled c
             in
                 group [
                     -- Adj
-                    rts (str adj) col.adj False radians --tText adj col.adj
+                    rts (str adj) col.adj False radians
                         |> scale 0.7
                         |> move (xpos (ur / 2) angle, 
                                  if quad == One || quad == Two then -7
                                  else 4),
                     -- Opp
-                    rts (str opp) col.opp False radians --tText opp col.opp
+                    rts (str opp) col.opp False radians
                         |> scale 0.7
                         |> move (xpos ur angle +
                                  if quad == One || quad == Four then (toFloat (String.length opp) + 2)
                                  else -(toFloat (String.length opp) + 2), ypos (ur / 2) angle),
                     -- Hyp
-                    rts (str "1") col.hyp False radians --tText "1" col.hyp
+                    rts (str "1") col.hyp False radians
                         |> scale 0.7
                         |> move (xpos (ur / 2) angle +
                                  if quad == One || quad == Four then -3 else 3, 

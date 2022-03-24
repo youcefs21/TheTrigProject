@@ -8,8 +8,6 @@ import Circle
 import Graphing
 import Questions
 
-on = 0.8
-off = 0.35
 myShapes model = 
     let
         col = getTheme model.col

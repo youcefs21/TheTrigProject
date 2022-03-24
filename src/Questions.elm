@@ -138,7 +138,6 @@ drawBubbles col state correct answers c hover radians =
         [] -> group []
         (x::xs) -> group [
             let
-                waitingOrIncorrect = state == Waiting || correct /= x && x /= hover
                 hovered = state == Waiting && x == hover
             in
                 group [ 

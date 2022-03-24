@@ -11492,6 +11492,20 @@ var $author$project$Circle$triangle = F5(
 						A2($author$project$Circle$pos, $author$project$Consts$ur, angle))),
 					function () {
 					if (showSLengths) {
+						var tText = F2(
+							function (str, c) {
+								return A2(
+									$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+									c,
+									A2(
+										$MacCASOutreach$graphicsvg$GraphicSVG$size,
+										4,
+										$MacCASOutreach$graphicsvg$GraphicSVG$centered(
+											A2(
+												$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
+												$author$project$Consts$fonts.monospace,
+												$MacCASOutreach$graphicsvg$GraphicSVG$text(str)))));
+							});
 						var rawOpp = A3($author$project$Consts$getString, $elm$core$Basics$sin, alpha, $author$project$Consts$oppLengths);
 						var rawAdj = A3($author$project$Consts$getString, $elm$core$Basics$cos, alpha, $author$project$Consts$adjLengths);
 						var opp = _Utils_ap(
@@ -12310,6 +12324,7 @@ var $author$project$Questions$drawBubbles = F7(
 				_List_fromArray(
 					[
 						function () {
+						var waitingOrIncorrect = _Utils_eq(state, $author$project$Consts$Waiting) || ((!_Utils_eq(correct, x)) && (!_Utils_eq(x, hover)));
 						var hovered = _Utils_eq(state, $author$project$Consts$Waiting) && _Utils_eq(x, hover);
 						return A2(
 							$MacCASOutreach$graphicsvg$GraphicSVG$notifyTap,

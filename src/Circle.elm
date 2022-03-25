@@ -39,7 +39,7 @@ unitCircle col showCast showSAngles radians angle hoverDeg hovering = group [
         rect 110 0.5
             |> filled col.grid 
         ]
-        |> makeTransparent 0.3,
+        |> makeTransparent 0.5,
 
     -- Circle
     circle ur 
@@ -61,13 +61,13 @@ cast col =
     in 
     group [
         tText "C" col.adj
-            |> move (r, -r),
+            |> move (r, -r - 3),
         tText "A" col.hyp
-            |> move (r, r - 5),
+            |> move (r, r - 4),
         tText "S" col.opp
-            |> move (-r, r - 5),
+            |> move (-r, r - 4),
         tText "T" col.tan
-            |> move (-r, -r)
+            |> move (-r, -r - 3)
     ]
 
 -- Draws the special angles around the unit circle
@@ -92,14 +92,6 @@ angles col radians angle hoverDeg hovering = group <|
                         |> move (x, y + 1.5)
                         |> makeTransparent 
                             (if angle == d then 0.7 else 0.5),
-                    -- text str
-                    --     |> customFont fonts.monospace
-                    --     |> size 4
-                    --     |> centered 
-                    --     |> (if angle == d then bold else identity)
-                    --     |> filled col.words 
-                    --     |> makeTransparent 0.9
-                    --     |> move (x, y),
                     rts (Consts.str str) col.words (angle == d) radians
                         |> makeTransparent 0.9
                         |> scale 0.75
@@ -149,22 +141,12 @@ triangle col angle quad showSLengths radians =
                 |> rotate (degrees (angle / 2))),
 
         -- Alpha angle text
-        -- text (if radians then (String.fromFloat <| toN (degToRad alpha) 2) ++ " rad" else (String.fromFloat alpha) ++ "°")
-        --     |> size 4
-        --     |> centered
-        --     |> customFont fonts.monospace
-        --     |> filled col.angle
         rts (str (if radians then (String.fromFloat <| toN (degToRad alpha) 2) ++ " rad" else (String.fromFloat alpha) ++ "°"))  col.angle False radians
             |> scale 0.6
-            |> move ((if radians then 20 else 10) * cos (degrees angle), (if radians then 5 else 1) * sin (degrees angle) - 1),
+            |> move ((if radians then 20 else 15) * cos (degrees angle), 5 * sin (degrees angle) - 1),
 
         -- Full angle text
         if quad == One then group [] else
-        -- text (if radians then (String.fromFloat <| toN (degToRad angle) 2) ++ " rad" else (String.fromFloat angle) ++ "°")
-        --     |> size 4
-        --     |> centered
-        --     |> customFont fonts.monospace
-        --     |> filled col.angle
         rts (str (if radians then (String.fromFloat <| toN (degToRad angle) 2) ++ " rad" else (String.fromFloat angle) ++ "°")) col.angle False radians
             |> scale 0.6
             |> move (-13 * cos (degrees angle), 

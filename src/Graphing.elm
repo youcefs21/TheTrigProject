@@ -95,11 +95,11 @@ myShapes model =
                     |> size 4
                     |> centered
                     |> filled col.words
-                    |> makeTransparent 0.5
+                    |> makeTransparent 0.8
                     |> move (-95, i * model.scaleY - 1.3),
                 line (-2, 0) (2, 0)
                     |> outlined (solid 0.5) col.grid
-                    |> makeTransparent 0.3
+                    |> makeTransparent 0.5
                     |> move (-90, i * model.scaleY)
                 ])                      
                 [-1, 0, 1]
@@ -108,12 +108,12 @@ myShapes model =
         -- Vertical Grid
         line (-90, -50) (-90, 50)
             |> outlined (solid 0.5) col.grid
-            |> makeTransparent 0.3,
+            |> makeTransparent 0.5,
 
         -- Horizontal Grid
         line (-93, 0) (92, 0)
             |> outlined (solid 0.5) col.grid
-            |> makeTransparent 0.3,
+            |> makeTransparent 0.5,
 
         -- Buttons to move the line
         List.map 

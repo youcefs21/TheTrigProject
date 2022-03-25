@@ -39,7 +39,7 @@ unitCircle col showCast showSAngles radians angle hoverDeg hovering = group [
         rect 110 0.5
             |> filled col.grid 
         ]
-        |> makeTransparent 0.3,
+        |> makeTransparent 0.5,
 
     -- Circle
     circle ur 
@@ -61,13 +61,13 @@ cast col =
     in 
     group [
         tText "C" col.adj
-            |> move (r, -r),
+            |> move (r, -r - 3),
         tText "A" col.hyp
-            |> move (r, r - 5),
+            |> move (r, r - 4),
         tText "S" col.opp
-            |> move (-r, r - 5),
+            |> move (-r, r - 4),
         tText "T" col.tan
-            |> move (-r, -r)
+            |> move (-r, -r - 3)
     ]
 
 -- Draws the special angles around the unit circle

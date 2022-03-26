@@ -134,7 +134,7 @@ myShapes model =
         List.map 
             (\(deg, rad) -> 
                 group [
-                    roundedRect 12 10 1
+                    roundedRect 12 (if model.radians then 10 else 7) 1
                         |> filled (if model.hovering && model.hoverDeg == (round deg) then col.optionHover else col.optionFade)
                         |> makeTransparent
                             (if deg == model.angle then 0.7 else 0.5)

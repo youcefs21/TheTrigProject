@@ -15,10 +15,11 @@ myShapes model = [
             let
                 f = \(x, y) -> UpdateAngle (poiToDeg (x + 57.5, y - 5))
             in
-                (circle (ur * 1.1)
+                (circle (ur * 1.02)
                     |> ghost
                     |> notifyMouseDown (ToggleDrag True)
                     |> notifyMouseUp (ToggleDrag False)
+                    |> notifyLeave   (ToggleDrag False)
                     |> notifyMouseDownAt f
                     |> if model.drag then 
                         notifyMouseMoveAt f
@@ -87,7 +88,7 @@ angles col radians angle hoverDeg hovering = group <|
                     rect (strlen 3) 8
                         |> ghost
                         |> move (x, y + 1),
-                    roundedRect 13 10 1
+                    roundedRect 13 (if radians then 10 else 7) 1
                         |> filled (if hovered then col.optionHover else col.optionFade)
                         |> move (x, y + 1.5)
                         |> makeTransparent 
@@ -242,8 +243,9 @@ update msg model =
             let 
                 newNewAngle = limitAngle newAngle
             in
-                ( { model | angle = newNewAngle,
-                            quad  = updateQuad newNewAngle }, Cmd.none )
+                ( { model | angle    = newNewAngle,
+                            quad     = updateQuad newNewAngle,
+                            hovering = False }, Cmd.none )
         HoverCircle deg hov ->
             ( { model | hoverDeg = deg, hovering = hov }, Cmd.none )
         SetCol t -> 

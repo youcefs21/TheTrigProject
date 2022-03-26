@@ -7,6 +7,7 @@ import GraphicSVG.EllieApp exposing (..)
 
 type Msg = Tick Float GetKeyState
          | ToggleSettings
+         | ToggleGame Bool
          | Tutorial Int Bool
          | HoverMain Int Bool 
          -- Circle Message
@@ -292,7 +293,7 @@ rts rad c b radians =
                         |> (if b then bold else identity)
                         |> size 6
                         |> filled c
-                        |> move (-6.5, 0.25)
+                        |> move (-7, 0.25)
                 else
                     group [],
                 root ((*) 90 <| toFloat <| String.length s)
@@ -316,7 +317,7 @@ rts rad c b radians =
                     |> size 6
                     |> filled c,  
                 rts ((if radians then str else rtdr) r) c b radians
-                    |> move (15, 0)
+                    |> move (17.5, 0)
                 ]
         F (n, d) neg ->
             group [
@@ -492,7 +493,7 @@ getOne qs seed =
 fonts = {
     monospace = "Source Code Pro",
     sansserif = "Helvetica",
-    math      = "Cambria Math"
+    math      = "Consolas"--"Cambria Math"
     }
 
 cols = {

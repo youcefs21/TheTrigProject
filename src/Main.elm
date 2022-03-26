@@ -18,8 +18,11 @@ myShapes model =
 
         -- Main app
         group [
-            Questions.myShapes model.questions
-                |> group,
+            if model.game then 
+                Questions.myShapes model.questions
+                    |> group
+            else
+                group [],
             group [
                 Graphing.myShapes model.graph
                     |> group
@@ -51,27 +54,45 @@ myShapes model =
                     |> notifyTap (HoverMain 2 False)
             ],
 
+        -- Game button
+        if model.tutorial == 1 then 
+            group []
+        else 
+            group [
+                optionButton "🎮" col (ToggleGame (not model.game)) model.hoverGame
+                    |> move (89, 57 - 12)
+                    |> notifyEnter (HoverMain 4 True)
+                    |> notifyLeave (HoverMain 4 False)
+                    |> notifyTap (HoverMain 4 False)
+            ],
+
         -- Settings
         if model.settings then 
             group [
                 -- Exit out of settings
-                rect 192 128
-                    |> filled col.buttons
-                    |> makeTransparent 0.4
-                    |> notifyTap ToggleSettings,
+                if model.tutorial /= 0 then 
+                    group []
+                else 
+                    tutBG   
+                        (roundedRect 45 103 2 |> ghost |> move (70, 9))
+                        col.tutBack
+                        |> notifyTap ToggleSettings,
 
                 -- Settings
                 settingsBox model col
                     |> move (70, 10)
             ]
         else 
-            group [
-                optionButton "⚙️" col ToggleSettings model.hoverSet
-                    |> move (89, 57)
-                    |> notifyEnter (HoverMain 1 True)
-                    |> notifyTap (HoverMain 1 False)
-                    |> notifyLeave (HoverMain 1 False)
-            ],
+            if model.tutorial == 1 then
+                group []
+            else 
+                group [
+                    optionButton "⚙️" col ToggleSettings model.hoverSet
+                        |> move (89, 57)
+                        |> notifyEnter (HoverMain 1 True)
+                        |> notifyTap (HoverMain 1 False)
+                        |> notifyLeave (HoverMain 1 False)
+                ],
 
         -- Tutorial
         group [
@@ -103,7 +124,7 @@ myShapes model =
                             col.tutBack,
                         tutText ["Click and drag inside the circle to go to",
                                 "the non-special angles if you want to",
-                                "explore. Non-special angles won't be",
+                                "explore. Only special angles will be",
                                 "quizzed."] col.tutWords False
                             |> move (-18, 10)
                     ]
@@ -113,13 +134,14 @@ myShapes model =
                         tutBG
                             (roundedRect 118 64 2 |> ghost |> move (36, 5))
                             col.tutBack,
-                        tutText ["This is the graph. You can click",
-                                "the buttons for special angles to",
-                                "move the line there and change",
-                                "the angle in the unit circle."] col.tutWords False
-                            |> move (-4, -35)
+                        tutText ["This is the graph. You can drag the",
+                                 "vertical line to move the angle in",
+                                 "the graph and the unit circle. You",
+                                 "can also click on the buttons here",
+                                 "like you could on the unit circle."] col.tutWords False
+                            |> move (-4, -34)
                     ]
-                        |> notifyTap (Tutorial 5 True)
+                        |> notifyTap (Tutorial (if model.game then 5 else 7) True)
                 5 ->
                     group [
                         tutBG
@@ -144,13 +166,25 @@ myShapes model =
                 7 ->
                     group [
                         tutBG   
+                            (roundedRect 10 10 1.5 |> ghost |> move (89, 57 - 12))
+                            col.tutBack,
+                        tutText ["If you want to explore the unit circle and the trig",
+                                 "graphs without being quizzed, you can turn off the",
+                                 "game functionality by pressing this button.",
+                                 "Press it again to turn it back on!"] col.tutWords False
+                            |> move (-40, 33)
+                    ]
+                        |> notifyTap (Tutorial 8 True)
+                8 ->
+                    group [
+                        tutBG   
                             (roundedRect 10 10 1.5 |> ghost |> move (89, 57))
                             col.tutBack,
                         tutText ["Finally, we have the settings."] col.tutWords False
                             |> move (13, 45)
                     ]
-                        |> notifyTap (Tutorial 8 True)
-                8 -> 
+                        |> notifyTap (Tutorial 9 True)
+                9 -> 
                     group [
                         tutBG   
                             (roundedRect 45 103 2 |> ghost |> move (70, 9))
@@ -159,18 +193,18 @@ myShapes model =
                                 "the unit circle and graph looks.",
                                 "",
                                 "You can also toggle between radians",
-                                "and degrees, although the questions",
-                                "will be in radians.",
+                                "and degrees.",
                                 "",
                                 "Next, you can choose which functions to",
                                 "show on the graph.", "", 
                                 "And, you can switch between light and", "dark modes.",
                                 "",
-                                "To exit the settings, tap anywhere outside."] col.tutWords False
+                                "To exit the settings, tap anywhere",
+                                "outside of the menu."] col.tutWords False
                             |> move (-64, 40)
                     ]
-                        |> notifyTap (Tutorial 9 True)
-                9 ->
+                        |> notifyTap (Tutorial 10 True)
+                10 ->
                     group [
                         tutBG (group []) col.tutBack,
                         tutText ["And that concludes the tutorial!",
@@ -183,37 +217,36 @@ myShapes model =
         ],
         
         if model.tutorial /= 0 || model.settings then 
+            tutText 
+                ["[press anywhere to " ++ 
+                    (if model.settings && model.tutorial == 0 then 
+                        "exit"
+                    else 
+                        "continue") 
+                    ++ "]"] 
+                col.tutWords True
+                |> makeTransparent 0.7
+                |> scale 0.5
+                |> move (0, 58)
+        else
+            group [],
+
+        if model.tutorial /= 0 then
             group [
-                tutText 
-                    ["[press anywhere to " ++ 
-                        (if model.settings && model.tutorial == 0 then 
-                            "exit"
-                        else 
-                            "continue") 
-                        ++ "]"] 
-                    col.tutWords True
-                    |> makeTransparent 0.7
-                    |> scale 0.5
-                    |> move (0, 58),
-                if not model.settings || model.tutorial == 8 then 
-                    group [
-                        roundedRect 40 18 5
-                            |> filled (if model.skip then col.optionHover else col.optionFade)
-                            |> makeTransparent 0.8,
-                        text "Skip"
-                            |> centered
-                            |> customFont fonts.sansserif
-                            |> filled (if model.skip then col.optionTextH else col.optionText)
-                            |> move (0, -4)
-                    ]
-                        |> scale 0.5
-                        |> move (0, 51)
-                        |> notifyEnter (HoverMain 3 True)
-                        |> notifyLeave (HoverMain 3 False)
-                        |> notifyTap (Tutorial 0 True)
-                else
-                    group []
+                roundedRect 40 18 5
+                    |> filled (if model.skip then col.optionHover else col.optionFade)
+                    |> makeTransparent 0.8,
+                text "Skip"
+                    |> centered
+                    |> customFont fonts.sansserif
+                    |> filled (if model.skip then col.optionTextH else col.optionText)
+                    |> move (0, -4)
             ]
+                |> scale 0.5
+                |> move (0, 51)
+                |> notifyEnter (HoverMain 3 True)
+                |> notifyLeave (HoverMain 3 False)
+                |> notifyTap (Tutorial 0 True)
         else
             group []
     ]
@@ -404,6 +437,8 @@ type alias Model = {
     showTan   : Bool,
     hoverSet  : Bool,
     hoverTut  : Bool,
+    hoverGame : Bool,
+    game      : Bool,
     tutorial  : Int,
     time      : Float
     }
@@ -425,7 +460,9 @@ init = {
     showTan   = False,
     hoverSet  = False,
     hoverTut  = False,
-    tutorial  = 0,
+    hoverGame = False,
+    game      = True,
+    tutorial  = 1,
     time      = 0
     }
 
@@ -445,6 +482,13 @@ update msg model =
         ToggleSettings ->
             ( { model | settings = not model.settings,
                         hoverSet = False }, Cmd.none )
+        ToggleGame b ->
+            let
+                (newQs,     qCmds)      = Questions.update msg model.questions
+            in
+                ( { model | questions = newQs,
+                            game      = b,
+                            hoverGame = False }, Cmd.batch [qCmds] )
         HoverMain i b ->
             let
                 newModel = 
@@ -455,6 +499,8 @@ update msg model =
                             { model | hoverTut = b }
                         3 ->
                             { model | skip = b }
+                        4 ->
+                            { model | hoverGame = b }
                         _ ->
                             model
             in
@@ -585,7 +631,7 @@ update msg model =
                 ( { model | questions = newQs }, Cmd.batch [qCmds] )
         Tutorial i b ->
             ( { model | tutorial = if b then i else model.tutorial + 1,
-                        settings = if i == 8 && b then True else False,
+                        settings = if i == 9 && b then True else False,
                         hoverTut = False,
                         skip     = False }, Cmd.none )
 

@@ -4,15 +4,13 @@ import Random
 import GraphicSVG exposing (..)
 import GraphicSVG.EllieApp exposing (..)
 import Consts exposing (..)
-import Html exposing (i)
 
 
 myShapes model = 
     let 
         col = getTheme model.col
-        actualScore (x, y) = x - y
     in [
-        showQuestion col model.currentQ (getFour model.currentQ (Random.initialSeed model.seed)) model.seed model.state model.hover (model.time - model.waitTime) (actualScore model.score) model.next model.clap model.radians
+        showQuestion col model.currentQ (getFour model.currentQ (Random.initialSeed model.seed)) model.seed model.state model.hover (model.time - model.waitTime) model.score model.next model.clap model.radians
             |> move (6, 0),
         showScore col model.state model.time model.score model.maxScore,
         if model.state == Waiting then group []
@@ -42,31 +40,23 @@ updateWeights weightedQs (Q q _) correct =
 
 -- Draws the score and controls clickability
 showScore col state time score maxScore = 
-    let
-        displayScore (correct, incorrect) =
-            let
-                finalScore = correct - incorrect
-            in "Score: " ++ String.fromInt finalScore
-    in 
-        group [ 
-            text (displayScore score)
+    group [     
+        text ("Score: " ++ String.fromInt score)
+            |> sansserif
+            |> size 10
+            |> filled (if state == Waiting then col.scoreWait else if state == Incorrect then col.scoreWrong else col.scoreCorrect )
+            |> move (-95, 23)
+            |> move (0 + (if state == Incorrect then (0.25 * sin (time * 20)) else 0), 30 + (if state == Correct then jump 0.5 time else 0)),
+        if (score < maxScore) then
+            text ("High score: " ++ String.fromInt maxScore)
                 |> sansserif
-                |> size 10
-                |> filled (if state == Waiting then col.scoreWait else if state == Incorrect then col.scoreWrong else col.scoreCorrect )
-                |> move (-95, 23)
-                --|> move (0.5 * paraX (0.1 * time), 0.5 * paraY (0.1 * time))
-                |> move (0 + (if state == Incorrect then (0.25 * sin (time * 20)) else 0), 30 + (if state == Correct then jump 0.5 time else 0)),
-            if ((Tuple.first score - Tuple.second score) < maxScore) then
-                text ("High score: " ++ String.fromInt maxScore)
-                    |> sansserif
-                    |> size 4
-                    |> filled col.scoreWait
-                    |> move (-95, 48)
-                    --|> move (0.5 * paraX (0.1 * time), 0.5 * paraY (0.1 * time))
-            else
-                group []
-            ]
-            |> move (5, -2)
+                |> size 4
+                |> filled col.scoreWait
+                |> move (-95, 48)
+        else
+            group []
+    ]
+        |> move (5, -2)
     
 -- Draws the question
 showQuestion col (Q question correct) incorrects seed state hover time score next clap radians = group [
@@ -178,7 +168,7 @@ type alias Model = {
     weightedQs : List (Float, Question),
     state      : State, 
     hover      : Rad,
-    score      : (Int, Int), 
+    score      : Int, 
     maxScore   : Int,
     seed       : Int, 
     next       : Bool,
@@ -195,7 +185,7 @@ init = {
     weightedQs = List.indexedMap (\_ q -> (1.0, q)) rawQs, 
     state      = Waiting, 
     hover      = C "",
-    score      = (0, 0), 
+    score      = 0,
     maxScore   = 0,
     seed       = 0, 
     next       = False,
@@ -213,18 +203,28 @@ update msg model =
             ( { model | currentQ = q }, Cmd.none )
         NewSeed i ->
             ( { model | seed = i }, Cmd.none )
+        ToggleGame b ->
+            if b then
+                ( model, Cmd.none )
+            else
+                ( { model | maxScore = max model.maxScore model.score }, Cmd.none )
         Select answer ->
-            ( if correctAnswer model.currentQ answer 
-              then { model | score    = (Tuple.first model.score + 1, Tuple.second model.score),
-                             state    = Correct,
-                             waitTime = model.time,
-                             maxScore = if (Tuple.first model.score - Tuple.second model.score + 1) > model.maxScore then (Tuple.first model.score - Tuple.second model.score + 1) else model.maxScore,
-                             clap     = if (Tuple.first model.score - Tuple.second model.score + 1) < 0 then "🤨" else "👏" }
-              else { model | score    = (Tuple.first model.score, Tuple.second model.score + 1),
-                             state    = Incorrect,
-                             waitTime = model.time,
-                             maxScore = if (Tuple.first model.score - Tuple.second model.score - 1) > model.maxScore then (Tuple.first model.score - Tuple.second model.score - 1) else model.maxScore,
-                             clap     = if (Tuple.first model.score - Tuple.second model.score - 1) < 0 then "🤨" else "👏"  },
+            ( if correctAnswer model.currentQ answer then 
+                let
+                    fscore = model.score + 1
+                in
+                    { model | score    = fscore,
+                              state    = Correct,
+                              waitTime = model.time,
+                              maxScore = if fscore > model.maxScore then fscore else model.maxScore }
+              else 
+                let
+                    fscore = max (model.score - 1) 0
+                in
+                    { model | score    = fscore,
+                              state    = Incorrect,
+                              waitTime = model.time,
+                              maxScore = if model.score > model.maxScore then model.score else model.maxScore },
               Cmd.none )
         UpdateState currentState ->
             ( { model | state      = Waiting,

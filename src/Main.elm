@@ -35,6 +35,10 @@ myShapes model =
                 |> move (0.5, 5)
         ],
 
+        circle 0.5
+            |> filled red
+            |> move (-16.5, 5),
+
         -- Tutorial button
         if model.tutorial /= 0 then 
             group []
@@ -508,6 +512,11 @@ update msg model =
                             questions  = newQs,
                             radians    = not model.radians }, Cmd.batch [circleCmds, graphCmds, qCmds] )
         HoverGraph _ _ -> 
+            let
+                (newGraph, graphCmds)  = Graphing.update msg model.graph 
+            in 
+                ( { model | graph = newGraph }, Cmd.batch [graphCmds] )
+        ToggleGDrag _ -> 
             let
                 (newGraph, graphCmds)  = Graphing.update msg model.graph 
             in 

@@ -20,6 +20,7 @@ type Msg = Tick Float GetKeyState
          -- Graphing Message
          | HoverGraph Int Bool
          | ToggleSin
+         | ToggleGDrag Bool
          | ToggleCos 
          | ToggleTan
          | SetCol Theme

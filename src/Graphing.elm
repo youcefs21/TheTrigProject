@@ -25,9 +25,26 @@ function model func fcol dnePossible grid =
                             if (abs y2) > 60 then group [] else
                             (line (x1, y1) (x2, y2)
                                 |> outlined (solid 0.5) fcol
-                                |> move (-90, 0))) 
+                                |> move (-90, 0)))
             (rangeStep 0 (2 * pi) deltaX)
             |> group,
+
+        -- Moving angle
+        let
+            x = -90 + (degrees model.angle) * scaleX
+            s = if model.radians then ((String.fromFloat <| (\d -> toN d 3) <| degToRad model.angle) ++ " rad") else ((String.fromFloat model.angle) ++ "°")
+        in
+            group [
+                line (-90, 0) (x, 0)
+                    |> outlined (dotted 0.5) grid,
+                text s
+                    |> customFont fonts.math
+                    |> size 4
+                    |> filled grid
+                    |> scale 0.95
+                    |> move (x + 2, 2)
+            ],
+        
         -- Moving line
         let
             x = -90 + (degrees model.angle) * scaleX
@@ -49,10 +66,7 @@ function model func fcol dnePossible grid =
                 circle 1
                     |> filled fcol
                     |> move (x, y2),
-                rts (str (String.fromFloat <| toN (func (degrees model.angle)) 3)) fcol False model.radians --text (String.fromFloat <| toN (func (degrees model.angle)) 3)
-                    -- |> customFont fonts.monospace
-                    -- |> size 4
-                    -- |> filled fcol
+                rts (str (String.fromFloat <| toN (func (degrees model.angle)) 3)) fcol False model.radians
                     |> scale 0.65
                     |> move (x + 7, max -40 <| min 75 y2 / 2)
                 ]
@@ -65,23 +79,22 @@ function model func fcol dnePossible grid =
                     |> move (x, y1 + 1)
             ra = round model.angle
         in
-            if ((ra == 90 || ra == 270) && dnePossible) then dne
-            else l,
-
-        -- Moving angle
-        let
-            x = -90 + (degrees model.angle) * scaleX
-            s = if model.radians then ((String.fromFloat <| (\d -> toN d 3) <| degToRad model.angle) ++ " rad") else ((String.fromFloat model.angle) ++ "°")
-        in
             group [
-                line (-90, 0) (x, 0)
-                    |> outlined (dotted 0.5) grid,
-                text s
-                    |> customFont fonts.math
-                    |> size 4
-                    |> filled grid
-                    |> scale 0.95
-                    |> move (x + 2, 2)
+                if ((ra == 90 || ra == 270) && dnePossible) then 
+                    dne
+                else 
+                    l,
+                -- to drag
+                rect (if model.gDrag then 60 else 10) 100
+                    |> ghost
+                    |> move (x, 0)
+                    |> notifyMouseDown (ToggleGDrag True)
+                    |> notifyMouseUp   (ToggleGDrag False)
+                    |> notifyLeave     (ToggleGDrag False)
+                    |> (if model.gDrag then
+                            notifyMouseMoveAt (\(d, _) -> UpdateAngle (toFloat <| round (min 360 <| (max 0 <| d + 16.5) * 3.44)))
+                        else
+                            identity)
             ]
     ]
 
@@ -89,20 +102,6 @@ myShapes model =
     let
         col = getTheme model.col
     in [
-        -- Function
-        if model.showSin then 
-            function model (sin) col.opp False col.grid
-        else
-            group [],
-        if model.showCos then
-            function model (cos) col.adj False col.grid
-        else
-            group [],
-        if model.showTan then
-            function model (tan) col.tan True col.grid
-        else
-            group [],
-
         -- Vertical scale
         List.map (\i -> 
             group [
@@ -143,13 +142,6 @@ myShapes model =
                     circle 0.5
                         |> filled col.dots
                         |> move (0, 3),
-                    -- text (if model.radians then rad else String.fromFloat deg ++ "°")
-                    --     |> size 4
-                    --     |> customFont fonts.monospace
-                    --     |> (if (deg == model.angle) then bold else identity)
-                    --     |> centered
-                    --     |> filled col.words
-                    --     |> makeTransparent 0.9
                     rts (str (if model.radians then rad else String.fromFloat deg ++ "°")) col.words (deg == model.angle) model.radians
                         |> makeTransparent 0.9
                         |> scale 0.75
@@ -160,7 +152,21 @@ myShapes model =
                     |> notifyEnter (HoverGraph (round deg) True)
                     |> notifyLeave (HoverGraph (round deg) False))                     
             specialAnglesSimple
-            |> group
+            |> group,
+        
+        -- Function
+        if model.showSin then 
+            function model (sin) col.opp False col.grid
+        else
+            group [],
+        if model.showCos then
+            function model (cos) col.adj False col.grid
+        else
+            group [],
+        if model.showTan then
+            function model (tan) col.tan True col.grid
+        else
+            group []
     ]
 
 deltaX = 0.01
@@ -179,7 +185,8 @@ type alias Model = {
     radians  : Bool,
     hoverDeg : Int,
     hovering : Bool,
-    col      : Theme
+    col      : Theme,
+    gDrag    : Bool
     }
 
 init : Model
@@ -195,7 +202,8 @@ init = {
     radians  = True,
     hoverDeg = 45,
     hovering = False,
-    col      = Light }
+    col      = Light,
+    gDrag    = False }
 
 update : Consts.Msg -> Model -> ( Model, Cmd Consts.Msg )
 update msg model = 
@@ -222,6 +230,8 @@ update msg model =
             ( { model | showCos = not model.showCos }, Cmd.none )
         ToggleTan ->
             ( { model | showTan = not model.showTan }, Cmd.none )
+        ToggleGDrag b ->
+            ( { model | gDrag = b }, Cmd.none )
         _ ->
             ( model, Cmd.none )
 

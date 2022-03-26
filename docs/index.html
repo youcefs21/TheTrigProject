@@ -9062,7 +9062,7 @@ var $author$project$Consts$genQ = function (qss) {
 var $author$project$Consts$Light = {$: 'Light'};
 var $author$project$Consts$One = {$: 'One'};
 var $author$project$Circle$init = {angle: 45, col: $author$project$Consts$Light, drag: false, hoverDeg: 45, hovering: false, quad: $author$project$Consts$One, radians: true, showCast: true, showSAngles: true, showSLengths: true, time: 0};
-var $author$project$Graphing$init = {angle: 45, col: $author$project$Consts$Light, hoverDeg: 45, hovering: false, quad: $author$project$Consts$One, radians: true, scaleY: 45, showCos: false, showSin: true, showTan: false, time: 0, yLine: false};
+var $author$project$Graphing$init = {angle: 45, col: $author$project$Consts$Light, gDrag: false, hoverDeg: 45, hovering: false, quad: $author$project$Consts$One, radians: true, scaleY: 45, showCos: false, showSin: true, showTan: false, time: 0, yLine: false};
 var $author$project$Consts$Waiting = {$: 'Waiting'};
 var $author$project$Consts$O = function (a) {
 	return {$: 'O', a: a};
@@ -9698,6 +9698,13 @@ var $author$project$Graphing$update = F2(
 						model,
 						{showTan: !model.showTan}),
 					$elm$core$Platform$Cmd$none);
+			case 'ToggleGDrag':
+				var b = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{gDrag: b}),
+					$elm$core$Platform$Cmd$none);
 			default:
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 		}
@@ -10018,10 +10025,21 @@ var $author$project$Main$update = F2(
 					$elm$core$Platform$Cmd$batch(
 						_List_fromArray(
 							[graphCmds])));
-			case 'ToggleYLine':
+			case 'ToggleGDrag':
 				var _v19 = A2($author$project$Graphing$update, msg, model.graph);
 				var newGraph = _v19.a;
 				var graphCmds = _v19.b;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{graph: newGraph}),
+					$elm$core$Platform$Cmd$batch(
+						_List_fromArray(
+							[graphCmds])));
+			case 'ToggleYLine':
+				var _v20 = A2($author$project$Graphing$update, msg, model.graph);
+				var newGraph = _v20.a;
+				var graphCmds = _v20.b;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -10031,9 +10049,9 @@ var $author$project$Main$update = F2(
 							[graphCmds])));
 			case 'ToggleSin':
 				var atLeastOne = model.showCos || model.showTan;
-				var _v20 = A2($author$project$Graphing$update, msg, model.graph);
-				var newGraph = _v20.a;
-				var graphCmds = _v20.b;
+				var _v21 = A2($author$project$Graphing$update, msg, model.graph);
+				var newGraph = _v21.a;
+				var graphCmds = _v21.b;
 				return atLeastOne ? _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -10043,9 +10061,9 @@ var $author$project$Main$update = F2(
 							[graphCmds]))) : _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 			case 'ToggleCos':
 				var atLeastOne = model.showSin || model.showTan;
-				var _v21 = A2($author$project$Graphing$update, msg, model.graph);
-				var newGraph = _v21.a;
-				var graphCmds = _v21.b;
+				var _v22 = A2($author$project$Graphing$update, msg, model.graph);
+				var newGraph = _v22.a;
+				var graphCmds = _v22.b;
 				return atLeastOne ? _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -10055,9 +10073,9 @@ var $author$project$Main$update = F2(
 							[graphCmds]))) : _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 			case 'ToggleTan':
 				var atLeastOne = model.showSin || model.showCos;
-				var _v22 = A2($author$project$Graphing$update, msg, model.graph);
-				var newGraph = _v22.a;
-				var graphCmds = _v22.b;
+				var _v23 = A2($author$project$Graphing$update, msg, model.graph);
+				var newGraph = _v23.a;
+				var graphCmds = _v23.b;
 				return atLeastOne ? _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -10066,17 +10084,6 @@ var $author$project$Main$update = F2(
 						_List_fromArray(
 							[graphCmds]))) : _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 			case 'NewSeed':
-				var _v23 = A2($author$project$Questions$update, msg, model.questions);
-				var newQs = _v23.a;
-				var qCmds = _v23.b;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{questions: newQs}),
-					$elm$core$Platform$Cmd$batch(
-						_List_fromArray(
-							[qCmds])));
-			case 'UpdateState':
 				var _v24 = A2($author$project$Questions$update, msg, model.questions);
 				var newQs = _v24.a;
 				var qCmds = _v24.b;
@@ -10087,7 +10094,7 @@ var $author$project$Main$update = F2(
 					$elm$core$Platform$Cmd$batch(
 						_List_fromArray(
 							[qCmds])));
-			case 'Choice':
+			case 'UpdateState':
 				var _v25 = A2($author$project$Questions$update, msg, model.questions);
 				var newQs = _v25.a;
 				var qCmds = _v25.b;
@@ -10098,7 +10105,7 @@ var $author$project$Main$update = F2(
 					$elm$core$Platform$Cmd$batch(
 						_List_fromArray(
 							[qCmds])));
-			case 'Select':
+			case 'Choice':
 				var _v26 = A2($author$project$Questions$update, msg, model.questions);
 				var newQs = _v26.a;
 				var qCmds = _v26.b;
@@ -10109,7 +10116,7 @@ var $author$project$Main$update = F2(
 					$elm$core$Platform$Cmd$batch(
 						_List_fromArray(
 							[qCmds])));
-			case 'Hover':
+			case 'Select':
 				var _v27 = A2($author$project$Questions$update, msg, model.questions);
 				var newQs = _v27.a;
 				var qCmds = _v27.b;
@@ -10120,10 +10127,21 @@ var $author$project$Main$update = F2(
 					$elm$core$Platform$Cmd$batch(
 						_List_fromArray(
 							[qCmds])));
-			case 'HoverNext':
+			case 'Hover':
 				var _v28 = A2($author$project$Questions$update, msg, model.questions);
 				var newQs = _v28.a;
 				var qCmds = _v28.b;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{questions: newQs}),
+					$elm$core$Platform$Cmd$batch(
+						_List_fromArray(
+							[qCmds])));
+			case 'HoverNext':
+				var _v29 = A2($author$project$Questions$update, msg, model.questions);
+				var newQs = _v29.a;
+				var qCmds = _v29.b;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -10199,6 +10217,12 @@ var $MacCASOutreach$graphicsvg$GraphicSVG$centered = function (stencil) {
 		var a = stencil;
 		return a;
 	}
+};
+var $MacCASOutreach$graphicsvg$GraphicSVG$Circle = function (a) {
+	return {$: 'Circle', a: a};
+};
+var $MacCASOutreach$graphicsvg$GraphicSVG$circle = function (r) {
+	return $MacCASOutreach$graphicsvg$GraphicSVG$Circle(r);
 };
 var $MacCASOutreach$graphicsvg$GraphicSVG$clip = F2(
 	function (shape1, shape2) {
@@ -10593,12 +10617,6 @@ var $author$project$Consts$ToggleDrag = function (a) {
 };
 var $author$project$Consts$UpdateAngle = function (a) {
 	return {$: 'UpdateAngle', a: a};
-};
-var $MacCASOutreach$graphicsvg$GraphicSVG$Circle = function (a) {
-	return {$: 'Circle', a: a};
-};
-var $MacCASOutreach$graphicsvg$GraphicSVG$circle = function (r) {
-	return $MacCASOutreach$graphicsvg$GraphicSVG$Circle(r);
 };
 var $MacCASOutreach$graphicsvg$GraphicSVG$notifyMouseDown = F2(
 	function (msg, shape) {
@@ -11808,6 +11826,9 @@ var $author$project$Consts$HoverGraph = F2(
 	function (a, b) {
 		return {$: 'HoverGraph', a: a, b: b};
 	});
+var $author$project$Consts$ToggleGDrag = function (a) {
+	return {$: 'ToggleGDrag', a: a};
+};
 var $author$project$Graphing$deltaX = 0.01;
 var $author$project$Consts$rangeStep = F3(
 	function (start, stop, step) {
@@ -11854,6 +11875,42 @@ var $author$project$Graphing$function = F5(
 							}
 						},
 						A3($author$project$Consts$rangeStep, 0, 2 * $elm$core$Basics$pi, $author$project$Graphing$deltaX))),
+					function () {
+					var x = (-90) + ($elm$core$Basics$degrees(model.angle) * $author$project$Graphing$scaleX);
+					var s = model.radians ? ($elm$core$String$fromFloat(
+						function (d) {
+							return A2($author$project$Consts$toN, d, 3);
+						}(
+							$author$project$Consts$degToRad(model.angle))) + ' rad') : ($elm$core$String$fromFloat(model.angle) + '°');
+					return $MacCASOutreach$graphicsvg$GraphicSVG$group(
+						_List_fromArray(
+							[
+								A3(
+								$MacCASOutreach$graphicsvg$GraphicSVG$outlined,
+								$MacCASOutreach$graphicsvg$GraphicSVG$dotted(0.5),
+								grid,
+								A2(
+									$MacCASOutreach$graphicsvg$GraphicSVG$line,
+									_Utils_Tuple2(-90, 0),
+									_Utils_Tuple2(x, 0))),
+								A2(
+								$MacCASOutreach$graphicsvg$GraphicSVG$move,
+								_Utils_Tuple2(x + 2, 2),
+								A2(
+									$MacCASOutreach$graphicsvg$GraphicSVG$scale,
+									0.95,
+									A2(
+										$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+										grid,
+										A2(
+											$MacCASOutreach$graphicsvg$GraphicSVG$size,
+											4,
+											A2(
+												$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
+												$author$project$Consts$fonts.math,
+												$MacCASOutreach$graphicsvg$GraphicSVG$text(s))))))
+							]));
+				}(),
 					function () {
 					var y2 = function () {
 						var yp = model.scaleY * func(
@@ -11931,42 +11988,37 @@ var $author$project$Graphing$function = F5(
 										$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
 										$author$project$Consts$fonts.math,
 										$MacCASOutreach$graphicsvg$GraphicSVG$text('DNE'))))));
-					return (((ra === 90) || (ra === 270)) && dnePossible) ? dne : l;
-				}(),
-					function () {
-					var x = (-90) + ($elm$core$Basics$degrees(model.angle) * $author$project$Graphing$scaleX);
-					var s = model.radians ? ($elm$core$String$fromFloat(
-						function (d) {
-							return A2($author$project$Consts$toN, d, 3);
-						}(
-							$author$project$Consts$degToRad(model.angle))) + ' rad') : ($elm$core$String$fromFloat(model.angle) + '°');
 					return $MacCASOutreach$graphicsvg$GraphicSVG$group(
 						_List_fromArray(
 							[
-								A3(
-								$MacCASOutreach$graphicsvg$GraphicSVG$outlined,
-								$MacCASOutreach$graphicsvg$GraphicSVG$dotted(0.5),
-								grid,
-								A2(
-									$MacCASOutreach$graphicsvg$GraphicSVG$line,
-									_Utils_Tuple2(-90, 0),
-									_Utils_Tuple2(x, 0))),
-								A2(
-								$MacCASOutreach$graphicsvg$GraphicSVG$move,
-								_Utils_Tuple2(x + 2, 2),
-								A2(
-									$MacCASOutreach$graphicsvg$GraphicSVG$scale,
-									0.95,
-									A2(
-										$MacCASOutreach$graphicsvg$GraphicSVG$filled,
-										grid,
-										A2(
-											$MacCASOutreach$graphicsvg$GraphicSVG$size,
-											4,
+								(((ra === 90) || (ra === 270)) && dnePossible) ? dne : l,
+								(model.gDrag ? $MacCASOutreach$graphicsvg$GraphicSVG$notifyMouseMoveAt(
+								function (_v0) {
+									var d = _v0.a;
+									return $author$project$Consts$UpdateAngle(
+										$elm$core$Basics$round(
 											A2(
-												$MacCASOutreach$graphicsvg$GraphicSVG$customFont,
-												$author$project$Consts$fonts.math,
-												$MacCASOutreach$graphicsvg$GraphicSVG$text(s))))))
+												$elm$core$Basics$min,
+												360,
+												A2($elm$core$Basics$max, 0, d + 16.5) * 3.44)));
+								}) : $elm$core$Basics$identity)(
+								A2(
+									$MacCASOutreach$graphicsvg$GraphicSVG$notifyLeave,
+									$author$project$Consts$ToggleGDrag(false),
+									A2(
+										$MacCASOutreach$graphicsvg$GraphicSVG$notifyMouseUp,
+										$author$project$Consts$ToggleGDrag(false),
+										A2(
+											$MacCASOutreach$graphicsvg$GraphicSVG$notifyMouseDown,
+											$author$project$Consts$ToggleGDrag(true),
+											A2(
+												$MacCASOutreach$graphicsvg$GraphicSVG$move,
+												_Utils_Tuple2(x, 0),
+												$MacCASOutreach$graphicsvg$GraphicSVG$ghost(
+													A2(
+														$MacCASOutreach$graphicsvg$GraphicSVG$rect,
+														model.gDrag ? 60 : 10,
+														100)))))))
 							]));
 				}()
 				]));
@@ -11987,9 +12039,6 @@ var $author$project$Graphing$myShapes = function (model) {
 	var col = $author$project$Consts$getTheme(model.col);
 	return _List_fromArray(
 		[
-			model.showSin ? A5($author$project$Graphing$function, model, $elm$core$Basics$sin, col.opp, false, col.grid) : $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil),
-			model.showCos ? A5($author$project$Graphing$function, model, $elm$core$Basics$cos, col.adj, false, col.grid) : $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil),
-			model.showTan ? A5($author$project$Graphing$function, model, $elm$core$Basics$tan, col.tan, true, col.grid) : $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil),
 			$MacCASOutreach$graphicsvg$GraphicSVG$group(
 			A2(
 				$elm$core$List$map,
@@ -12125,7 +12174,10 @@ var $author$project$Graphing$myShapes = function (model) {
 															model.radians))))
 											]))))));
 				},
-				$author$project$Consts$specialAnglesSimple))
+				$author$project$Consts$specialAnglesSimple)),
+			model.showSin ? A5($author$project$Graphing$function, model, $elm$core$Basics$sin, col.opp, false, col.grid) : $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil),
+			model.showCos ? A5($author$project$Graphing$function, model, $elm$core$Basics$cos, col.adj, false, col.grid) : $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil),
+			model.showTan ? A5($author$project$Graphing$function, model, $elm$core$Basics$tan, col.tan, true, col.grid) : $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil)
 		]);
 };
 var $author$project$Consts$UpdateState = function (a) {
@@ -12675,6 +12727,7 @@ var $author$project$Main$optionButton = F4(
 												$MacCASOutreach$graphicsvg$GraphicSVG$text(sym))))))))
 					])));
 	});
+var $MacCASOutreach$graphicsvg$GraphicSVG$red = A4($MacCASOutreach$graphicsvg$GraphicSVG$rgba, 204, 0, 0, 1);
 var $author$project$Consts$Dark = {$: 'Dark'};
 var $author$project$Consts$SetCol = function (a) {
 	return {$: 'SetCol', a: a};
@@ -13057,6 +13110,13 @@ var $author$project$Main$myShapes = function (model) {
 										$author$project$Circle$myShapes(model.circle))))
 							])))
 				])),
+			A2(
+			$MacCASOutreach$graphicsvg$GraphicSVG$move,
+			_Utils_Tuple2(-16.5, 5),
+			A2(
+				$MacCASOutreach$graphicsvg$GraphicSVG$filled,
+				$MacCASOutreach$graphicsvg$GraphicSVG$red,
+				$MacCASOutreach$graphicsvg$GraphicSVG$circle(0.5))),
 			(!(!model.tutorial)) ? $MacCASOutreach$graphicsvg$GraphicSVG$group(_List_Nil) : $MacCASOutreach$graphicsvg$GraphicSVG$group(
 			_List_fromArray(
 				[

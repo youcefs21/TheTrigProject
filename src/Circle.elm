@@ -15,7 +15,7 @@ myShapes model = [
             let
                 f = \(x, y) -> UpdateAngle (poiToDeg (x + 57.5, y - 5))
             in
-                (circle (ur * 1.02)
+                (circle (ur * (if model.drag then 10 else 1))
                     |> ghost
                     |> notifyMouseDown (ToggleDrag True)
                     |> notifyMouseUp (ToggleDrag False)

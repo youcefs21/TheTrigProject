@@ -85,7 +85,7 @@ function model func fcol dnePossible grid =
                 else 
                     l,
                 -- to drag
-                rect (if model.gDrag then 60 else 10) 100
+                rect (if model.gDrag then 1000 else 10) (if model.gDrag then 1000 else 100)
                     |> ghost
                     |> move (x, 0)
                     |> notifyMouseDown (ToggleGDrag True)
@@ -97,6 +97,8 @@ function model func fcol dnePossible grid =
                             identity)
             ]
     ]
+    |> clip
+            (rect 200 100 |> ghost)
 
 myShapes model = 
     let

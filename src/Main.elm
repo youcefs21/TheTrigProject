@@ -27,8 +27,6 @@ myShapes model =
                 Graphing.myShapes model.graph
                     |> group
                     |> scale 0.6
-                    |> clip
-                        (rect 130 60 |> ghost)
                     |> move (37, 0),
                 Circle.myShapes model.circle
                     |> group
@@ -218,7 +216,7 @@ myShapes model =
         
         if model.tutorial /= 0 || model.settings then 
             tutText 
-                ["[press anywhere to " ++ 
+                ["[click anywhere to " ++ 
                     (if model.settings && model.tutorial == 0 then 
                         "exit"
                     else 
